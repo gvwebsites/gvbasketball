@@ -1,0 +1,188 @@
+# GV Basketball — Website Build Log & Runbook
+
+Live site: **https://gvbasketball.com** — a basketball skills-training business in Metro Manila
+(Makati & Ortigas), run by Coach Gino Victorino. Tagline: *"Build Better Players. Build Better
+People."*
+
+This document is the source of truth for how the site is built and how to change it. The actual
+custom source lives in [`build/`](build/) (also deployed to the live server's `wp-content/`).
+
+---
+
+## 1. Hosting & access
+
+| Thing | Value |
+|---|---|
+| Platform | Hostinger Premium (shared) |
+| WordPress | 6.8.5 · PHP 8.2 · WP-CLI 2.12 |
+| Theme | Astra 4.13 (active) |
+| Page builder | **Elementor Pro 3.30** (Theme Builder used for header/footer) |
+| SSH alias | `gvweb` (user `u907133977`) |
+| WP root | `/home/u907133977/domains/gvbasketball.com/public_html` |
+| Origin IP | `37.44.245.74` |
+| DNS | **Cloudflare** (`norman/carol.ns.cloudflare.com`); A record → `37.44.245.74` (proxied) |
+| Email routing | Cloudflare Email Routing — `info@gvbasketball.com` is active |
+| Full backup | `~/backups/gvbasketball-20260627-015018/` (`db.sql` + `wp-content.tar.gz`) taken before any change |
+
+All work was done over SSH + WP-CLI. Secrets (Google OAuth client id/secret) live in the local
+`.env` (gitignored) and in `wp-config.php` as constants.
+
+---
+
+## 2. Architecture of the custom build
+
+The front end is delivered as **hand-crafted HTML + a shared CSS design system**, mounted inside
+Elementor so pages stay Elementor-native (editable, with Theme Builder header/footer). Two
+must-use plugins power it:
+
+- **`wp-content/mu-plugins/gv-brand.php`** → enqueues the design system CSS site-wide
+  (`mu-plugins/gv-assets/gv-brand.css`). All classes are namespaced `gv-`.
+- **`wp-content/mu-plugins/gv-build.php`** → build helpers used by the deploy scripts:
+  - `gv_set_page_html($page_id, $html)` — set a page to one full-width HTML widget.
+  - `gv_set_page_blocks($page_id, $blocks)` — page from ordered html/shortcode widgets.
+  - `gv_set_theme_part($title, $type, $html)` / `gv_set_theme_part_blocks(...)` — Elementor
+    Theme Builder header/footer from HTML/blocks, applied site-wide.
+  - `gv_ensure_page($slug, $title)` — idempotent page creator.
+
+> Theme Builder note: Elementor Pro caches header/footer display conditions in the option
+> `elementor_pro_theme_builder_conditions` (`['header'=>[id=>['include/general']], 'footer'=>...]`).
+> Setting the post meta alone is **not** enough — the option must be updated too (the deploy
+> scripts do this).
+
+### Global background fix
+The Astra "photography" starter shipped a **dark/black body**. `gv-brand.css` forces
+`html body{background:#fff}` and white default sections so text is readable everywhere.
+
+---
+
+## 3. Design system (`build/mu-plugins/gv-assets/gv-brand.css`)
+
+- **Colors:** Navy `#123B78`, Deep Navy `#021F51`, Basketball Orange `#F47B20`, Charcoal `#1C1C1E`,
+  Steel `#6B6F76`, Light `#E6E7E9`, Silver `#A7A9AC`, White. (Also set in Elementor Global Kit, post id 5.)
+- **Fonts:** Bebas Neue (display/headlines), Montserrat (sub-heads/UI), Inter (body).
+- **Components:** `gv-hero`, `gv-section[--light|--navy|--deep|--charcoal|--tight]`, `gv-wrap`,
+  `gv-section-title`, `gv-eyebrow`, `gv-lead`, `gv-btn[--primary|--navy|--ghost|--outline]`,
+  `gv-grid--2/3/4`, `gv-card`, `gv-program`, `gv-steps`/`gv-step`, `gv-person`, `gv-quote`,
+  `gv-acc` (FAQ accordion via `<details>`), `gv-stats`, `gv-gallery`, `gv-nav` (header),
+  `gv-footer`, `gv-newsletter-band`, booking/form wrappers.
+
+---
+
+## 4. Pages (all live unless noted)
+
+| Page | Slug | Post ID | Notes |
+|---|---|---|---|
+| Home | `/` | 2887 | front page |
+| About Coach Gino | `/about/` | 26 | |
+| Training Programs | `/training-programs/` | 2981 | |
+| Athlete Development System | `/athlete-development/` | 2984 | |
+| Success Stories | `/success-stories/` | 2985 | testimonial section removed |
+| Testimonials | `/testimonials/` | 2986 | **draft (hidden)** — placeholder until real reviews |
+| Gallery | `/gallery/` | 2987 | |
+| FAQ | `/faq/` | 2988 | |
+| Book a Consultation | `/book-a-consultation/` | 2982 | LatePoint `[latepoint_book_form]` |
+| Member Booking (portal) | `/booking/` | 2983 | LatePoint `[latepoint_customer_dashboard]` |
+| Contact | `/contact/` | 2989 | WPForms contact + location cards |
+| Player Waiver & Consent | `/waiver/` | 3009 | WPForms waiver |
+
+Page HTML source: [`build/pages/`](build/pages/) (marketing pages) and generated inline in
+[`build/scripts/build-functional.php`](build/scripts/) + `build-extras.php` (booking/portal/contact/waiver).
+
+### Header / footer (Elementor Theme Builder)
+- **GV Header** (post 3002): custom `gv-nav` — horizontal logo, nav, orange "Book a Consultation",
+  sticky, CSS-only mobile hamburger. Replaces Astra's header. Source: `build/templates/header.html`.
+- **GV Footer** (post 2991): newsletter band (top) + 4-column footer. Source: `build/templates/footer.html`.
+- Primary nav menu: WP menu "Primary Menu" assigned to Astra `primary` location (rebuilt via
+  `build/scripts/build-menu.php`; its term ID changes on each rebuild).
+
+---
+
+## 5. Brand assets (media library)
+
+| Asset | Attachment ID |
+|---|---|
+| Horizontal logo (header / `custom_logo`) | 2977 (`/uploads/2026/06/gvbasketball-long.svg`) |
+| Primary vertical logo | 2978 |
+| Circle icon | 2979 |
+| Favicon PNG (site icon) | 2976 |
+| Hero (moody dribble) | 2917 |
+| Coach Gino clinic (landscape) | 2937 / 2938 (`GV2`) |
+| Coach Gino clinic (square) | 2935 |
+| Team photo | 2936 (`GV`) |
+| Phil Handy | 2929 · Micah Lancaster | 2930 |
+
+Source SVGs: [`logo/`](logo/). SVG uploads enabled via **Safe SVG** plugin (uploads must run as an
+admin user: `wp media import ... --user=1`). All ~80 demo images + 10 demo posts from the starter
+were deleted.
+
+---
+
+## 6. Booking — LatePoint (free), payments OFF
+
+Config created by [`build/scripts/setup-latepoint.php`](build/scripts/setup-latepoint.php):
+
+- **Agent:** Coach Gino (id 1). **Locations:** Makati (1), Ortigas (2).
+- **Services:** Player Consultation (45m), Private Training (60m), Small Group (90m, cap 5),
+  Elite Performance (90m, cap 5) — all `charge_amount=0`.
+- **Work periods:** Mon/Tue/Fri/Sun, 15:00–18:00 (minutes 900–1080), both locations, all services.
+  (LatePoint weekday: 1=Mon … 7=Sun; times = minutes from midnight.)
+- **Settings:** `enable_payments_local=off`, service/location category steps off, timezone selector
+  off, `accent_color=#F47B20`, support text → WhatsApp +63 917 882 4466.
+- **Shortcodes:** `[latepoint_book_form]`, `[latepoint_customer_dashboard]`, `[latepoint_customer_login]`.
+
+---
+
+## 7. Transactional email — FluentSMTP + Gmail OAuth
+
+- **Sender:** `info@gvbasketball.com` (Gmail "Send mail as" alias on `gvictorino.websites@gmail.com`).
+- **Gmail API** enabled on GCP project `gvbasketball`. OAuth client id/secret stored in
+  `wp-config.php` as `FLUENTMAIL_GMAIL_CLIENT_ID` / `FLUENTMAIL_GMAIL_CLIENT_SECRET`.
+- FluentSMTP connection authenticated and **verified** (`wp_mail` test sent OK).
+- ⚠️ **Security TODO:** the OAuth **client secret was echoed** during setup (WP-CLI `config set`
+  prints values) — recommend resetting it in Cloud Console, updating `.env`, then re-setting the
+  constant with `--quiet`.
+
+## 8. Forms (WPForms Lite)
+
+| Form | ID | Notifies |
+|---|---|---|
+| Contact GV Basketball | 3003 | info@gvbasketball.com |
+| GV Newsletter | 3005 | info@ (footer band) |
+| GV Player Waiver | 3007 | info@ |
+
+Note: WPForms Lite has no **Phone** field (Pro only) — phone uses a text field. Newsletter currently
+emails signups to info@; to auto-sync to an **Omnisend** list, connect the Omnisend account and use
+its form/integration.
+
+---
+
+## 9. How to make common changes
+
+All deploy scripts live in [`build/scripts/`](build/scripts/). General loop: edit the file in
+`build/`, `scp` it to the server, run via `wp eval-file`, then flush caches
+(`wp elementor flush-css && wp litespeed-purge all`). The CSS is cache-busted by file mtime.
+
+- **Edit design system:** change `build/mu-plugins/gv-assets/gv-brand.css` →
+  `scp` to `wp-content/mu-plugins/gv-assets/gv-brand.css` → purge LiteSpeed.
+- **Edit a marketing page:** edit `build/pages/<slug>.html` → `scp` to server →
+  `wp eval "gv_set_page_html(<ID>, file_get_contents('<path>'));"`.
+- **Edit booking/contact/waiver pages or forms:** edit `build-functional.php` / `build-extras.php`
+  → `wp eval-file`.
+- **Re-show testimonials:** `wp post update 2986 --post_status=publish`, restore the testimonial
+  sections in `build/pages/home.html` + `success-stories.html`, re-add the nav (`build-menu.php`)
+  and footer (`footer.html`) links, redeploy.
+
+---
+
+## 10. Status
+
+**Done & verified live:** brand system, logos/favicon, all 12 pages, header/footer, mobile menu,
+LatePoint booking (renders + bookable), member portal/login, contact + waiver forms, newsletter
+band, SMTP (Gmail), readable white design across desktop + mobile. Demo content purged.
+
+**Open / optional (not blockers):**
+1. Reset the leaked Google OAuth **client secret** (security).
+2. **Omnisend** newsletter auto-sync (currently emails info@).
+3. **Automated referral rewards** — needs a paid plugin + customer accounts.
+4. Real **testimonials / photos / before-after videos** (placeholders currently hidden/used) and
+   **exact venue addresses** for the location links.
