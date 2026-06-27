@@ -194,6 +194,30 @@ band, SMTP (Gmail), readable white design across desktop + mobile. Demo content 
 
 ## 11. Changelog
 
+### 2026-06-27 — Minimalist refinement pass (mood-board alignment)
+Client wanted a more minimalist, peg-aligned feel (Rooted Heat Studio reference) and Instagram-only contact.
+
+- **Home hero** — replaced the light editorial split (image-in-card) with a full-bleed cinematic hero:
+  `.gv-hero--home` (gv-home-hero.webp bg, even dark navy overlay, **centered** headline + CTAs,
+  min-height 82vh). Now consistent with interior-page heroes + the dark minimalist peg. CSS in
+  `gv-brand.css` (`.gv-hero--home`, `.gv-hero__inner--center`).
+- **Nav trimmed** (`templates/header.html`) — removed Development, Success, Gallery (pages stay
+  published, reachable via footer/links). Nav = Home · About · Programs · FAQ · Contact · **Member
+  Login (person icon → /booking/)** · Book CTA. Login is icon-only on desktop, icon + label in the
+  mobile dropdown (`.gv-nav__login`, `.gv-nav__login-label`).
+- **Instagram only** — removed **all WhatsApp and Facebook** integrations. Every "WhatsApp Us" CTA →
+  "Message on Instagram" (`https://ig.me/m/gvbasketballl`); footer socials = Instagram only; footer
+  "WhatsApp" line → Instagram DM; contact page rebuilt to Instagram + Email (Lucide SVG icons,
+  dropped the ✆/✉/◎/f Unicode glyphs). Touched all pages + `build-functional.php` + `build-extras.php`.
+- **Full-bleed width** — `.ast-container{max-width:100%}` so all `.gv-section` backgrounds are true
+  edge-to-edge (verified section width == viewport).
+- **Newsletter gap** — the white strip under "Get Training Tips & Updates" was Elementor's default 20px
+  flex `gap` on the footer container; zeroed with `.elementor-location-footer .e-con{gap:0}` (now 0px,
+  band sits flush on the footer).
+- **Deploy** — `build/scripts/deploy-refine.php` (header + 8 marketing pages, with backups) + re-ran
+  idempotent `build-functional.php` (book/portal/contact) and `build-extras.php` (waiver + footer).
+  Flushed Elementor CSS + LiteSpeed. QA'd live desktop + mobile (headless browser) and via curl.
+
 ### 2026-06-27 — New AI image library deployed (all old photos replaced)
 Replaced every legacy photo across the site with a 16-image cinematic library (dark/moody, navy +
 orange, faces obscured) matching the brand mood board. Kept only the Phil Handy + Micah Lancaster

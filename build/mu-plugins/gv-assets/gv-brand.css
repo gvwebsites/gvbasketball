@@ -29,6 +29,9 @@
 /* ---------- Global background fix (Astra starter shipped a dark body) ---------- */
 html body{background:#ffffff!important;}
 body .elementor,body .ast-container,body #content,body #primary,body .site-content,body .entry-content{background:transparent;}
+/* Full-width content container so gv-section backgrounds are true full-bleed (gv-wrap caps inner width). */
+body .ast-container{max-width:100%!important;padding-left:0!important;padding-right:0!important;}
+body .site-content .ast-container,body #primary{margin-left:0;margin-right:0;}
 
 /* ---------- Base / resets within our scope ---------- */
 .gv-page{font-family:var(--gv-font-body);color:var(--gv-charcoal);line-height:1.65;font-size:17px;-webkit-font-smoothing:antialiased;background:#fff;}
@@ -90,6 +93,16 @@ body .elementor,body .ast-container,body #content,body #primary,body .site-conte
 .gv-hero .gv-lead{color:#c6d2e8;font-size:1.2rem;margin-top:20px;}
 .gv-hero__rule{width:64px;height:5px;background:var(--gv-orange);border-radius:3px;margin:0 0 26px;}
 @media(max-width:782px){.gv-hero__inner{padding:84px 0 72px;}}
+
+/* Home hero — full-bleed cinematic photo, even dark overlay, centered content */
+.gv-hero--home{min-height:82vh;display:flex;align-items:center;}
+.gv-hero--home .gv-wrap{width:100%;}
+.gv-hero--home .gv-hero__bg{opacity:.62;}
+.gv-hero--home .gv-hero__overlay{background:linear-gradient(180deg,rgba(2,31,81,.62) 0%,rgba(2,31,81,.5) 45%,rgba(2,31,81,.72) 100%);}
+.gv-hero__inner--center{max-width:880px;margin:0 auto;text-align:center;padding:96px 0;}
+.gv-hero__inner--center .gv-hero__rule,.gv-hero__inner--center .gv-lead{margin-left:auto;margin-right:auto;}
+.gv-hero__inner--center .gv-btn-row{justify-content:center;}
+@media(max-width:782px){.gv-hero--home{min-height:78vh;}.gv-hero__inner--center{padding:72px 0;}}
 
 /* ---------- Grid ---------- */
 .gv-grid{display:grid;gap:26px;}
@@ -211,6 +224,10 @@ li.gv-navcta>a:hover{background:var(--gv-orange-dark)!important;}
 .gv-nav__menu a:hover{color:var(--gv-orange);}
 .gv-nav__cta,.gv-nav__menu a.gv-nav__cta{display:inline-flex;align-items:center;background:var(--gv-orange);color:#fff;padding:12px 22px;min-height:44px;border-radius:8px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;font-size:.84rem;}
 .gv-nav__cta:hover{background:var(--gv-orange-dark);color:#fff;}
+.gv-nav__login{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:8px;color:var(--gv-navy);transition:color .2s,background .2s;}
+.gv-nav__login svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;display:block;}
+.gv-nav__login:hover{color:var(--gv-orange);background:var(--gv-light);}
+.gv-nav__login-label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;}
 .gv-nav__toggle{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;}
 .gv-nav__toggle:focus-visible+.gv-nav__burger{outline:3px solid var(--gv-orange);outline-offset:3px;border-radius:6px;}
 .gv-nav__burger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:10px;min-width:44px;min-height:44px;align-items:center;justify-content:center;background:transparent;border:0;}
@@ -221,6 +238,9 @@ li.gv-navcta>a:hover{background:var(--gv-orange-dark)!important;}
   #gv-nav-toggle:checked ~ .gv-nav__menu{display:flex;}
   .gv-nav__menu a{padding:13px 0;width:100%;border-bottom:1px solid var(--gv-light);}
   .gv-nav__menu a.gv-nav__cta{margin-top:12px;text-align:center;border-bottom:0;}
+  .gv-nav__login{width:100%;height:auto;justify-content:flex-start;gap:10px;padding:13px 0;border-radius:0;border-bottom:1px solid var(--gv-light);font-weight:600;font-size:.94rem;}
+  .gv-nav__login:hover{background:transparent;}
+  .gv-nav__login-label{position:static;width:auto;height:auto;clip:auto;}
 }
 
 /* ---------- Newsletter band (footer, WPForms) ---------- */
@@ -244,6 +264,8 @@ li.gv-navcta>a:hover{background:var(--gv-orange-dark)!important;}
 .gv-waiverform-wrap .wpforms-form button[type=submit]{background:var(--gv-orange)!important;border-radius:8px!important;font-family:var(--gv-font-head)!important;font-weight:700!important;text-transform:uppercase;letter-spacing:.03em;}
 
 /* ---------- Footer (Elementor Theme Builder template, HTML widget) ---------- */
+/* Kill Elementor's default 20px flex gap between the newsletter band and footer (showed as a white strip). */
+.elementor-location-footer .e-con{gap:0!important;row-gap:0!important;}
 .gv-footer{background:var(--gv-navy-deep);color:#aeb9cf;font-family:var(--gv-font-body);}
 .gv-footer a{color:#cdd8ec;}
 .gv-footer a:hover{color:var(--gv-orange);}

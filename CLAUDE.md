@@ -89,8 +89,9 @@ colors/fonts), `apply-pages.php` (all marketing pages), `setup-latepoint.php`, `
 `/contact/` **2989** · `/waiver/` **3009**.
 
 ### Theme Builder
-- **GV Header** (3002): `build/templates/header.html` — `gv-nav` (logo 2977, nav, orange CTA, sticky,
-  CSS-only mobile menu). Replaces Astra's header.
+- **GV Header** (3002): `build/templates/header.html` — `gv-nav` (logo 2977; nav = Home·About·Programs·
+  FAQ·Contact; icon-only Member Login → `/booking/`; orange CTA; sticky; CSS-only mobile menu). Replaces
+  Astra's header. (Development/Success/Gallery pages are live but intentionally not in the nav.)
 - **GV Footer** (2991): `build/templates/footer.html` — newsletter band + 4 columns.
 - Nav menu "Primary Menu" → Astra `primary` location (rebuild with `build/scripts/build-menu.php`).
 
@@ -134,7 +135,10 @@ FluentSMTP + Gmail OAuth, sender `info@gvbasketball.com`. OAuth keys are wp-conf
 
 - Brand voice: disciplined, confident, developmental — fundamentals, work ethic, basketball IQ.
   Don't invent specific stats, named athletes, schools, or testimonials.
-- Real contacts: WhatsApp `https://wa.me/639178824466` · IG `@gvbasketballl` · FB `/GvBasketball` ·
-  Google reviews `https://g.page/r/CS7s3B4R726oEAE/review` · locations Makati & Ortigas.
+- On-site contact is **Instagram only** (client preference): IG `@gvbasketballl`, DM link
+  `https://ig.me/m/gvbasketballl` (used for every "Message on Instagram" CTA), plus `info@gvbasketball.com`.
+  **WhatsApp and Facebook were removed from the site** — do not re-add them. (Off-site refs still exist:
+  WhatsApp `+63 917 882 4466`, FB `/GvBasketball`, Google reviews `https://g.page/r/CS7s3B4R726oEAE/review`.)
+  Locations Makati & Ortigas.
 - Pricing is **never** shown publicly — "shared during the consultation." No online payments.
 - After meaningful changes, update `PROJECT_LOG.md` and commit (keep `.env` out of git).

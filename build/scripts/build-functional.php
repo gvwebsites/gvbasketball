@@ -7,7 +7,7 @@ $cta = <<<'HTML'
 <p class="gv-lead">Book a consultation and we'll map out the right path for your athlete.</p>
 <div class="gv-btn-row" style="justify-content:center;">
 <a class="gv-btn gv-btn--primary" href="/book-a-consultation/">Book a Consultation</a>
-<a class="gv-btn gv-btn--ghost" href="https://wa.me/639178824466" target="_blank" rel="noopener">WhatsApp Us</a>
+<a class="gv-btn gv-btn--ghost" href="https://ig.me/m/gvbasketballl" target="_blank" rel="noopener">Message on Instagram</a>
 </div></div></div></section></div>
 HTML;
 
@@ -84,7 +84,7 @@ $book_c = <<<'HTML'
 <div class="gv-step"><h3 class="gv-step__title">First Session &amp; Evaluation</h3><p>Your first paid training session includes a full player evaluation — development starts day one.</p></div>
 <div class="gv-step"><h3 class="gv-step__title">Your Plan</h3><p>A personalized development plan and your ongoing training schedule.</p></div>
 </div>
-<p class="gv-center gv-lead" style="margin:30px auto 0;">Prefer to chat first? <a href="https://wa.me/639178824466" target="_blank" rel="noopener" style="color:#fff;text-decoration:underline;">Message us on WhatsApp</a>.</p>
+<p class="gv-center gv-lead" style="margin:30px auto 0;">Prefer to chat first? <a href="https://ig.me/m/gvbasketballl" target="_blank" rel="noopener" style="color:#fff;text-decoration:underline;">Message us on Instagram</a>.</p>
 </div></section>
 </div>
 HTML;
@@ -113,7 +113,7 @@ $port_c = <<<'HTML'
 <span class="gv-eyebrow">Need Help?</span><h2 class="gv-section-title">We're Here For You</h2>
 <p class="gv-lead">Questions about your sessions or schedule? Reach out anytime.</p>
 <div class="gv-btn-row" style="justify-content:center;">
-<a class="gv-btn gv-btn--outline" href="https://wa.me/639178824466" target="_blank" rel="noopener">WhatsApp Us</a>
+<a class="gv-btn gv-btn--outline" href="https://ig.me/m/gvbasketballl" target="_blank" rel="noopener">Message on Instagram</a>
 <a class="gv-btn gv-btn--outline" href="/contact/">Contact</a>
 </div></div></div></section>
 </div>
@@ -136,17 +136,15 @@ $contact_a = <<<'HTML'
 </div></div></section>
 <section class="gv-section"><div class="gv-wrap">
 <div class="gv-contact-grid">
-<div class="gv-contact-item"><div class="gv-contact-item__ic">✆</div><div><b>WhatsApp</b><br><a href="https://wa.me/639178824466" target="_blank" rel="noopener">+63 917 882 4466</a></div></div>
-<div class="gv-contact-item"><div class="gv-contact-item__ic">✉</div><div><b>Email</b><br><a href="mailto:info@gvbasketball.com">info@gvbasketball.com</a></div></div>
-<div class="gv-contact-item"><div class="gv-contact-item__ic">◎</div><div><b>Instagram</b><br><a href="https://instagram.com/gvbasketballl" target="_blank" rel="noopener">@gvbasketballl</a></div></div>
-<div class="gv-contact-item"><div class="gv-contact-item__ic">f</div><div><b>Facebook</b><br><a href="https://facebook.com/GvBasketball" target="_blank" rel="noopener">GV Basketball</a></div></div>
+<div class="gv-contact-item"><div class="gv-contact-item__ic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg></div><div><b>Instagram</b><br><a href="https://ig.me/m/gvbasketballl" target="_blank" rel="noopener">Message @gvbasketballl</a></div></div>
+<div class="gv-contact-item"><div class="gv-contact-item__ic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></div><div><b>Email</b><br><a href="mailto:info@gvbasketball.com">info@gvbasketball.com</a></div></div>
 </div>
 </div></section>
 <section class="gv-section gv-section--light"><div class="gv-wrap">
 <div class="gv-head-block gv-center"><span class="gv-eyebrow">Where We Train</span><h2 class="gv-section-title">Our Locations</h2><p class="gv-lead">Sessions run in Makati and Ortigas, Metro Manila. Your exact venue is confirmed at your consultation.</p></div>
 <div class="gv-grid gv-grid--2">
-<div class="gv-card"><div class="gv-card__icon">◎</div><h3 class="gv-card__title">Makati</h3><p>Skills training in Makati, Metro Manila — convenient for families across the city.</p><div style="margin-top:14px;"><a class="gv-btn gv-btn--outline" href="https://www.google.com/maps/search/?api=1&query=Makati%2C%20Metro%20Manila" target="_blank" rel="noopener">View on Google Maps</a></div></div>
-<div class="gv-card"><div class="gv-card__icon">◎</div><h3 class="gv-card__title">Ortigas</h3><p>Skills training in Ortigas Center, Pasig — accessible from across Metro Manila.</p><div style="margin-top:14px;"><a class="gv-btn gv-btn--outline" href="https://www.google.com/maps/search/?api=1&query=Ortigas%20Center%2C%20Pasig" target="_blank" rel="noopener">View on Google Maps</a></div></div>
+<div class="gv-card"><div class="gv-card__icon"><svg viewBox="0 0 24 24"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg></div><h3 class="gv-card__title">Makati</h3><p>Skills training in Makati, Metro Manila — convenient for families across the city.</p><div style="margin-top:14px;"><a class="gv-btn gv-btn--outline" href="https://www.google.com/maps/search/?api=1&query=Makati%2C%20Metro%20Manila" target="_blank" rel="noopener">View on Google Maps</a></div></div>
+<div class="gv-card"><div class="gv-card__icon"><svg viewBox="0 0 24 24"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg></div><h3 class="gv-card__title">Ortigas</h3><p>Skills training in Ortigas Center, Pasig — accessible from across Metro Manila.</p><div style="margin-top:14px;"><a class="gv-btn gv-btn--outline" href="https://www.google.com/maps/search/?api=1&query=Ortigas%20Center%2C%20Pasig" target="_blank" rel="noopener">View on Google Maps</a></div></div>
 </div>
 </div></section>
 <section class="gv-section" style="padding-bottom:14px;"><div class="gv-wrap">
