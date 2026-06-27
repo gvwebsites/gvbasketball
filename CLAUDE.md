@@ -1,7 +1,12 @@
 # CLAUDE.md — GV Basketball site
 
-Operational guide for updating **https://gvbasketball.com** (WordPress on Hostinger). For full
-background see [`PROJECT_LOG.md`](PROJECT_LOG.md). **Edit source in `build/`, then deploy over SSH.**
+Operational guide for updating **https://gvbasketball.com** (WordPress on Hostinger). **Edit source in
+`build/`, then deploy over SSH.**
+
+**Docs map:**
+- [`PROJECT_LOG.md`](PROJECT_LOG.md) — technical build log + changelog (source of truth for how it's built).
+- [`PROGRESS_LOG.md`](PROGRESS_LOG.md) — plain-language progress summary for the client.
+- [`docs/`](docs/) — working handoffs for upcoming work (e.g. `HANDOFF-member-profile.md`).
 
 ---
 
