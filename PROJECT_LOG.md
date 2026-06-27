@@ -72,7 +72,7 @@ The Astra "photography" starter shipped a **dark/black body**. `gv-brand.css` fo
 
 | Page | Slug | Post ID | Notes |
 |---|---|---|---|
-| Home | `/` | 2887 | front page |
+| Home | `/` | 2887 | front page · **minimalist revamp** (2026-06-27): lean 5-section, light/airy, editorial hero |
 | About Coach Gino | `/about/` | 26 | |
 | Training Programs | `/training-programs/` | 2981 | |
 | Athlete Development System | `/athlete-development/` | 2984 | |
@@ -186,3 +186,35 @@ band, SMTP (Gmail), readable white design across desktop + mobile. Demo content 
 3. **Automated referral rewards** — needs a paid plugin + customer accounts.
 4. Real **testimonials / photos / before-after videos** (placeholders currently hidden/used) and
    **exact venue addresses** for the location links.
+5. **New home hero photo** — the editorial hero currently shows a branded navy fallback block. When
+   a photo is supplied, upload to WP media and replace `.gv-hero__media-fallback` in
+   `build/pages/home.html` with an `<img>`, then redeploy.
+
+---
+
+## 11. Changelog
+
+### 2026-06-27 — Home page minimalist revamp
+Client brief: rethink the home page as **minimalist** (peg: `rootedheatstudio.rezerv.co`), drop the
+current GV-shot images, stay on-brand. Decisions: image-led with a *new* hero photo (client to
+supply), keep the Phil Handy / Micah Lancaster mentor headshots, lean **5-section** layout, and a
+**light & airy** white-dominant palette.
+
+- **`build/pages/home.html`** — full rewrite. New structure: (1) editorial split hero (white, big
+  Bebas headline + 2 CTAs, photo on the right with a branded navy fallback until the real image
+  lands), (2) positioning + "Mentored by NBA Skills Coaches" with the two mentor cards, (3) 3-up
+  programs preview (concise — full detail lives on `/training-programs/`), (4) the 6-step Athlete
+  Development System, (5) final CTA. Dropped the old stats strip, who-we-are split, standalone
+  mentors grid, and the 4-up trust grid.
+- **`build/mu-plugins/gv-assets/gv-brand.css`** — additive only (no existing components changed):
+  `.gv-hero--light` (white editorial hero, 2-col → 1-col ≤860px), `.gv-hero__media` /
+  `.gv-hero__media-fallback` (rounded media frame + branded placeholder), `.gv-section--airy`,
+  `.gv-narrow`, and a `.gv-program__body p` rule for the slimmer program cards.
+- **Mobile responsiveness** — verified all 8 marketing pages (with header + footer) at 390px: zero
+  horizontal overflow, burger nav collapses, all grids and the footer stack to one column.
+  Confirmed on the live site (desktop 1280px + mobile 390px) after deploy.
+- **Deploy** — `gv-brand.css` scp'd; `home.html` applied via `gv_set_page_html(2887, …)`; Elementor
+  CSS + LiteSpeed caches purged. Targeted pre-change backups in `~/backups/` (`gv-brand.css.bak-*`,
+  `home-2887-content.bak-*.html`, `home-2887-elementor_data.bak-*.json`). Note: `wp db export`
+  (mysqldump) errors on this host — use targeted file/post backups (the baseline full backup
+  `gvbasketball-20260627-015018/` remains the safety net).

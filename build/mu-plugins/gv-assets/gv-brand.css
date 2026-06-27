@@ -264,6 +264,29 @@ li.gv-navcta>a:hover{background:var(--gv-orange-dark)!important;}
 .gv-bookform-wrap button[type=submit],.gv-bookform-wrap .latepoint-btn-primary,.gv-bookform-wrap .latepoint-btn.latepoint-btn-primary,.gv-dash-wrap button[type=submit],.gv-dash-wrap .latepoint-btn-primary{background:var(--gv-orange)!important;border-color:var(--gv-orange)!important;color:#fff!important;}
 .gv-bookform-wrap button[type=submit]:hover,.gv-dash-wrap button[type=submit]:hover{background:var(--gv-orange-dark)!important;}
 
+/* ---------- Home: light/airy editorial hero ---------- */
+.gv-hero--light{background:#fff;color:var(--gv-charcoal);}
+.gv-hero--light .gv-hero__inner{display:grid;grid-template-columns:1.05fr .95fr;gap:64px;align-items:center;max-width:none;padding:104px 0 96px;}
+.gv-hero--light h1{color:var(--gv-navy);}
+.gv-hero--light .gv-lead{color:var(--gv-steel);}
+.gv-hero__copy{max-width:560px;}
+.gv-hero__media{display:flex;}
+.gv-hero__media img{width:100%;border-radius:var(--gv-radius-lg);box-shadow:var(--gv-shadow);object-fit:cover;}
+.gv-hero__media-fallback{position:relative;width:100%;min-height:460px;border-radius:var(--gv-radius-lg);background:linear-gradient(150deg,var(--gv-navy) 0%,var(--gv-navy-deep) 100%);box-shadow:var(--gv-shadow);overflow:hidden;display:flex;align-items:flex-end;padding:38px;}
+.gv-hero__media-fallback::after{content:"";position:absolute;right:-50px;top:-50px;width:220px;height:220px;background:radial-gradient(circle,rgba(244,123,32,.4),transparent 70%);}
+.gv-hero__media-fallback .gv-hero__rule{margin:0 0 14px;}
+.gv-hero__media-badge{position:relative;color:#fff;font-family:var(--gv-font-display);font-size:2.2rem;line-height:.92;letter-spacing:1px;text-transform:uppercase;}
+@media(max-width:860px){
+  .gv-hero--light .gv-hero__inner{grid-template-columns:1fr;gap:36px;padding:72px 0 60px;}
+  .gv-hero__media-fallback{min-height:300px;}
+}
+
+/* ---------- Home: airy section + helpers ---------- */
+.gv-section--airy{padding:112px 0;}
+@media(max-width:782px){.gv-section--airy{padding:72px 0;}}
+.gv-narrow{max-width:840px;margin-left:auto;margin-right:auto;}
+.gv-program__body p{margin:0;color:var(--gv-charcoal);}
+
 /* ---------- Utility ---------- */
 .gv-mt-0{margin-top:0;}
 .gv-orange{color:var(--gv-orange);}
