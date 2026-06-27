@@ -56,7 +56,7 @@ echo "waiver_id=$waiver_id\n";
 $waiver_page = gv_ensure_page('waiver', 'Player Waiver & Consent');
 $waiver_a = <<<'HTML'
 <div class="gv-page">
-<section class="gv-hero"><div class="gv-hero__bg" style="background-image:url('https://gvbasketball.com/wp-content/uploads/2025/07/GV-Basketball-Hero.jpeg');"></div><div class="gv-hero__overlay"></div>
+<section class="gv-hero"><div class="gv-hero__bg" style="background-image:url('https://gvbasketball.com/wp-content/uploads/2026/06/gv-about-hero.webp');"></div><div class="gv-hero__overlay"></div>
 <div class="gv-wrap"><div class="gv-hero__inner" style="padding:88px 0 60px;max-width:760px;">
 <span class="gv-eyebrow">Before You Train</span>
 <h1 class="gv-h1">Player Waiver &amp; Consent</h1>
@@ -72,7 +72,7 @@ $waiver_cta = <<<'HTML'
 <div class="gv-page"><section class="gv-section gv-section--tight"><div class="gv-wrap"><div class="gv-cta">
 <span class="gv-eyebrow">Questions?</span><h2 class="gv-section-title">We're Here To Help</h2>
 <p class="gv-lead">Not sure about anything on the form? Reach out before your first session.</p>
-<div class="gv-btn-row" style="justify-content:center;"><a class="gv-btn gv-btn--primary" href="https://wa.me/639178824466" target="_blank" rel="noopener">WhatsApp Us</a><a class="gv-btn gv-btn--ghost" href="/contact/">Contact</a></div>
+<div class="gv-btn-row" style="justify-content:center;"><a class="gv-btn gv-btn--primary" href="https://ig.me/m/gvbasketballl" target="_blank" rel="noopener">Message on Instagram</a><a class="gv-btn gv-btn--ghost" href="/contact/">Contact</a></div>
 </div></div></section></div>
 HTML;
 echo gv_set_page_blocks($waiver_page, array(

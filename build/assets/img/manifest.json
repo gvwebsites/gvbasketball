@@ -1,0 +1,24 @@
+{
+  "model": "gpt-image-1",
+  "size": "1536x1024",
+  "out_dir": "build/assets/img/source",
+  "style": "Cinematic basketball photography for a premium athletic training brand. Dark, moody, editorial. Deep navy (#021F51) and charcoal shadows with dramatic directional gym lighting and a single warm orange (#F47B20) accent highlight. High contrast, shallow depth of field, fine film grain, professional sports-campaign look. Faces obscured, turned away, in shadow, or motion-blurred. No identifiable individuals. No text, no logos, no watermarks, no brand marks on apparel.",
+  "images": [
+    { "file": "home-hero", "subject": "A young basketball player mid-dribble, low dramatic camera angle, hard side light, dust and atmosphere in the air." },
+    { "file": "about-hero", "subject": "An empty professional indoor basketball court, polished hardwood, moody overhead lighting, a single spotlight pool on the floor." },
+    { "file": "programs-hero", "subject": "A basketball resting on hardwood beside bright orange training cones, top-down view, long dramatic shadows." },
+    { "file": "development-hero", "subject": "A shooting-form silhouette against a bright window backlight, arm extended at the moment of release." },
+    { "file": "success-hero", "subject": "Extreme close-up of hands gripping a worn leather basketball, sweat, tension, rim light along the fingers." },
+    { "file": "faq-hero", "subject": "A tactics whiteboard covered in X's-and-O's basketball play diagrams, a basketball on a rack softly out of focus behind it." },
+    { "file": "contact-hero", "subject": "A basketball court sideline at dusk: a bench, a gym bag, and a ball, with late warm light streaming through high windows." },
+    { "file": "prog-private", "subject": "A one-on-one basketball training drill, the coach's shadow guiding a player, sense of motion, intimate framing." },
+    { "file": "prog-group", "subject": "A line of basketball players running a footwork drill, strong depth of field, synchronized motion." },
+    { "file": "prog-elite", "subject": "Conditioning and strength work near the basketball rim, dramatic backlight, silhouette and sweat." },
+    { "file": "dev-ballhandling", "subject": "A two-ball dribbling drill, heavy motion blur on the basketballs, focused low light." },
+    { "file": "dev-footwork", "subject": "An agility ladder and cone drill on hardwood, low camera angle, fast motion." },
+    { "file": "dev-film", "subject": "A hand pointing at a clipboard or whiteboard breakdown of a basketball play, focused desk light." },
+    { "file": "gallery-1", "subject": "A basketball passing through a net, frozen mid-motion, backlit, water droplets in the air." },
+    { "file": "gallery-2", "subject": "Basketball sneakers planting hard on hardwood, low angle, energetic sense of a sharp cut." },
+    { "file": "gallery-3", "subject": "Empty bleachers and a basketball court seen from a high corner, moody, a single pool of light." }
+  ]
+}

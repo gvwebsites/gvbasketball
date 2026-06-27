@@ -194,6 +194,86 @@ band, SMTP (Gmail), readable white design across desktop + mobile. Demo content 
 
 ## 11. Changelog
 
+### 2026-06-27 — Minimalist refinement pass (mood-board alignment)
+Client wanted a more minimalist, peg-aligned feel (Rooted Heat Studio reference) and Instagram-only contact.
+
+- **Home hero** — replaced the light editorial split (image-in-card) with a full-bleed cinematic hero:
+  `.gv-hero--home` (gv-home-hero.webp bg, even dark navy overlay, **centered** headline + CTAs,
+  min-height 82vh). Now consistent with interior-page heroes + the dark minimalist peg. CSS in
+  `gv-brand.css` (`.gv-hero--home`, `.gv-hero__inner--center`).
+- **Nav trimmed** (`templates/header.html`) — removed Development, Success, Gallery (pages stay
+  published, reachable via footer/links). Nav = Home · About · Programs · FAQ · Contact · **Member
+  Login (person icon → /booking/)** · Book CTA. Login is icon-only on desktop, icon + label in the
+  mobile dropdown (`.gv-nav__login`, `.gv-nav__login-label`).
+- **Instagram only** — removed **all WhatsApp and Facebook** integrations. Every "WhatsApp Us" CTA →
+  "Message on Instagram" (`https://ig.me/m/gvbasketballl`); footer socials = Instagram only; footer
+  "WhatsApp" line → Instagram DM; contact page rebuilt to Instagram + Email (Lucide SVG icons,
+  dropped the ✆/✉/◎/f Unicode glyphs). Touched all pages + `build-functional.php` + `build-extras.php`.
+- **Full-bleed width** — `.ast-container{max-width:100%}` so all `.gv-section` backgrounds are true
+  edge-to-edge (verified section width == viewport).
+- **Newsletter gap** — the white strip under "Get Training Tips & Updates" was Elementor's default 20px
+  flex `gap` on the footer container; zeroed with `.elementor-location-footer .e-con{gap:0}` (now 0px,
+  band sits flush on the footer).
+- **Deploy** — `build/scripts/deploy-refine.php` (header + 8 marketing pages, with backups) + re-ran
+  idempotent `build-functional.php` (book/portal/contact) and `build-extras.php` (waiver + footer).
+  Flushed Elementor CSS + LiteSpeed. QA'd live desktop + mobile (headless browser) and via curl.
+
+### 2026-06-27 — New AI image library deployed (all old photos replaced)
+Replaced every legacy photo across the site with a 16-image cinematic library (dark/moody, navy +
+orange, faces obscured) matching the brand mood board. Kept only the Phil Handy + Micah Lancaster
+headshots and the SVG logos. Images were generated externally, mapped to slots, optimized, and wired
+in per section (not a blanket swap — each section gets a contextually correct image).
+
+- **Pipeline**: 16 PNGs (`assets/`) → `cwebp -q 80` resize (heroes 1600w, content/gallery 1100w) →
+  `build/assets/img/web/*.webp` (≈790 KB total, down from ~30 MB). Uploaded via `wp media import
+  --user=1` to `wp-content/uploads/2026/06/gv-*.webp` (attachment IDs **3023–3038**).
+- **Slot map** (source → slot): dribble→home-hero · court→about-hero · ball-and-cones→programs-hero ·
+  shooting-form→development-hero · sweat-fingers→success-hero · tactics-whiteboard→faq-hero ·
+  gym-bag→contact-hero · one-on-one→private · footwork-drill→group · conditioning→elite ·
+  agility-ladder→footwork · two-ball→ballhandling · hand-whiteboard→film · through-net→gallery ·
+  sneaker→gallery · empty-bleachers→court/gallery-hero.
+- **Pages updated** (per-section imagery): `home` (hero `<img>` replaces the fallback panel), `about`,
+  `training-programs`, `athlete-development` (6 step images), `success-stories`, `faq`, `gallery`
+  (rebuilt as a 6-tile non-repeating grid), `testimonials` (hidden draft, content refreshed).
+  Functional pages (`book` 2982, `booking` 2983, `contact` 2989, `waiver` 3009) hero backgrounds
+  swapped in-place via recursive str_replace on `_elementor_data` (see `build/scripts/deploy-images.php`).
+- **Old media deleted** (`wp post delete --force`): 2917 (GV-Basketball-Hero), 2935 (clinic jpg),
+  2936 (GV.png), 2937 (GV2.png), 2938 (GV2.jpeg). Home page `post_content` (stale pre-revamp copy
+  Elementor never renders) re-synced to remove dangling refs. **Kept**: 2929 Phil, 2930 Micah, logos
+  2977/2978/2979, favicon 2976. `GV_Logo_Main.png` (2949) left in place — referenced by `astra-settings`
+  (the Astra logo slot the GV Header SVG overrides; not rendered on any live page).
+- **Deploy**: `build/scripts/deploy-images.php` (`wp eval-file`) with per-target backups to `~/backups/`,
+  then `wp elementor flush-css && wp litespeed-purge all`. QA'd live with a headless browser (desktop +
+  mobile) and `curl`; all new images return 200, no old URLs remain on any page.
+
+### 2026-06-27 — Full frontend revamp (icons, footer socials, a11y, forms)
+Client brief: professional brand-aligned revamp — fix missing footer FB/IG icons, kill amateur
+Unicode "icons", remove placeholder/"coming soon" content, improve contrast/spacing/mobile/forms,
+and replace all old imagery with a new AI-generated library (keep only Phil Handy + Micah Lancaster
+headshots + SVG logos). Imagery is generated via the `codex` CLI (OpenAI image model).
+
+- **`build/templates/footer.html`** — replaced text social labels (`IG`/`f`/`WA`) with real brand
+  SVG icons (Instagram, Facebook, WhatsApp; Simple Icons) + `aria-label`s. This was the "missing FB/IG
+  icons" issue. IG handle `gvbasketballl` (3 L's) left intact (correct).
+- **`build/mu-plugins/gv-assets/gv-brand.css`** — SVG icon system (`.gv-card__icon svg`, `.gv-ic`,
+  `.gv-quote__stars svg`, `.gv-contact-item__ic svg`, `.gv-footer__socials a svg`, `.gv-program__ic`);
+  global `:focus-visible` rings; `prefers-reduced-motion` guard; mobile form inputs (16px / 48px
+  targets / focus rings) for contact + waiver; keyboard-accessible mobile nav toggle; nav CTA ≥44px;
+  footer fine-print contrast nudge (`#7e8aa6`→`#9aa8c4`).
+- **Pages** — replaced every Unicode glyph with Lucide SVG icons: `about` (6), `athlete-development`
+  (3), `success-stories` (6 + added icons to 6 milestone cards), `home`/`training-programs` (added
+  program-head icons + Makati/Ortigas map-pins). `testimonials` (hidden): removed fake video cards,
+  stars → SVG. `success-stories`: "Featured Stories Coming Soon" → confident "Follow The Journey"
+  (IG + FB). Icon reference: `build/assets/icons.html`.
+- **Imagery (in progress)** — prompts in `build/assets/img/PROMPTS.md` + `manifest.json`; generator
+  script `/tmp/gvb_generate_images.py`. **Blocked**: OpenAI Platform API `billing_hard_limit_reached`.
+  Old hero/section/gallery images still live until generation succeeds, then swap + remove old media
+  (GV.png 2936, GV2.png 2937/2938, clinic jpg, hero 2917) and rebuild `gallery.html`.
+- **Deploy** — `build/scripts/deploy-revamp.php` (per-page `_elementor_data`/content backups to
+  `~/backups/`, then `gv_set_page_html` for 2887/26/2981/2984/2985 + `gv_set_theme_part_blocks` footer
+  w/ newsletter 3005 + conditions). CSS scp'd; Elementor CSS + LiteSpeed purged. Verified live: 0
+  Unicode glyphs, footer SVG socials on all pages, no "coming soon".
+
 ### 2026-06-27 — Home page minimalist revamp
 Client brief: rethink the home page as **minimalist** (peg: `rootedheatstudio.rezerv.co`), drop the
 current GV-shot images, stay on-brand. Decisions: image-led with a *new* hero photo (client to
