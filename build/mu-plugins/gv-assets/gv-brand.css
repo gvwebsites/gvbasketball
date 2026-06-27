@@ -57,7 +57,8 @@ body .site-content .ast-container,body #primary{margin-left:0;margin-right:0;}
 .gv-h1{font-family:var(--gv-font-display);font-size:clamp(2.8rem,6vw,5rem);line-height:.92;letter-spacing:1px;text-transform:uppercase;margin:0;}
 .gv-eyebrow{font-family:var(--gv-font-head);font-weight:700;font-size:.82rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gv-orange);margin:0 0 14px;display:inline-block;}
 .gv-section-title{font-family:var(--gv-font-display);font-size:clamp(2.1rem,4.4vw,3.4rem);line-height:.98;letter-spacing:.5px;text-transform:uppercase;color:var(--gv-navy);margin:0 0 18px;}
-.gv-subhead{font-family:var(--gv-font-head);font-weight:600;font-size:clamp(1.05rem,2vw,1.35rem);color:var(--gv-charcoal);margin:0 0 16px;}
+.gv-subhead{font-family:var(--gv-font-head);font-weight:600;font-size:clamp(1.05rem,2vw,1.35rem);color:var(--gv-charcoal);margin:30px 0 14px;}
+.gv-subhead:first-of-type{margin-top:0;}
 .gv-lead{font-size:1.12rem;color:var(--gv-steel);max-width:62ch;}
 .gv-section--navy .gv-lead,.gv-section--deep .gv-lead,.gv-section--charcoal .gv-lead{color:#aeb9cf;}
 .gv-center{text-align:center;}
@@ -163,7 +164,8 @@ body .site-content .ast-container,body #primary{margin-left:0;margin-right:0;}
 /* ---------- Mentor / people ---------- */
 .gv-person{background:#fff;border-radius:var(--gv-radius-lg);overflow:hidden;box-shadow:var(--gv-shadow-sm);border:1px solid var(--gv-light);height:100%;}
 .gv-person__img{aspect-ratio:4/3;object-fit:cover;width:100%;}
-.gv-person__body{padding:22px 24px;}
+.gv-person__body{padding:22px 24px;color:var(--gv-charcoal);}
+.gv-person__body p{color:var(--gv-charcoal);}
 .gv-person__name{font-family:var(--gv-font-head);font-weight:700;color:var(--gv-navy);font-size:1.2rem;margin:0 0 4px;}
 .gv-person__role{color:var(--gv-orange);font-weight:600;font-size:.9rem;margin:0 0 10px;}
 
@@ -293,8 +295,12 @@ li.gv-navcta>a:hover{background:var(--gv-orange-dark)!important;}
 .gv-bookform-wrap>div,.gv-bookform-wrap .latepoint-booking-form-w,.gv-bookform-wrap form{max-width:1000px;margin-left:auto;margin-right:auto;}
 .gv-dash-wrap{background:var(--gv-light);padding:56px 20px;min-height:46vh;}
 .gv-dash-wrap>div,.gv-dash-wrap .latepoint-customer-dashboard-w{max-width:1040px;margin-left:auto;margin-right:auto;}
-.gv-contactform-wrap{max-width:640px;margin:0 auto;padding:8px 20px 80px;}
-.gv-contactform-wrap .wpforms-container{margin:0;}
+/* Widget shrink-wraps in the Elementor flex container — force full width, then cap the inner form. */
+.gv-contactform-wrap{width:100%;margin:0 auto;padding:8px 20px 80px;}
+.gv-contactform-wrap .wpforms-container{width:100%;max-width:760px;margin:0 auto;}
+/* WPForms caps "medium" fields ~60% wide — make every field + input fill the form. */
+.gv-contactform-wrap .wpforms-field,.gv-contactform-wrap .wpforms-field-medium,.gv-contactform-wrap .wpforms-field-large,.gv-contactform-wrap .wpforms-field-small,.gv-contactform-wrap .wpforms-field-row{width:100%!important;max-width:100%!important;}
+.gv-contactform-wrap .wpforms-form input,.gv-contactform-wrap .wpforms-form textarea,.gv-contactform-wrap .wpforms-form select{width:100%!important;max-width:100%!important;}
 .gv-contactform-wrap .wpforms-form input[type=text],.gv-contactform-wrap .wpforms-form input[type=email],.gv-contactform-wrap .wpforms-form input[type=tel],.gv-contactform-wrap .wpforms-form textarea{border-radius:8px!important;border:1px solid var(--gv-light)!important;}
 .gv-contactform-wrap .wpforms-form button[type=submit]{background:var(--gv-orange)!important;border-radius:8px!important;font-family:var(--gv-font-head)!important;font-weight:700!important;text-transform:uppercase;letter-spacing:.03em;}
 .gv-map iframe{width:100%;height:280px;border:0;border-radius:var(--gv-radius);display:block;}

@@ -148,7 +148,7 @@ $contact_a = <<<'HTML'
 </div>
 </div></section>
 <section class="gv-section" style="padding-bottom:14px;"><div class="gv-wrap">
-<div class="gv-head-block gv-center" style="margin-bottom:0;"><span class="gv-eyebrow">Send a Message</span><h2 class="gv-section-title">Drop Us a Line</h2></div>
+<div class="gv-head-block gv-center" style="margin-bottom:0;"><span class="gv-eyebrow">Send a Message</span><h2 class="gv-section-title">Contact Us</h2></div>
 </div></section>
 </div>
 HTML;
