@@ -56,7 +56,7 @@ echo "waiver_id=$waiver_id\n";
 $waiver_page = gv_ensure_page('waiver', 'Player Waiver & Consent');
 $waiver_a = <<<'HTML'
 <div class="gv-page">
-<section class="gv-hero"><div class="gv-hero__bg" style="background-image:url('https://gvbasketball.com/wp-content/uploads/2025/07/GV-Basketball-Hero.jpeg');"></div><div class="gv-hero__overlay"></div>
+<section class="gv-hero"><div class="gv-hero__bg" style="background-image:url('https://gvbasketball.com/wp-content/uploads/2026/06/gv-about-hero.webp');"></div><div class="gv-hero__overlay"></div>
 <div class="gv-wrap"><div class="gv-hero__inner" style="padding:88px 0 60px;max-width:760px;">
 <span class="gv-eyebrow">Before You Train</span>
 <h1 class="gv-h1">Player Waiver &amp; Consent</h1>

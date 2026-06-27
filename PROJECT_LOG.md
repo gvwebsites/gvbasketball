@@ -194,6 +194,34 @@ band, SMTP (Gmail), readable white design across desktop + mobile. Demo content 
 
 ## 11. Changelog
 
+### 2026-06-27 — New AI image library deployed (all old photos replaced)
+Replaced every legacy photo across the site with a 16-image cinematic library (dark/moody, navy +
+orange, faces obscured) matching the brand mood board. Kept only the Phil Handy + Micah Lancaster
+headshots and the SVG logos. Images were generated externally, mapped to slots, optimized, and wired
+in per section (not a blanket swap — each section gets a contextually correct image).
+
+- **Pipeline**: 16 PNGs (`assets/`) → `cwebp -q 80` resize (heroes 1600w, content/gallery 1100w) →
+  `build/assets/img/web/*.webp` (≈790 KB total, down from ~30 MB). Uploaded via `wp media import
+  --user=1` to `wp-content/uploads/2026/06/gv-*.webp` (attachment IDs **3023–3038**).
+- **Slot map** (source → slot): dribble→home-hero · court→about-hero · ball-and-cones→programs-hero ·
+  shooting-form→development-hero · sweat-fingers→success-hero · tactics-whiteboard→faq-hero ·
+  gym-bag→contact-hero · one-on-one→private · footwork-drill→group · conditioning→elite ·
+  agility-ladder→footwork · two-ball→ballhandling · hand-whiteboard→film · through-net→gallery ·
+  sneaker→gallery · empty-bleachers→court/gallery-hero.
+- **Pages updated** (per-section imagery): `home` (hero `<img>` replaces the fallback panel), `about`,
+  `training-programs`, `athlete-development` (6 step images), `success-stories`, `faq`, `gallery`
+  (rebuilt as a 6-tile non-repeating grid), `testimonials` (hidden draft, content refreshed).
+  Functional pages (`book` 2982, `booking` 2983, `contact` 2989, `waiver` 3009) hero backgrounds
+  swapped in-place via recursive str_replace on `_elementor_data` (see `build/scripts/deploy-images.php`).
+- **Old media deleted** (`wp post delete --force`): 2917 (GV-Basketball-Hero), 2935 (clinic jpg),
+  2936 (GV.png), 2937 (GV2.png), 2938 (GV2.jpeg). Home page `post_content` (stale pre-revamp copy
+  Elementor never renders) re-synced to remove dangling refs. **Kept**: 2929 Phil, 2930 Micah, logos
+  2977/2978/2979, favicon 2976. `GV_Logo_Main.png` (2949) left in place — referenced by `astra-settings`
+  (the Astra logo slot the GV Header SVG overrides; not rendered on any live page).
+- **Deploy**: `build/scripts/deploy-images.php` (`wp eval-file`) with per-target backups to `~/backups/`,
+  then `wp elementor flush-css && wp litespeed-purge all`. QA'd live with a headless browser (desktop +
+  mobile) and `curl`; all new images return 200, no old URLs remain on any page.
+
 ### 2026-06-27 — Full frontend revamp (icons, footer socials, a11y, forms)
 Client brief: professional brand-aligned revamp — fix missing footer FB/IG icons, kill amateur
 Unicode "icons", remove placeholder/"coming soon" content, improve contrast/spacing/mobile/forms,
