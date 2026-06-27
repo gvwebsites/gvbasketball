@@ -194,6 +194,34 @@ band, SMTP (Gmail), readable white design across desktop + mobile. Demo content 
 
 ## 11. Changelog
 
+### 2026-06-27 — Full frontend revamp (icons, footer socials, a11y, forms)
+Client brief: professional brand-aligned revamp — fix missing footer FB/IG icons, kill amateur
+Unicode "icons", remove placeholder/"coming soon" content, improve contrast/spacing/mobile/forms,
+and replace all old imagery with a new AI-generated library (keep only Phil Handy + Micah Lancaster
+headshots + SVG logos). Imagery is generated via the `codex` CLI (OpenAI image model).
+
+- **`build/templates/footer.html`** — replaced text social labels (`IG`/`f`/`WA`) with real brand
+  SVG icons (Instagram, Facebook, WhatsApp; Simple Icons) + `aria-label`s. This was the "missing FB/IG
+  icons" issue. IG handle `gvbasketballl` (3 L's) left intact (correct).
+- **`build/mu-plugins/gv-assets/gv-brand.css`** — SVG icon system (`.gv-card__icon svg`, `.gv-ic`,
+  `.gv-quote__stars svg`, `.gv-contact-item__ic svg`, `.gv-footer__socials a svg`, `.gv-program__ic`);
+  global `:focus-visible` rings; `prefers-reduced-motion` guard; mobile form inputs (16px / 48px
+  targets / focus rings) for contact + waiver; keyboard-accessible mobile nav toggle; nav CTA ≥44px;
+  footer fine-print contrast nudge (`#7e8aa6`→`#9aa8c4`).
+- **Pages** — replaced every Unicode glyph with Lucide SVG icons: `about` (6), `athlete-development`
+  (3), `success-stories` (6 + added icons to 6 milestone cards), `home`/`training-programs` (added
+  program-head icons + Makati/Ortigas map-pins). `testimonials` (hidden): removed fake video cards,
+  stars → SVG. `success-stories`: "Featured Stories Coming Soon" → confident "Follow The Journey"
+  (IG + FB). Icon reference: `build/assets/icons.html`.
+- **Imagery (in progress)** — prompts in `build/assets/img/PROMPTS.md` + `manifest.json`; generator
+  script `/tmp/gvb_generate_images.py`. **Blocked**: OpenAI Platform API `billing_hard_limit_reached`.
+  Old hero/section/gallery images still live until generation succeeds, then swap + remove old media
+  (GV.png 2936, GV2.png 2937/2938, clinic jpg, hero 2917) and rebuild `gallery.html`.
+- **Deploy** — `build/scripts/deploy-revamp.php` (per-page `_elementor_data`/content backups to
+  `~/backups/`, then `gv_set_page_html` for 2887/26/2981/2984/2985 + `gv_set_theme_part_blocks` footer
+  w/ newsletter 3005 + conditions). CSS scp'd; Elementor CSS + LiteSpeed purged. Verified live: 0
+  Unicode glyphs, footer SVG socials on all pages, no "coming soon".
+
 ### 2026-06-27 — Home page minimalist revamp
 Client brief: rethink the home page as **minimalist** (peg: `rootedheatstudio.rezerv.co`), drop the
 current GV-shot images, stay on-brand. Decisions: image-led with a *new* hero photo (client to
