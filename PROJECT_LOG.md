@@ -130,6 +130,27 @@ Config created by [`build/scripts/setup-latepoint.php`](build/scripts/setup-late
   off, `accent_color=#F47B20`, support text → WhatsApp +63 917 882 4466.
 - **Shortcodes:** `[latepoint_book_form]`, `[latepoint_customer_dashboard]`, `[latepoint_customer_login]`.
 
+### Member login & signup (passwordless email OTP)
+
+Configured by [`build/scripts/enable-member-auth.php`](build/scripts/enable-member-auth.php).
+The nav "Member Login" → `/booking/` (2983) renders `[latepoint_customer_dashboard]`, which shows
+the login/signup form when logged out. Auth is **passwordless one-time code over email**, so every
+signup has a verified email address. LatePoint settings set:
+
+| Setting | Value | Why |
+|---|---|---|
+| `selected_customer_authentication_method` | `otp` | Code-only auth (no passwords) |
+| `default_customer_authentication_method` | `otp` | OTP shown by default |
+| `selected_customer_authentication_field_type` | `email` | Verify via email |
+| `notifications_email_processor` | `wp_mail` | **Required** — without it LatePoint email notifications (incl. OTP) are disabled and OTP send fails silently |
+| `page_url_customer_dashboard` / `page_url_customer_login` | `/booking/` | Post-login redirects land on the GV-styled page, not the bare `/customer-cabinet/` (2980) |
+
+Verified end-to-end: OTP send to `test@favor.church` returned `status=success` (active row in
+`wp_latepoint_customer_otp_codes`, code stored hashed), and `/booking/` renders `auth[via]=otp`
+with password fields hidden. Pre-change settings snapshot:
+`backups/latepoint_settings-pre-member-auth-2026-06-29.tsv`. Design spec:
+[`docs/superpowers/specs/2026-06-29-member-signup-verified-email-design.md`](docs/superpowers/specs/2026-06-29-member-signup-verified-email-design.md).
+
 ---
 
 ## 7. Transactional email — FluentSMTP + Gmail OAuth
@@ -193,6 +214,17 @@ band, SMTP (Gmail), readable white design across desktop + mobile. Demo content 
 ---
 
 ## 11. Changelog
+
+### 2026-06-29 — Member signup with verified email (passwordless OTP)
+
+Enabled LatePoint native customer auth as **passwordless email OTP** on `/booking/`
+([`build/scripts/enable-member-auth.php`](build/scripts/enable-member-auth.php)): members sign up /
+log in by entering an email and a 6-digit code sent to it, so every account is email-verified. Also
+set `notifications_email_processor=wp_mail` (LatePoint email notifications were off, which had been
+silently blocking OTP send) and pointed `page_url_customer_dashboard`/`page_url_customer_login` at
+`/booking/` so post-login lands on the branded page. Verified by sending an OTP to
+`test@favor.church` (success). No HTML/CSS/template changes. Note: `wp db export` fails on this host
+(mysqldump unavailable) — backed up the settings table to `backups/` instead.
 
 ### 2026-06-27 — Minimalist refinement pass (mood-board alignment)
 Client wanted a more minimalist, peg-aligned feel (Rooted Heat Studio reference) and Instagram-only contact.

@@ -1,0 +1,22 @@
+accent_color	#F47B20
+calendar_hidden_statuses	cancelled
+currency_iso_code	PHP
+currency_symbol_after	
+currency_symbol_before	₱
+default_booking_status	approved
+enable_payments_local	off
+is_database_seeded	1
+need_action_statuses	pending,payment_pending
+page_url_customer_dashboard	/customer-cabinet
+page_url_customer_login	/customer-cabinet
+selected_customer_authentication_field_type	email
+step_codes_in_order	booking__services,booking__agents,booking__datepicker,customer,verify,payment__times,payment__portions,payment__methods,payment__processors,payment__pay,confirmation
+steps_settings	a:12:{s:6:"shared";a:1:{s:18:"steps_support_text";s:54:"<h5>Questions?</h5><p>Call (858) 939-3746 for help</p>";}s:17:"booking__services";a:3:{s:18:"side_panel_heading";s:17:"Service Selection";s:22:"side_panel_description";s:69:"Please select a service for which you want to schedule an appointment";s:18:"main_panel_heading";s:18:"Available Services";}s:15:"booking__agents";a:3:{s:18:"side_panel_heading";s:15:"Agent Selection";s:22:"side_panel_description";s:59:"Please select an agent that will be providing you a service";s:18:"main_panel_heading";s:16:"Available Agents";}s:19:"booking__datepicker";a:3:{s:18:"side_panel_heading";s:18:"Select Date & Time";s:22:"side_panel_description";s:48:"Please select date and time for your appointment";s:18:"main_panel_heading";s:21:"Date & Time Selection";}s:8:"customer";a:3:{s:18:"side_panel_heading";s:22:"Enter Your Information";s:22:"side_panel_description";s:37:"Please enter your contact information";s:18:"main_panel_heading";s:20:"Customer Information";}s:6:"verify";a:3:{s:18:"side_panel_heading";s:20:"Verify Order Details";s:22:"side_panel_description";s:86:"Double check your reservation details and click submit button if everything is correct";s:18:"main_panel_heading";s:20:"Verify Order Details";}s:14:"payment__times";a:3:{s:18:"side_panel_heading";s:22:"Payment Time Selection";s:22:"side_panel_description";s:61:"Please choose when you would like to pay for your appointment";s:18:"main_panel_heading";s:27:"When would you like to pay?";}s:17:"payment__portions";a:3:{s:18:"side_panel_heading";s:25:"Payment Portion Selection";s:22:"side_panel_description";s:48:"Please select how much you would like to pay now";s:18:"main_panel_heading";s:35:"How much would you like to pay now?";}s:16:"payment__methods";a:3:{s:18:"side_panel_heading";s:24:"Payment Method Selection";s:22:"side_panel_description";s:68:"Please select a payment method you would like to make a payment with";s:18:"main_panel_heading";s:21:"Select payment method";}s:19:"payment__processors";a:3:{s:18:"side_panel_heading";s:27:"Payment Processor Selection";s:22:"side_panel_description";s:70:"Please select a payment processor you want to process the payment with";s:18:"main_panel_heading";s:24:"Select payment processor";}s:12:"payment__pay";a:3:{s:18:"side_panel_heading";s:14:"Make a Payment";s:22:"side_panel_description";s:67:"Please enter your payment information so we can process the payment";s:18:"main_panel_heading";s:30:"Enter your payment information";}s:12:"confirmation";a:3:{s:18:"side_panel_heading";s:12:"Confirmation";s:22:"side_panel_description";s:76:"Your order has been placed. Please retain this confirmation for your record.";s:18:"main_panel_heading";s:18:"Order Confirmation";}}
+steps_show_location_categories	off
+steps_show_service_categories	off
+steps_show_timezone_selector	off
+steps_support_text	Questions? Message us on Instagram @gvbasketballl
+support_email	info@gvbasketball.com
+support_phone	
+timeslot_blocking_statuses	approved
+

@@ -17,6 +17,8 @@ work sessions. No technical knowledge needed — it's meant to be something you 
 4. **The site is simpler and more focused** — we trimmed the menu, removed clutter, and made everything
    easier to read on phones.
 5. **Contact is now Instagram-first** — WhatsApp and Facebook were removed everywhere per your request.
+6. **Members can now sign up and log in with a verified email** — no passwords to remember; they get a
+   one-time code by email each time, which also confirms the email is real.
 
 ---
 
@@ -82,10 +84,11 @@ A few things are working but would benefit from your eyes or a content decision:
    genuine client results or quotes, we can build them out properly.
 5. **Pricing** — still intentionally not shown publicly ("shared during consultation"). Confirm that's
    still how you want it.
-6. **Member login & booking experience** — this is the next area we plan to polish (how clients log in,
-   book a consult, and manage their sessions). A couple of decisions from you will shape it: should
-   members log in with a password or a simpler email link, and what should they be able to do once
-   logged in (just see upcoming sessions, or reschedule/manage more)?
+6. **Member login & booking experience** — members can now **sign up and log in on the Member Login
+   page** using just their email: they receive a one-time code, enter it, and they're in (no password
+   to remember, and the email is verified in the process). Two things would help us polish it further:
+   what should members be able to do once logged in (just see upcoming sessions, or reschedule/manage
+   more?), and would you like the login/code email to carry GV branding (right now it's plain text)?
 
 ---
 

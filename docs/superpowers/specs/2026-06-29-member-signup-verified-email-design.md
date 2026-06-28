@@ -1,7 +1,7 @@
 # Member Login: Signup with Verified Email — Design
 
 **Date:** 2026-06-29
-**Status:** Approved (design) — pending spec review
+**Status:** Implemented 2026-06-29 (verified OTP send to test@favor.church)
 **Site:** https://gvbasketball.com (WordPress + LatePoint 5.6.3 on Hostinger)
 
 ## Goal
@@ -51,6 +51,7 @@ No HTML, CSS, or template changes. The nav already links to `/booking/`.
 | `selected_customer_authentication_method` | `otp` | Only one-time-code auth is offered |
 | `default_customer_authentication_method` | `otp` | OTP shown by default |
 | `selected_customer_authentication_field_type` | `email` | (already set) verify via email, not phone |
+| `notifications_email_processor` | `wp_mail` | **Required prerequisite** (discovered during impl): LatePoint email notifications were disabled, which silently blocked OTP send. Routes OTP email through Default WP Mailer → FluentSMTP. |
 
 Result on `/booking/`: logged-out members see "enter email → receive 6-digit code
 → verify & enter." New emails create an account on first successful verification;
