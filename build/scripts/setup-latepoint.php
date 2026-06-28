@@ -81,6 +81,9 @@ $set = array(
     'steps_show_location_categories' => 'off',
     'steps_show_timezone_selector'   => 'off',
     'enable_payments_local'          => 'off',
+    'currency_iso_code'              => 'PHP',
+    'currency_symbol_before'         => '₱',
+    'currency_symbol_after'          => '',
 );
 foreach ($set as $k => $v) {
     $wpdb->query($wpdb->prepare("DELETE FROM {$p}latepoint_settings WHERE name=%s", $k));
