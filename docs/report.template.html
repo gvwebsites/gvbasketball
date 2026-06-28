@@ -1,0 +1,336 @@
+<meta charset="utf-8">
+<title>GV Basketball &mdash; Website Handover Report</title>
+<meta name="description" content="A plain-language tour of the GV Basketball website: landing page, booking system, where requests go, and what needs your input.">
+<style>
+  :root{
+    --deep:#021F51; --navy:#123B78; --orange:#F47B20; --orange-d:#d9690f;
+    --ink:#16223b; --muted:#5b6678; --paper:#F4F6F9; --card:#ffffff;
+    --line:#dde3ec; --live:#1f8a4c; --input:#b07814;
+    --maxw:920px;
+    --disp:"Helvetica Neue",Helvetica,Arial,sans-serif;
+    --body:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);
+       line-height:1.62;font-size:17px;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px;}
+  h1,h2,h3{font-family:var(--disp);text-transform:uppercase;font-weight:800;
+           letter-spacing:.01em;text-wrap:balance;line-height:1.04;margin:0;}
+  p{margin:0 0 14px;}
+  a{color:var(--navy);}
+  .eyebrow{font-family:var(--disp);text-transform:uppercase;letter-spacing:.18em;
+           font-weight:700;font-size:.72rem;color:var(--orange);}
+
+  /* Cover */
+  .cover{background:var(--deep);color:#fff;padding:64px 0 56px;
+         background-image:linear-gradient(135deg,#021F51 0%,#0a2c63 55%,#123B78 100%);}
+  .cover .eyebrow{color:#ffb877;}
+  .cover h1{font-size:clamp(2.4rem,6vw,3.6rem);color:#fff;margin:14px 0 0;}
+  .cover .accent{height:5px;width:74px;background:var(--orange);border-radius:3px;margin:22px 0;}
+  .cover p{color:#c6d2e8;max-width:60ch;margin:0;}
+  .meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:26px;}
+  .meta span{font-family:var(--mono);font-size:.78rem;color:#aebbd6;
+             border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:5px 12px;}
+
+  /* Sections */
+  section{padding:46px 0;border-bottom:1px solid var(--line);}
+  section:last-of-type{border-bottom:0;}
+  h2{font-size:clamp(1.5rem,3.4vw,2.1rem);color:var(--deep);}
+  h2 .num{color:var(--orange);margin-right:.4em;}
+  .lead{font-size:1.08rem;color:var(--muted);max-width:64ch;margin:10px 0 0;}
+  .sec-head{margin-bottom:26px;}
+
+  /* Screen frame */
+  figure{margin:0 0 8px;}
+  .screen{background:var(--card);border:1px solid var(--line);border-radius:12px;
+          overflow:hidden;box-shadow:0 18px 40px -26px rgba(2,31,81,.5);}
+  .screen__bar{display:flex;align-items:center;gap:8px;padding:10px 14px;
+               background:#eef1f6;border-bottom:1px solid var(--line);}
+  .dot{width:10px;height:10px;border-radius:50%;background:#cbd3df;}
+  .screen__url{font-family:var(--mono);font-size:.74rem;color:var(--muted);
+               margin-left:8px;background:#fff;border:1px solid var(--line);
+               border-radius:6px;padding:3px 10px;}
+  .screen img{display:block;width:100%;height:auto;}
+  .screen--tall img{max-height:560px;object-fit:cover;object-position:top;}
+  figcaption{font-size:.82rem;color:var(--muted);margin-top:8px;}
+  .two{display:grid;grid-template-columns:1.6fr 1fr;gap:20px;align-items:start;}
+  @media(max-width:680px){.two{grid-template-columns:1fr;}}
+
+  /* Callouts */
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-top:22px;}
+  .card--navy{background:var(--deep);color:#fff;border:0;
+              background-image:linear-gradient(135deg,#021F51,#123B78);}
+  .card--navy h3{color:#fff;} .card--navy p{color:#cdd8ec;} .card--navy a{color:#ffd9b8;}
+  .card--accent{border-left:4px solid var(--orange);}
+  .card h3{font-size:1.05rem;color:var(--deep);margin-bottom:8px;}
+  .card--navy h3{color:#fff;}
+  ul.clean{margin:8px 0 0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:10px;}
+  ul.clean li{padding-left:26px;position:relative;}
+  ul.clean li::before{content:"";position:absolute;left:0;top:.55em;width:9px;height:9px;
+                      border-radius:2px;background:var(--orange);}
+  .card--navy ul.clean li::before{background:#ffb877;}
+
+  /* chips */
+  .chip{display:inline-flex;align-items:center;gap:7px;font-family:var(--disp);
+        text-transform:uppercase;letter-spacing:.08em;font-weight:700;font-size:.7rem;
+        padding:5px 11px;border-radius:999px;}
+  .chip::before{content:"";width:8px;height:8px;border-radius:50%;}
+  .chip--live{background:#e7f3ec;color:var(--live);} .chip--live::before{background:var(--live);}
+  .chip--input{background:#f8efdd;color:var(--input);} .chip--input::before{background:var(--input);}
+  .chips{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 4px;}
+
+  /* flow diagram */
+  .flow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:12px;align-items:stretch;margin-top:18px;}
+  @media(max-width:680px){.flow{grid-template-columns:1fr;}.flow .arrow{transform:rotate(90deg);justify-self:center;}}
+  .node{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px;text-align:center;display:flex;flex-direction:column;gap:4px;justify-content:center;}
+  .node b{font-family:var(--disp);text-transform:uppercase;letter-spacing:.04em;font-size:.85rem;color:var(--deep);}
+  .node small{font-family:var(--mono);font-size:.72rem;color:var(--muted);}
+  .node--hi{border-color:var(--orange);box-shadow:0 0 0 3px rgba(244,123,32,.12);}
+  .arrow{align-self:center;color:var(--orange);font-size:1.4rem;font-weight:800;}
+
+  .feature-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:18px;}
+  @media(max-width:680px){.feature-grid{grid-template-columns:1fr;}}
+  .feat{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px;}
+  .feat b{display:block;font-family:var(--disp);text-transform:uppercase;letter-spacing:.03em;color:var(--deep);font-size:.92rem;margin-bottom:3px;}
+  .feat span{font-size:.92rem;color:var(--muted);}
+
+  footer{background:var(--deep);color:#aebbd6;padding:34px 0;font-size:.86rem;}
+  footer .wrap{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;}
+  footer b{color:#fff;font-family:var(--disp);letter-spacing:.04em;}
+  .q{font-weight:600;color:var(--ink);}
+</style>
+
+<div class="cover">
+  <div class="wrap">
+    <div class="eyebrow">Website Handover &middot; Final Revision</div>
+    <h1>GV Basketball<br>Website Report</h1>
+    <div class="accent"></div>
+    <p>A plain-language tour of your finished website &mdash; what it does, how the booking system works,
+       where your requests land, and the few things that still need a word from you. No technical
+       knowledge needed.</p>
+    <div class="meta">
+      <span>gvbasketball.com</span><span>Prepared for Coach Gino</span><span>June 2026</span>
+    </div>
+  </div>
+</div>
+
+<section><div class="wrap">
+  <div class="sec-head">
+    <div class="eyebrow">Start here</div>
+    <h2>What you have now</h2>
+    <p class="lead">A complete, professional website with an online consultation-booking system &mdash;
+       built around your brand (navy, orange, disciplined and confident). Everything below is live today.</p>
+  </div>
+  <div class="feature-grid">
+    <div class="feat"><b>Landing page</b><span>A bold, modern homepage that introduces GV Basketball and sends visitors to book.</span></div>
+    <div class="feat"><b>Online booking</b><span>Visitors reserve a consultation and pick a date/time themselves.</span></div>
+    <div class="feat"><b>Requests to your inbox</b><span>Every booking and message reaches you by email automatically.</span></div>
+    <div class="feat"><b>Member area</b><span>Clients can log in to view and manage their sessions.</span></div>
+    <div class="feat"><b>Instagram-first contact</b><span>One clear way to reach you: Instagram DM + email.</span></div>
+    <div class="feat"><b>Built for Manila</b><span>Philippine Peso (&#8369;) and Manila time throughout.</span></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="sec-head">
+    <div class="chips"><span class="chip chip--live">Live</span></div>
+    <h2><span class="num">01</span>The landing page</h2>
+    <p class="lead">The homepage opens full-screen with a cinematic basketball image, your tagline, and two
+       clear buttons &mdash; &ldquo;Book a Consultation&rdquo; and &ldquo;View Training Programs.&rdquo; It's designed to feel premium
+       and get visitors to take action.</p>
+  </div>
+  <div class="two">
+    <figure>
+      <div class="screen"><div class="screen__bar"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span class="screen__url">gvbasketball.com</span></div>
+      <img src="@@shot-home-hero@@" alt="GV Basketball homepage hero"></div>
+      <figcaption>Homepage hero &mdash; desktop.</figcaption>
+    </figure>
+    <figure>
+      <div class="screen"><div class="screen__bar"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span class="screen__url">mobile</span></div>
+      <img src="@@shot-mobile-home@@" alt="GV Basketball homepage on a phone"></div>
+      <figcaption>Same page on a phone &mdash; fully responsive.</figcaption>
+    </figure>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="sec-head">
+    <div class="chips"><span class="chip chip--live">Live</span><span class="chip chip--input">A photo would help</span></div>
+    <h2><span class="num">02</span>About &amp; credibility</h2>
+    <p class="lead">The About page tells your story and shows your credentials &mdash; including your mentors,
+       Coach Phil Handy and Coach Micah Lancaster. This is where trust is built.</p>
+  </div>
+  <figure>
+    <div class="screen screen--tall"><div class="screen__bar"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span class="screen__url">gvbasketball.com/about</span></div>
+    <img src="@@shot-about-full@@" alt="About page"></div>
+    <figcaption>About page (top portion shown). One thing missing: a real photo of you &mdash; see &ldquo;What needs your input.&rdquo;</figcaption>
+  </figure>
+</div></section>
+
+<section><div class="wrap">
+  <div class="sec-head">
+    <div class="chips"><span class="chip chip--live">Live</span><span class="chip chip--input">Confirm details</span></div>
+    <h2><span class="num">03</span>Training programs</h2>
+    <p class="lead">Three programs are presented &mdash; Private, Small Group, and Elite Performance &mdash; each with
+       who it's for and what's included, plus your locations and schedule. Pricing stays private
+       (&ldquo;shared during the consultation&rdquo;), as you asked.</p>
+  </div>
+  <figure>
+    <div class="screen screen--tall"><div class="screen__bar"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span class="screen__url">gvbasketball.com/training-programs</span></div>
+    <img src="@@shot-programs-full@@" alt="Training programs page"></div>
+    <figcaption>Programs page (top portion shown). Please confirm the program details and schedule are accurate.</figcaption>
+  </figure>
+</div></section>
+
+<section><div class="wrap">
+  <div class="sec-head">
+    <div class="chips"><span class="chip chip--live">Live</span></div>
+    <h2><span class="num">04</span>The booking system</h2>
+    <p class="lead">This is the heart of the site. A visitor picks a service, chooses an available date and
+       time, and submits their details &mdash; all by themselves, online. The four services are Player
+       Consultation, Private Training, Small Group, and Elite Performance.</p>
+  </div>
+  <figure>
+    <div class="screen"><div class="screen__bar"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span class="screen__url">gvbasketball.com/book-a-consultation</span></div>
+    <img src="@@shot-booking-form@@" alt="Booking &mdash; service selection"></div>
+    <figcaption>Step 1 of the booking form &mdash; choosing a service.</figcaption>
+  </figure>
+  <figure style="margin-top:22px;">
+    <div class="screen screen--tall"><div class="screen__bar"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span class="screen__url">gvbasketball.com/book-a-consultation</span></div>
+    <img src="@@shot-booking-full@@" alt="Booking page full"></div>
+    <figcaption>The full booking page, including the &ldquo;From Consultation to Court&rdquo; steps that set client expectations.</figcaption>
+  </figure>
+</div></section>
+
+<section><div class="wrap">
+  <div class="sec-head">
+    <div class="eyebrow">Important &mdash; please read</div>
+    <h2><span class="num">05</span>Where your booking requests go</h2>
+    <p class="lead">Every booking and every message from the website is sent to your business address and
+       then forwarded to your personal inbox &mdash; so you never have to &ldquo;check the website.&rdquo;</p>
+  </div>
+
+  <div class="flow">
+    <div class="node"><b>Website</b><small>booking / message</small></div>
+    <div class="arrow">&rarr;</div>
+    <div class="node node--hi"><b>info@gvbasketball.com</b><small>your business address</small></div>
+    <div class="arrow">&rarr;</div>
+    <div class="node node--hi"><b>Your Yahoo inbox</b><small>&hellip;@ymail.com</small></div>
+  </div>
+
+  <div class="card card--accent">
+    <h3>What this means for you day-to-day</h3>
+    <ul class="clean">
+      <li><b>You receive every request by email.</b> Booking requests and contact messages are sent to
+          <b>info@gvbasketball.com</b>, which automatically forwards to your personal <b>Yahoo (ymail.com)</b>
+          inbox. Open your normal email and it's there.</li>
+      <li><b>Booking requests are also saved on the website.</b> They don't just live in email &mdash; they're
+          stored in your booking system so nothing gets lost.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>How to view or edit a booking yourself</h3>
+    <ul class="clean">
+      <li>Go to <b>gvbasketball.com/wp-admin</b> and log in with your admin account.</li>
+      <li>Open <b>LatePoint &rarr; Bookings</b> in the left menu.</li>
+      <li>From there you can <b>view, reschedule, or cancel</b> any booking, and see the client's contact details.</li>
+      <li>Times are shown in <b>Manila time</b>; amounts are in <b>Philippine Peso (&#8369;)</b>.</li>
+    </ul>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="sec-head">
+    <div class="eyebrow">By design</div>
+    <h2><span class="num">06</span>Payments &mdash; handled by you, not the website</h2>
+    <p class="lead">The website does <b>not</b> collect payments. This was intentional: pricing stays private
+       and payment is arranged with you directly, in person or however you prefer.</p>
+  </div>
+  <div class="card card--navy">
+    <h3>If you ever want to accept payments online</h3>
+    <p>It wasn't part of this build, but the booking system <b>can</b> support online payments later. A web
+       developer can connect a payment provider (for example PayMongo, GCash, or a card gateway) and switch
+       it on. Just say the word and we can scope it as a separate, optional add-on &mdash; nothing about the
+       current site needs to change for it.</p>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="sec-head">
+    <div class="chips"><span class="chip chip--live">Live</span></div>
+    <h2><span class="num">07</span>Member login area</h2>
+    <p class="lead">Clients can log in (the person icon in the menu) to see and manage their upcoming
+       sessions. This area works today; polishing its look and flow is the natural next step if you'd like.</p>
+  </div>
+  <figure>
+    <div class="screen screen--tall"><div class="screen__bar"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span class="screen__url">gvbasketball.com/booking</span></div>
+    <img src="@@shot-portal-full@@" alt="Member booking portal"></div>
+    <figcaption>The member booking area.</figcaption>
+  </figure>
+</div></section>
+
+<section><div class="wrap">
+  <div class="sec-head">
+    <div class="chips"><span class="chip chip--live">Live</span></div>
+    <h2><span class="num">08</span>Contact &mdash; Instagram first</h2>
+    <p class="lead">Per your preference, the only contact channels on the site are <b>Instagram and email</b>
+       (WhatsApp and Facebook were removed everywhere). The contact form's messages also arrive at
+       info@gvbasketball.com &rarr; your Yahoo inbox.</p>
+  </div>
+  <figure>
+    <div class="screen screen--tall"><div class="screen__bar"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span class="screen__url">gvbasketball.com/contact</span></div>
+    <img src="@@shot-contact-full@@" alt="Contact page"></div>
+    <figcaption>Contact page &mdash; Instagram DM, email, and a message form.</figcaption>
+  </figure>
+</div></section>
+
+<section><div class="wrap">
+  <div class="sec-head">
+    <div class="chips"><span class="chip chip--live">Live</span></div>
+    <h2><span class="num">09</span>Gallery</h2>
+    <p class="lead">A clean grid of cinematic basketball imagery in your brand style, with a prompt to follow
+       you on Instagram.</p>
+  </div>
+  <figure>
+    <div class="screen screen--tall"><div class="screen__bar"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span class="screen__url">gvbasketball.com/gallery</span></div>
+    <img src="@@shot-gallery-full@@" alt="Gallery page"></div>
+    <figcaption>Gallery (top portion shown).</figcaption>
+  </figure>
+</div></section>
+
+<section><div class="wrap">
+  <div class="sec-head">
+    <div class="eyebrow">Closing the loop</div>
+    <h2><span class="num">10</span>What needs your input</h2>
+    <p class="lead">This is the final revision. The site is done and live &mdash; these are the few places where your
+       words or a decision would make it even stronger.</p>
+  </div>
+
+  <div class="card card--accent">
+    <ul class="clean">
+      <li><b>Training programs &mdash; confirm the details.</b> Are the program names, descriptions, age ranges,
+          and schedule (Mon/Tue/Fri/Sun, 3&ndash;6 PM, Makati &amp; Ortigas) correct?</li>
+      <li><b>FAQ &mdash; review the answers.</b> Please read the questions and tell us anything to add, remove, or fix.</li>
+      <li><b>A real photo of Coach Gino.</b> The site currently has stylized imagery and your mentors, but no
+          actual photo of you. Adding one (e.g. on the About page) would add a strong personal, trust-building touch.</li>
+      <li><b>Testimonials / success stories.</b> If you can share genuine client results or quotes, we can build
+          them out properly.</li>
+      <li><b>Pricing.</b> Still hidden on purpose (&ldquo;shared during the consultation&rdquo;). Confirm that's how you want it.</li>
+      <li><b>Member login experience.</b> If you'd like, the next step is polishing how clients log in and manage
+          their sessions &mdash; and deciding whether they should be able to reschedule themselves.</li>
+    </ul>
+  </div>
+
+  <figure style="margin-top:22px;">
+    <div class="screen screen--tall"><div class="screen__bar"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span class="screen__url">gvbasketball.com/faq</span></div>
+    <img src="@@shot-faq-full@@" alt="FAQ page"></div>
+    <figcaption>The FAQ page &mdash; please review the answers and send any edits.</figcaption>
+  </figure>
+</div></section>
+
+<footer><div class="wrap">
+  <span><b>GV Basketball</b> &mdash; Build Better Players. Build Better People.</span>
+  <span>gvbasketball.com &middot; info@gvbasketball.com &middot; @gvbasketballl</span>
+</div></footer>

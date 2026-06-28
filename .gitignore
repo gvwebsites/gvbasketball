@@ -11,3 +11,6 @@
 *.jpg
 *.png
 !logo/*.png
+
+# Local DB / settings backups (never commit)
+backups/

@@ -84,6 +84,8 @@ $set = array(
     'currency_iso_code'              => 'PHP',
     'currency_symbol_before'         => '₱',
     'currency_symbol_after'          => '',
+    'steps_support_text'             => 'Questions? Message us on Instagram @gvbasketballl',
+    'support_phone'                  => '',
 );
 foreach ($set as $k => $v) {
     $wpdb->query($wpdb->prepare("DELETE FROM {$p}latepoint_settings WHERE name=%s", $k));
