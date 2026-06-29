@@ -224,6 +224,26 @@ band, SMTP (Gmail), readable white design across desktop + mobile. Demo content 
 
 ## 11. Changelog
 
+### 2026-06-29 — "Request Training" form replaces LatePoint public booking
+- The public booking page `/book-a-consultation/` (2982) no longer shows the LatePoint date/time
+  picker. It now serves a simple branded request form via the `[gv_request_form]` shortcode in a new
+  mu-plugin **`build/mu-plugins/gv-request-form.php`**. Fields: parent name, player name, player age
+  (4–25), email (required), phone/Instagram (optional), training type (Private Training · Small Group ·
+  Elite Performance), preferred days & times (free text). No date/time selection.
+- On submit (standard POST → `admin-post.php`, Post-Redirect-Get): sends a **branded HTML notification**
+  to `info@gvbasketball.com` (Reply-To = submitter) **and a branded auto-reply** to the submitter. Both
+  reuse the `gv-otp-email.php` visual style (logo header, orange rule, navy headings, IG footer).
+- **Spam protection: Cloudflare Turnstile** (managed widget, provisioned via the CF API with
+  `build/scripts/setup-turnstile.sh`; keys stored as wp-config constants `GV_TURNSTILE_SITEKEY` /
+  `GV_TURNSTILE_SECRET` and mirrored to gitignored `.env`). Server-side `siteverify` in the handler,
+  plus a nonce and a honeypot. CF zone id `4efc307b…` (purge via API when needed).
+- LatePoint left installed — the member portal `/booking/` (2983) + OTP login still use it.
+- **Reframe:** all CTA labels changed "Book a Consultation" → **"Request Training"** site-wide (nav,
+  footer, menu, all marketing pages, page title 2982). **Slug `/book-a-consultation/` kept** (no broken
+  links). SEO plugin auto-meta descriptions still rebuild on their own scan (cosmetic, head-only).
+- Verified with screenshots: form (desktop + mobile), success banner, both branded emails; tokenless
+  POST rejected; portal still LatePoint. Spec + plan in `docs/superpowers/`.
+
 ### 2026-06-29 — PHP currency, card-text fix, client handover report
 - LatePoint currency set to **Philippine Peso** (`currency_iso_code=PHP`, `currency_symbol_before=₱`);
   booking-form support text switched from WhatsApp to Instagram, `support_phone` cleared — completes

@@ -19,6 +19,12 @@ work sessions. No technical knowledge needed — it's meant to be something you 
 5. **Contact is now Instagram-first** — WhatsApp and Facebook were removed everywhere per your request.
 6. **Members can now sign up and log in with a verified email** — no passwords to remember; they get a
    one-time code by email each time, which also confirms the email is real.
+7. **The "Book a Consultation" page is now a simple "Request Training" form** — no more picking a date
+   and time on a calendar. A parent just enters their name, the player's name and age, their email
+   (plus phone or Instagram if they like), the type of training they want, and the days/times that
+   suit them. You get a clean, branded email at info@gvbasketball.com with all the details, and the
+   parent automatically gets a friendly "we got your request" reply. The form is protected against
+   spam/bots by Cloudflare, so your inbox stays clean.
 
 ---
 
