@@ -2,7 +2,7 @@
 $pages = array(
   'about'                => 'About Coach Gino',
   'training-programs'    => 'Training Programs',
-  'book-a-consultation'  => 'Book a Consultation',
+  'book-a-consultation'  => 'Request Training',
   'booking'              => 'Member Booking',
   'athlete-development'  => 'Athlete Development System',
   'success-stories'      => 'Success Stories',
