@@ -143,7 +143,16 @@ identity is `info@`.
 ## 5. Gotchas (read before editing)
 
 - **Secrets:** never print secret values. `wp config set` **echoes the value** — use `--quiet` and
-  verify with `wp eval "echo strlen(CONST);"`. `.env` holds the Google OAuth keys and is gitignored.
+  verify with `wp eval "echo strlen(CONST);"`. `.env` (gitignored) holds the Google OAuth keys, the
+  **Cloudflare API token** (`CLOUDFLARE_API_TOKEN` / `_ACCOUNT_ID`), and the **Turnstile** site/secret keys.
+- **Cloudflare zone** (`gvbasketball.com`, Free plan, zone `4efc307b…`): tuned for WordPress —
+  `ssl=strict` (origin has a valid Let's Encrypt cert; keep it renewing or strict will hard-fail the
+  site), `always_use_https=on`, `min_tls_version=1.2`, `always_online`/`early_hints`/`0rtt` on,
+  `cache_level=aggressive`, `brotli`/`http3` on. **Keep `rocket_loader` OFF** (it breaks LatePoint /
+  Turnstile / OTP JS) and **never add a "Cache Everything" rule** (the booking portal, request form, and
+  OTP login must stay dynamic — HTML is uncached by default). The `.env` token is **account-owned**, so
+  the **Page Rules API is unavailable** to it (error 1011); use the dashboard or a user-owned token for
+  page/cache rules. Edit zone settings via `PATCH /zones/<zone>/settings/<id>` with the `.env` token.
 - **SVG uploads** require the **Safe SVG** plugin AND running as admin: `wp media import file.svg --user=1`.
 - **White background:** Astra's starter shipped a dark body; `gv-brand.css` forces white. Keep default
   `.gv-section` white with navy/charcoal text, or use `--navy`/`--deep` sections with light text.

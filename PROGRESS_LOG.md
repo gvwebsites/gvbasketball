@@ -66,6 +66,12 @@ Worth checking on both a **phone and a desktop** — a lot of the polish is in h
 - Fixed small spacing and alignment issues across the Programs and About pages.
 - Made forms larger and easier to tap on phones.
 
+**Security & speed (behind the scenes)**
+- Tuned the site's protection/delivery layer (Cloudflare) for safety and speed: visitors are always
+  sent to the secure (padlock) version of the site, the connection now uses modern encryption
+  end-to-end, and a cached copy can stay up even if the host has a brief hiccup. Nothing looks
+  different — the site just loads a touch faster and is a bit more secure.
+
 ---
 
 ## Branding applied throughout
