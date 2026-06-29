@@ -127,7 +127,8 @@ Config created by [`build/scripts/setup-latepoint.php`](build/scripts/setup-late
 - **Work periods:** Mon/Tue/Fri/Sun, 15:00–18:00 (minutes 900–1080), both locations, all services.
   (LatePoint weekday: 1=Mon … 7=Sun; times = minutes from midnight.)
 - **Settings:** `enable_payments_local=off`, service/location category steps off, timezone selector
-  off, `accent_color=#F47B20`, support text → WhatsApp +63 917 882 4466.
+  off, `accent_color=#F47B20`, **currency = Philippine Peso** (`currency_iso_code=PHP`,
+  `currency_symbol_before=₱`), support text → Instagram (`steps_support_text`), `support_phone` cleared.
 - **Shortcodes:** `[latepoint_book_form]`, `[latepoint_customer_dashboard]`, `[latepoint_customer_login]`.
 
 ### Member login & signup (passwordless email OTP)
@@ -214,6 +215,18 @@ band, SMTP (Gmail), readable white design across desktop + mobile. Demo content 
 ---
 
 ## 11. Changelog
+
+### 2026-06-29 — PHP currency, card-text fix, client handover report
+- LatePoint currency set to **Philippine Peso** (`currency_iso_code=PHP`, `currency_symbol_before=₱`);
+  booking-form support text switched from WhatsApp to Instagram, `support_phone` cleared — completes
+  the Instagram-only rollout. Applied via targeted settings update (not a full `setup-latepoint.php`
+  re-run, to avoid recreating agents/services and breaking existing bookings).
+- Fixed light-blue body text on white cards inside navy sections (booking "From Consultation to Court"
+  steps): `.gv-step` / `.gv-card` / `.gv-program` now force charcoal text (same class of bug as the
+  mentor cards earlier).
+- Added **`docs/CLIENT-REPORT.html`** — a branded, screenshot-rich handover report for the client
+  (capabilities tour, booking → info@ → personal inbox flow, payments-by-design, what needs his input).
+  Source template: `docs/report.template.html`. Also published as a private Artifact link.
 
 ### 2026-06-29 — Member signup with verified email (passwordless OTP)
 
