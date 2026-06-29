@@ -226,6 +226,21 @@ band, SMTP (Gmail), readable white design across desktop + mobile. Demo content 
 
 ## 11. Changelog
 
+### 2026-06-29 — Cloudflare zone optimized for WordPress (TLS + performance)
+- Tuned the live `gvbasketball.com` zone (Free plan, id `4efc307b…`) via the CF API using the
+  `.env` token. Applied: `always_use_https=on` (force HTTPS at the edge — verified HTTP `301`→HTTPS),
+  `min_tls_version=1.0→1.2` (drop deprecated TLS), `ssl=full→strict` (origin presents a valid
+  Let's Encrypt cert for `gvbasketball.com`, so strict closes the CF↔origin MITM gap),
+  `always_online=on`, `early_hints=on`, `0rtt=on`.
+- Left as-is because already correct for this WP site: `cache_level=aggressive`, `brotli=on`,
+  `http3=on`, `browser_cache_ttl=4h`, `minify=off` (Cloudflare retired Auto Minify), and
+  **`rocket_loader=off`** — kept off intentionally so it can't break LatePoint / Turnstile / OTP JS.
+- **No full-page HTML caching** (no "Cache Everything" rule): the booking portal (`/booking/`),
+  request form (`/book-a-consultation/`), and passwordless OTP login must stay dynamic. Verified
+  both return `200` post-change.
+- Note: the `.env` CF token is **account-owned**, so the Page Rules API is unavailable to it
+  (error 1011) — not needed here since HTML is uncached by default.
+
 ### 2026-06-29 — Inbound email + displayed address moved to gvbasketballcoaching@gmail.com
 - **Recipient + display only** (sender unchanged). Where mail is *delivered* and where the address is
   *shown* now points to `gvbasketballcoaching@gmail.com`; the **From / sender** stays
