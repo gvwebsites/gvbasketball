@@ -176,13 +176,15 @@ snapshot: `backups/latepoint_settings-pre-member-auth-2026-06-29.tsv`. Design sp
 
 | Form | ID | Notifies |
 |---|---|---|
-| Contact GV Basketball | 3003 | info@gvbasketball.com |
-| GV Newsletter | 3005 | info@ (footer band) |
-| GV Player Waiver | 3007 | info@ |
+| Contact GV Basketball | 3003 | gvbasketballcoaching@gmail.com |
+| GV Newsletter | 3005 | gvbasketballcoaching@gmail.com (footer band) |
+| GV Player Waiver | 3007 | gvbasketballcoaching@gmail.com |
 
-Note: WPForms Lite has no **Phone** field (Pro only) — phone uses a text field. Newsletter currently
-emails signups to info@; to auto-sync to an **Omnisend** list, connect the Omnisend account and use
-its form/integration.
+Note: WPForms Lite has no **Phone** field (Pro only) — phone uses a text field. As of 2026-06-29 form
+**recipients** deliver to `gvbasketballcoaching@gmail.com` (the displayed mailto + LatePoint agent
+email moved too); the **From / sender** address stays `info@gvbasketball.com` via the existing
+FluentSMTP Gmail connection. To auto-sync newsletter signups to an **Omnisend** list, connect the
+Omnisend account and use its form/integration.
 
 ---
 
@@ -223,6 +225,18 @@ band, SMTP (Gmail), readable white design across desktop + mobile. Demo content 
 ---
 
 ## 11. Changelog
+
+### 2026-06-29 — Inbound email + displayed address moved to gvbasketballcoaching@gmail.com
+- **Recipient + display only** (sender unchanged). Where mail is *delivered* and where the address is
+  *shown* now points to `gvbasketballcoaching@gmail.com`; the **From / sender** stays
+  `info@gvbasketball.com` (FluentSMTP Gmail connection left untouched — no OAuth reconnection).
+- Changed: Request Training mu-plugin admin recipient (`GV_RF_RECIPIENT`), WPForms notification
+  recipients for Contact (3003) / Newsletter (3005) / Waiver (3007) — their `sender_address` kept as
+  `info@` — LatePoint Coach Gino agent email, and the displayed mailto in the footer (2991) and Contact
+  page (2989). Source updated in `gv-request-form.php`, `build-extras.php`, `build-functional.php`,
+  `setup-latepoint.php`, `footer.html`.
+- Not touched: historical client reports (`docs/CLIENT-REPORT.html`, `report.template.html`) describing
+  the old Cloudflare-routing setup, and the FluentSMTP sender identity.
 
 ### 2026-06-29 — "Request Training" form replaces LatePoint public booking
 - The public booking page `/book-a-consultation/` (2982) no longer shows the LatePoint date/time

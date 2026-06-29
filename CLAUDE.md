@@ -125,13 +125,18 @@ logged out. **Passwordless OTP over email** (every signup = verified email). Set
 disabled**). The OTP email is branded by mu-plugin `gv-otp-email.php` (hooks `wp_mail`, swaps in HTML).
 Test a send: `wp eval 'var_dump(OsOTPHelper::generateAndSendOTP("test@favor.church","email","email"));'`.
 
-### Forms (WPForms Lite → email info@)
+### Forms (WPForms Lite → recipient gvbasketballcoaching@gmail.com)
 Contact **3003**, Newsletter **3005**, Waiver **3007**. (Lite has no Phone field — use text.)
+Notification **recipient** + the displayed mailto + the LatePoint agent email all deliver to
+`gvbasketballcoaching@gmail.com` (set 2026-06-29); the **From/sender** stays `info@gvbasketball.com`
+(WPForms `sender_address` + the FluentSMTP connection were left unchanged).
 
 ### Email
 FluentSMTP + Gmail OAuth, sender `info@gvbasketball.com`. OAuth keys are wp-config constants
 `FLUENTMAIL_GMAIL_CLIENT_ID/SECRET`. Test: `wp eval 'var_dump(wp_mail("info@gvbasketball.com","test","ok"));'`.
 LatePoint notifications need their own switch (`notifications_email_processor=wp_mail`) on top of FluentSMTP.
+Inbound mail (form submissions) is **delivered** to `gvbasketballcoaching@gmail.com`; only the sending
+identity is `info@`.
 
 ---
 
@@ -155,7 +160,8 @@ LatePoint notifications need their own switch (`notifications_email_processor=wp
 - Brand voice: disciplined, confident, developmental — fundamentals, work ethic, basketball IQ.
   Don't invent specific stats, named athletes, schools, or testimonials.
 - On-site contact is **Instagram only** (client preference): IG `@gvbasketballl`, DM link
-  `https://ig.me/m/gvbasketballl` (used for every "Message on Instagram" CTA), plus `info@gvbasketball.com`.
+  `https://ig.me/m/gvbasketballl` (used for every "Message on Instagram" CTA), plus the displayed email
+  `gvbasketballcoaching@gmail.com` (sending identity is still `info@gvbasketball.com`).
   **WhatsApp and Facebook were removed from the site** — do not re-add them. (Off-site refs still exist:
   WhatsApp `+63 917 882 4466`, FB `/GvBasketball`, Google reviews `https://g.page/r/CS7s3B4R726oEAE/review`.)
   Locations Makati & Ortigas.

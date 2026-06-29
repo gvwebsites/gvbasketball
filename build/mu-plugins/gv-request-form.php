@@ -6,7 +6,7 @@ Version: 1.0
 */
 if (!defined('ABSPATH')) exit;
 
-if (!defined('GV_RF_RECIPIENT')) define('GV_RF_RECIPIENT', 'info@gvbasketball.com');
+if (!defined('GV_RF_RECIPIENT')) define('GV_RF_RECIPIENT', 'gvbasketballcoaching@gmail.com');
 
 function gv_rf_types() {
     return array('Private Training', 'Small Group', 'Elite Performance');

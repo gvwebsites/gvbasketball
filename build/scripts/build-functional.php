@@ -29,7 +29,7 @@ $form = array(
     'notification_enable' => '1',
     'notifications' => array('1'=>array(
       'notification_name'=>'Admin Notification',
-      'email'=>'info@gvbasketball.com',
+      'email'=>'gvbasketballcoaching@gmail.com',
       'subject'=>'New contact — GV Basketball website',
       'sender_name'=>'GV Basketball',
       'sender_address'=>'info@gvbasketball.com',
@@ -137,7 +137,7 @@ $contact_a = <<<'HTML'
 <section class="gv-section"><div class="gv-wrap">
 <div class="gv-contact-grid">
 <div class="gv-contact-item"><div class="gv-contact-item__ic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg></div><div><b>Instagram</b><br><a href="https://ig.me/m/gvbasketballl" target="_blank" rel="noopener">Message @gvbasketballl</a></div></div>
-<div class="gv-contact-item"><div class="gv-contact-item__ic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></div><div><b>Email</b><br><a href="mailto:info@gvbasketball.com">info@gvbasketball.com</a></div></div>
+<div class="gv-contact-item"><div class="gv-contact-item__ic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></div><div><b>Email</b><br><a href="mailto:gvbasketballcoaching@gmail.com">gvbasketballcoaching@gmail.com</a></div></div>
 </div>
 </div></section>
 <section class="gv-section gv-section--light"><div class="gv-wrap">

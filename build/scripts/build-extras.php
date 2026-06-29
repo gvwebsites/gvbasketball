@@ -19,7 +19,7 @@ $news_id = gv_make_form('GV Newsletter',
     'submit_text_processing'=>'Subscribing...',
     'antispam_v3'=>'1',
     'notification_enable'=>'1',
-    'notifications'=>array('1'=>array('notification_name'=>'New Subscriber','email'=>'info@gvbasketball.com','subject'=>'New newsletter subscriber','sender_name'=>'GV Basketball','sender_address'=>'info@gvbasketball.com','replyto'=>'{field_id="1"}','message'=>'{all_fields}')),
+    'notifications'=>array('1'=>array('notification_name'=>'New Subscriber','email'=>'gvbasketballcoaching@gmail.com','subject'=>'New newsletter subscriber','sender_name'=>'GV Basketball','sender_address'=>'info@gvbasketball.com','replyto'=>'{field_id="1"}','message'=>'{all_fields}')),
     'confirmations'=>array('1'=>array('type'=>'message','message'=>'<p>You\'re on the list — see you on the court!</p>','message_scroll'=>'1')),
   )
 );
@@ -46,7 +46,7 @@ $waiver_id = gv_make_form('GV Player Waiver',
     'submit_text_processing'=>'Submitting...',
     'antispam_v3'=>'1',
     'notification_enable'=>'1',
-    'notifications'=>array('1'=>array('notification_name'=>'New Waiver','email'=>'info@gvbasketball.com','subject'=>'New signed waiver — GV Basketball','sender_name'=>'GV Basketball','sender_address'=>'info@gvbasketball.com','replyto'=>'{field_id="4"}','message'=>'{all_fields}')),
+    'notifications'=>array('1'=>array('notification_name'=>'New Waiver','email'=>'gvbasketballcoaching@gmail.com','subject'=>'New signed waiver — GV Basketball','sender_name'=>'GV Basketball','sender_address'=>'info@gvbasketball.com','replyto'=>'{field_id="4"}','message'=>'{all_fields}')),
     'confirmations'=>array('1'=>array('type'=>'message','message'=>'<p>Thank you — your waiver has been received. See you at training!</p>','message_scroll'=>'1')),
   )
 );

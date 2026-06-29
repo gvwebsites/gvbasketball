@@ -12,7 +12,7 @@ $agent = new OsAgentModel();
 $agent->first_name  = 'Coach';
 $agent->last_name   = 'Gino';
 $agent->display_name= 'Coach Gino';
-$agent->email       = 'info@gvbasketball.com';
+$agent->email       = 'gvbasketballcoaching@gmail.com';
 $agent->status      = 'active';
 $agent->save();
 $agent_id = $agent->id;
