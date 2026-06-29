@@ -22,16 +22,19 @@ cd /home/u907133977/domains/gvbasketball.com/public_html
   everything with WP-CLI over SSH.
 - SSH prints a harmless "post-quantum" warning to stderr; ignore it (filter with
   `2>&1 | grep -v "post-quantum\|store now\|upgraded. See\|vulnerable"`).
-- **Always back up before risky DB/file ops:** `wp db export ~/backups/pre-change-$(date +%F-%H%M).sql`.
-  (Original baseline backup: `~/backups/gvbasketball-20260627-015018/`.)
+- **Always back up before risky DB/file ops.** ⚠️ `wp db export` currently **fails on this host**
+  (exit 255 — mysqldump unavailable). For settings/table-scoped changes, snapshot the table instead:
+  `wp db query "SELECT name,value FROM wp_latepoint_settings ORDER BY name;" --skip-column-names > backup.tsv`.
+  (Original baseline full backup: `~/backups/gvbasketball-20260627-015018/`.)
 
 ---
 
 ## 2. The golden workflow (how updates work)
 
-The front end is **hand-written HTML + a shared CSS design system**, mounted into Elementor by two
-must-use plugins (`wp-content/mu-plugins/gv-brand.php` = CSS, `gv-build.php` = helper functions).
-You almost never touch the Elementor editor. To change the site:
+The front end is **hand-written HTML + a shared CSS design system**, mounted into Elementor by
+must-use plugins (`wp-content/mu-plugins/gv-brand.php` = CSS, `gv-build.php` = helper functions,
+`gv-otp-email.php` = branded member-login OTP email). You almost never touch the Elementor editor.
+To change the site:
 
 > **edit a file in `build/` → `scp` it to the server → apply with a `gv_*` helper → flush caches.**
 
@@ -112,12 +115,23 @@ Agent Coach Gino (1) · locations Makati (1)/Ortigas (2) · services Consultatio
 Group/Elite · work periods Mon/Tue/Fri/Sun 900–1080 (mins; weekday 1=Mon…7=Sun). Shortcodes:
 `[latepoint_book_form]`, `[latepoint_customer_dashboard]`. Edit via `build/scripts/setup-latepoint.php`.
 
+### Member login & signup (passwordless email OTP)
+"Member Login" (nav) → `/booking/` (2983) → `[latepoint_customer_dashboard]` shows login/signup when
+logged out. **Passwordless OTP over email** (every signup = verified email). Set via
+`build/scripts/enable-member-auth.php`: `selected_customer_authentication_method=otp`,
+`default_customer_authentication_method=otp`, `selected_customer_authentication_field_type=email`,
+`page_url_customer_dashboard`/`page_url_customer_login=/booking/`, and
+`notifications_email_processor=wp_mail` (**without this LatePoint email — incl. OTP — is silently
+disabled**). The OTP email is branded by mu-plugin `gv-otp-email.php` (hooks `wp_mail`, swaps in HTML).
+Test a send: `wp eval 'var_dump(OsOTPHelper::generateAndSendOTP("test@favor.church","email","email"));'`.
+
 ### Forms (WPForms Lite → email info@)
 Contact **3003**, Newsletter **3005**, Waiver **3007**. (Lite has no Phone field — use text.)
 
 ### Email
 FluentSMTP + Gmail OAuth, sender `info@gvbasketball.com`. OAuth keys are wp-config constants
 `FLUENTMAIL_GMAIL_CLIENT_ID/SECRET`. Test: `wp eval 'var_dump(wp_mail("info@gvbasketball.com","test","ok"));'`.
+LatePoint notifications need their own switch (`notifications_email_processor=wp_mail`) on top of FluentSMTP.
 
 ---
 

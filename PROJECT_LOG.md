@@ -43,6 +43,8 @@ must-use plugins power it:
   - `gv_set_theme_part($title, $type, $html)` / `gv_set_theme_part_blocks(...)` — Elementor
     Theme Builder header/footer from HTML/blocks, applied site-wide.
   - `gv_ensure_page($slug, $title)` — idempotent page creator.
+- **`wp-content/mu-plugins/gv-otp-email.php`** → runtime hook (not build-time): brands the member
+  login OTP email by intercepting `wp_mail` (see §6 "Member login & signup").
 
 > Theme Builder note: Elementor Pro caches header/footer display conditions in the option
 > `elementor_pro_theme_builder_conditions` (`['header'=>[id=>['include/general']], 'footer'=>...]`).
@@ -146,10 +148,16 @@ signup has a verified email address. LatePoint settings set:
 | `notifications_email_processor` | `wp_mail` | **Required** — without it LatePoint email notifications (incl. OTP) are disabled and OTP send fails silently |
 | `page_url_customer_dashboard` / `page_url_customer_login` | `/booking/` | Post-login redirects land on the GV-styled page, not the bare `/customer-cabinet/` (2980) |
 
+**Branded OTP email:** LatePoint sends a plain-text "Your OTP code is: …" with no pre-send content
+filter, so mu-plugin [`build/mu-plugins/gv-otp-email.php`](build/mu-plugins/gv-otp-email.php) hooks
+`wp_mail` (scoped to subjects containing "OTP"), extracts the code, and swaps in a branded HTML email
+(GV logo, navy/orange, spaced code, 10-min expiry note) with `Content-Type: text/html`.
+
 Verified end-to-end: OTP send to `test@favor.church` returned `status=success` (active row in
-`wp_latepoint_customer_otp_codes`, code stored hashed), and `/booking/` renders `auth[via]=otp`
-with password fields hidden. Pre-change settings snapshot:
-`backups/latepoint_settings-pre-member-auth-2026-06-29.tsv`. Design spec:
+`wp_latepoint_customer_otp_codes`, code stored hashed); a `phpmailer_init` capture confirmed the wire
+payload is the branded HTML (subject "Your GV Basketball login code", `ContentType: text/html`, logo +
+code present); and `/booking/` renders `auth[via]=otp` with password fields hidden. Pre-change settings
+snapshot: `backups/latepoint_settings-pre-member-auth-2026-06-29.tsv`. Design spec:
 [`docs/superpowers/specs/2026-06-29-member-signup-verified-email-design.md`](docs/superpowers/specs/2026-06-29-member-signup-verified-email-design.md).
 
 ---
@@ -235,8 +243,10 @@ Enabled LatePoint native customer auth as **passwordless email OTP** on `/bookin
 log in by entering an email and a 6-digit code sent to it, so every account is email-verified. Also
 set `notifications_email_processor=wp_mail` (LatePoint email notifications were off, which had been
 silently blocking OTP send) and pointed `page_url_customer_dashboard`/`page_url_customer_login` at
-`/booking/` so post-login lands on the branded page. Verified by sending an OTP to
-`test@favor.church` (success). No HTML/CSS/template changes. Note: `wp db export` fails on this host
+`/booking/` so post-login lands on the branded page. Added mu-plugin `gv-otp-email.php` to replace
+LatePoint's plain-text OTP email with a branded HTML version (logo, navy/orange, spaced code, expiry).
+Verified by sending OTPs to `test@favor.church` (success; `phpmailer_init` capture confirmed branded
+HTML on the wire). No front-end HTML/CSS/template changes. Note: `wp db export` fails on this host
 (mysqldump unavailable) — backed up the settings table to `backups/` instead.
 
 ### 2026-06-27 — Minimalist refinement pass (mood-board alignment)
