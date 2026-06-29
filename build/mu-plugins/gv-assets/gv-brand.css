@@ -152,7 +152,7 @@ body .site-content .ast-container,body #primary{margin-left:0;margin-right:0;}
 .gv-steps{counter-reset:gv;display:grid;gap:22px;grid-template-columns:repeat(3,1fr);}
 @media(max-width:900px){.gv-steps{grid-template-columns:1fr;}}
 .gv-step{position:relative;background:#fff;border-radius:var(--gv-radius);padding:30px 28px 28px;border:1px solid var(--gv-light);box-shadow:var(--gv-shadow-sm);color:var(--gv-charcoal);}
-.gv-step p{color:var(--gv-charcoal);}
+.gv-step p{color:var(--gv-navy-deep);}
 .gv-step::before{counter-increment:gv;content:counter(gv,decimal-leading-zero);font-family:var(--gv-font-display);font-size:2.6rem;color:var(--gv-orange);line-height:1;display:block;margin-bottom:12px;}
 .gv-step__title{font-family:var(--gv-font-head);font-weight:700;color:var(--gv-navy);font-size:1.15rem;margin:0 0 8px;}
 
