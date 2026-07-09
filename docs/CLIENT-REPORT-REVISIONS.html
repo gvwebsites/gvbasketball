@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>GV Basketball &mdash; Website Revisions Report</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A detailed report of the July 2026 website revisions, media optimizations, gold branding, and schedule updates.">
+  <style>
+    :root {
+      --deep: #021F51;
+      --navy: #123B78;
+      --gold: #C9A24B;
+      --gold-soft: #dfc17f;
+      --ink: #16223b;
+      --muted: #5b6678;
+      --paper: #F4F6F9;
+      --card: #ffffff;
+      --line: #dde3ec;
+      --live: #1f8a4c;
+      --maxw: 920px;
+      --disp: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      --body: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--body);
+      line-height: 1.62;
+      font-size: 17px;
+      -webkit-font-smoothing: antialiased;
+    }
+    .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+    h1, h2, h3 {
+      font-family: var(--disp);
+      text-transform: uppercase;
+      font-weight: 800;
+      letter-spacing: .01em;
+      text-wrap: balance;
+      line-height: 1.1;
+      margin: 0;
+    }
+    p { margin: 0 0 14px; }
+    a { color: var(--navy); text-decoration: none; font-weight: 600; }
+    a:hover { text-decoration: underline; }
+    .eyebrow {
+      font-family: var(--disp);
+      text-transform: uppercase;
+      letter-spacing: .18em;
+      font-weight: 700;
+      font-size: .75rem;
+      color: var(--gold);
+    }
+    .cover {
+      background: var(--deep);
+      color: #fff;
+      padding: 64px 0 56px;
+      background-image: linear-gradient(135deg, #021F51 0%, #0a2c63 55%, #123B78 100%);
+    }
+    .cover .eyebrow { color: var(--gold-soft); }
+    .cover h1 { font-size: clamp(2.2rem, 5vw, 3.4rem); color: #fff; margin: 14px 0 0; }
+    .cover .accent { height: 5px; width: 74px; background: var(--gold); border-radius: 3px; margin: 22px 0; }
+    .cover p { color: #c6d2e8; max-width: 65ch; margin: 0; }
+    .meta { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 26px; }
+    .meta span {
+      font-family: var(--mono);
+      font-size: .78rem;
+      color: #aebbd6;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 999px;
+      padding: 5px 12px;
+    }
+    section { padding: 54px 0; border-bottom: 1px solid var(--line); }
+    section:last-of-type { border-bottom: 0; }
+    h2 { font-size: clamp(1.4rem, 3vw, 1.9rem); color: var(--deep); }
+    h2 .num { color: var(--gold); margin-right: .4em; }
+    .lead { font-size: 1.08rem; color: var(--muted); max-width: 68ch; margin: 10px 0 0; }
+    .sec-head { margin-bottom: 32px; }
+    figure { margin: 0 0 24px; }
+    .screen {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 18px 40px -26px rgba(2, 31, 81, 0.5);
+    }
+    .screen__bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      background: #eef1f6;
+      border-bottom: 1px solid var(--line);
+    }
+    .dot { width: 10px; height: 10px; border-radius: 50%; background: #cbd3df; }
+    .screen__url {
+      font-family: var(--mono);
+      font-size: .74rem;
+      color: var(--muted);
+      margin-left: 8px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 3px 10px;
+    }
+    .screen img { display: block; width: 100%; height: auto; }
+    figcaption { font-size: .82rem; color: var(--muted); margin-top: 8px; text-align: center; }
+    .two { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+    @media(max-width: 768px) { .two { grid-template-columns: 1fr; } }
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 22px 24px; margin-top: 22px; }
+    .card--navy {
+      background: var(--deep);
+      color: #fff;
+      border: 0;
+      background-image: linear-gradient(135deg, #021F51, #123B78);
+    }
+    .card--navy h3 { color: #fff; }
+    .card--navy p { color: #cdd8ec; }
+    .card--navy a { color: var(--gold-soft); }
+    .card--accent { border-left: 4px solid var(--gold); }
+    .card h3 { font-size: 1.1rem; color: var(--deep); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.02em; }
+    ul.clean { margin: 8px 0 0; padding-left: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    ul.clean li { padding-left: 26px; position: relative; }
+    ul.clean li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: .55em;
+      width: 9px;
+      height: 9px;
+      border-radius: 2px;
+      background: var(--gold);
+    }
+    .card--navy ul.clean li::before { background: var(--gold-soft); }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-family: var(--disp);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-weight: 700;
+      font-size: .7rem;
+      padding: 5px 11px;
+      border-radius: 999px;
+    }
+    .chip::before { content: ""; width: 8px; height: 8px; border-radius: 50%; }
+    .chip--live { background: #e7f3ec; color: var(--live); }
+    .chip--live::before { background: var(--live); }
+    .feature-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 18px; }
+    @media(max-width: 680px) { .feature-grid { grid-template-columns: 1fr; } }
+    .feat { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; }
+    .feat b { display: block; font-family: var(--disp); text-transform: uppercase; letter-spacing: .03em; color: var(--deep); font-size: .92rem; margin-bottom: 3px; }
+    .feat span { font-size: .92rem; color: var(--muted); }
+    footer { background: var(--deep); color: #aebbd6; padding: 34px 0; font-size: .86rem; border-top: 1px solid rgba(255, 255, 255, 0.1); }
+    footer .wrap { display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
+    footer b { color: #fff; font-family: var(--disp); letter-spacing: .04em; }
+  </style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="wrap">
+    <div class="eyebrow">Client Revisions &middot; Verification &amp; Release</div>
+    <h1>GV Basketball<br>Revisions Report</h1>
+    <div class="accent"></div>
+    <p>A comprehensive report of the July 2026 website revisions based on the approved design specifications. We have deployed your actual training photographs, reconfigured the scheduling logic for three new venues, introduced premium gold branding elements, and integrated booking flow graphics.</p>
+    <div class="meta">
+      <span>gvbasketball.com</span><span>Prepared for Coach Gino</span><span>July 2026</span>
+    </div>
+  </div>
+</div>
+
+<section><div class="wrap">
+  <div class="sec-head">
+    <div class="eyebrow">Overview</div>
+    <h2>Revisions Checklist Summary</h2>
+    <p class="lead">All requirements outlined in the <a href="file:///Users/rico/Git/gvbasketball/docs/superpowers/specs/2026-07-09-client-revisions-design.md">Revisions Specification Sheet</a> have been fully implemented, deployed, and verified on the live server.</p>
+  </div>
+  <div class="feature-grid">
+    <div class="feat"><b>Real Photo Assets Deployed</b><span>10 portrait/action training photos optimized to WebP and deployed as primary hero and content visuals.</span></div>
+    <div class="feat"><b>3-Venue Schedule Rebuild</b><span>Replaced "Makati &amp; Ortigas" with Dasma Makati, Urdaneta Village, and Corinthian Gardens across all pages.</span></div>
+    <div class="feat"><b>Premium Gold Branding</b><span>Scoped gold color accents, watermark, divider, trust badges, and a minimalist premium footer.</span></div>
+    <div class="feat"><b>Informational Booking Flow</b><span>A 5-step booking and payment graphic explaining off-site billing near the request form.</span></div>
+    <div class="feat"><b>LatePoint Reconfiguration</b><span>Re-mapped DB tables to 3 venues and customized work day availability per location.</span></div>
+    <div class="feat"><b>Email &amp; System Clean-up</b><span>Updated transactional email footers, removed Facebook/WhatsApp leftovers, and flushed all cache layers.</span></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="sec-head">
+    <div class="chips"><span class="chip chip--live">Live &amp; Optimized</span></div>
+    <h2><span class="num">01</span>Real Photo Pipeline &amp; Crop Decisions</h2>
+    <p class="lead">We optimized 8 raw portrait files into compressed WebP assets (under 400KB each) to maintain fast page speed. To support widescreen monitors, we cropped the hero photos using specific gravity commands to keep focus points aligned:</p>
+  </div>
+  <div class="two">
+    <div>
+      <figure>
+        <div class="screen"><div class="screen__bar"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span class="screen__url">gvbasketball.com</span></div>
+        <img src="screenshots/home.png" alt="GV Basketball Homepage Hero">
+        </div>
+        <figcaption>Homepage: Center crop preserves the court, basketball hoop, and player positions.</figcaption>
+      </figure>
+    </div>
+    <div>
+      <div class="card card--accent">
+        <h3>Crop &amp; Pipeline Details</h3>
+        <ul class="clean">
+          <li><strong>Home Hero:</strong> Cropped with <code>-gravity Center</code> to maintain the vertical height of the backboard and the baseline workout.</li>
+          <li><strong>Programs Hero:</strong> Cropped with <code>-gravity North</code> to prevent cutting off the faces of Coach Gino and the athlete during active drills.</li>
+          <li><strong>About Hero &amp; Story:</strong> Deployed Coach Gino's portrait in high definition on the About hero background and story columns.</li>
+          <li><strong>Asset Verification:</strong> All WebP images return 200 HTTP codes on the live site. Source files are tracked under `revisions/`.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="sec-head">
+    <div class="chips"><span class="chip chip--live">Live</span></div>
+    <h2><span class="num">02</span>Training Programs Overhaul</h2>
+    <p class="lead">The Training Programs page has been completely rewritten to reflect the new class formats, maximum athlete limits, skill inclusivity, and updated schedule:</p>
+  </div>
+  <figure>
+    <div class="screen"><div class="screen__bar"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span class="screen__url">gvbasketball.com/training-programs/</span></div>
+    <img src="screenshots/training-programs.png" alt="Training Programs Page">
+    </div>
+    <figcaption>Training Programs page schedule table and redesigned program details.</figcaption>
+  </figure>
+  <div class="card card--accent">
+    <h3>Content Updates</h3>
+    <ul class="clean">
+      <li><strong>Small Group:</strong> Capacity increased to <strong>6 athletes</strong>, with an explicit line welcoming "athletes of all skill levels."</li>
+      <li><strong>Elite Performance:</strong> Rewritten to include <strong>integrated aqua training</strong> as part of the strength, conditioning, and recovery regimen.</li>
+      <li><strong>Pricing Message:</strong> Aligned with the Instagram-only and consultation-only guidelines, clarifying that pricing plans are customized during your session.</li>
+      <li><strong>Venue &amp; Day Schedule:</strong> Removed the confusing beginner/intermediate time divisions. Features a clean table showing venue availability (Dasma Makati = Mon/Wed/Thu, Urdaneta Village = Fri/Sun, Corinthian Gardens = Sun).</li>
+      <li><strong>Homepage Mirroring:</strong> The program cards on the front page have been mirrored to match this clean content hierarchy.</li>
+    </ul>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="sec-head">
+    <div class="chips"><span class="chip chip--live">Live</span></div>
+    <h2><span class="num">03</span>Premium Gold Elevation &amp; Minimalist Footer</h2>
+    <p class="lead">To elevate the brand aesthetic, we introduced a premium scoped gold accent (<code>#C9A24B</code>) into specific call-to-action sections and footer layouts, complementing the core basketball orange:</p>
+  </div>
+  <div class="two">
+    <figure>
+      <div class="screen"><div class="screen__bar"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span class="screen__url">gvbasketball.com/about/</span></div>
+      <img src="screenshots/about.png" alt="About Page &amp; Gold CTA Section">
+      </div>
+      <figcaption>About page showing Coach Gino's portrait and the premium gold CTA background band.</figcaption>
+    </figure>
+    <div>
+      <div class="card card--navy">
+        <h3>Branding &amp; Layout Polish</h3>
+        <ul class="clean">
+          <li><strong>Premium CTA:</strong> The bottom section of the marketing pages now features a deep navy gradient, gold heading typography, a subtle GV watermark, a custom basketball icon divider, and a gold button ("Request Training") paired with a gold-outline Instagram CTA.</li>
+          <li><strong>Trust Badge Row:</strong> Embedded a horizontal trust grid below the buttons highlighting: <em>Personalized Plan · Measurable Progress · Elite Standards · Results That Last</em>.</li>
+          <li><strong>Minimalist Footer:</strong> Completely rebuilt from 4 columns to a clean, premium 3-column layout. It features thin gold hairline borders, an Instagram-only social icon, email, and a location listing showing the three new venues.</li>
+          <li><strong>Email Footers:</strong> Replaced "Makati &amp; Ortigas" with "Metro Manila" in the footers of the OTP login email (<code>gv-otp-email.php</code>) and request form (<code>gv-request-form.php</code>).</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="sec-head">
+    <div class="chips"><span class="chip chip--live">Live</span></div>
+    <h2><span class="num">04</span>Booking Flow Graphic &amp; LatePoint Reconfiguration</h2>
+    <p class="lead">To provide clarity on how booking and billing work without showing prices online, we added a styled 5-step visual stepper above the consultation request form. We also reconfigured the LatePoint database tables to map the new venues and active days:</p>
+  </div>
+  <figure>
+    <div class="screen"><div class="screen__bar"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span class="screen__url">gvbasketball.com/book-a-consultation/</span></div>
+    <img src="screenshots/book-a-consultation.png" alt="Booking Consultation Page">
+    </div>
+    <figcaption>Consultation page showing the Booking &amp; Payment Flow stepper near the request form.</figcaption>
+  </figure>
+  <div class="card card--accent">
+    <h3>Functional Integration</h3>
+    <ul class="clean">
+      <li><strong>5-Step Stepper Graphic:</strong> Renders inline on the consultation and booking pages (<em>1. Book Online &rarr; 2. We Confirm &rarr; 3. Reserve Your Spot &rarr; 4. Booking Confirmed &rarr; 5. Train</em>) detailing that payments are handled directly off-site.</li>
+      <li><strong>LatePoint DB Update:</strong> Restructured the database locations table to register Dasma Makati (ID 1), Urdaneta Village (ID 2), and Corinthian Gardens (ID 3).</li>
+      <li><strong>Work Day Restrictions:</strong> Customized LatePoint work periods so Coach Gino is bookable at specific venues on their exact days (Dasma = Mon/Wed/Thu, Urdaneta = Fri/Sun, Corinthian = Sun).</li>
+      <li><strong>Database Backup:</strong> Prior to reconfiguring, a database snapshot of all LatePoint settings, locations, services, and work periods was taken and stored securely in <code>~/latepoint-backup/</code>.</li>
+    </ul>
+  </div>
+</section>
+
+<section><div class="wrap">
+  <div class="sec-head">
+    <div class="eyebrow">Verification</div>
+    <h2>Live Site Quality Assurance</h2>
+    <p class="lead">We performed full regression testing and element verification across the live server.</p>
+  </div>
+  <div class="two">
+    <figure>
+      <div class="screen"><div class="screen__bar"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span class="screen__url">gvbasketball.com/booking/</span></div>
+      <img src="screenshots/booking.png" alt="Member Login &amp; Portal Page">
+      </div>
+      <figcaption>Member login and portal dashboard showing the booking flow graphic.</figcaption>
+    </figure>
+    <div class="card card--accent">
+      <h3>QA &amp; Verification Checks</h3>
+      <ul class="clean">
+        <li><strong>Markup Audit:</strong> Verified that the gold classes (<code>gv-btn--gold</code>) and trust badges (<code>gv-cta__trust</code>) are active on the Home, About, and Training Programs pages.</li>
+        <li><strong>No Leftover References:</strong> A global sweep confirmed that the old "Makati &amp; Ortigas" references have been completely replaced by the new venues and the "Metro Manila" shorthand.</li>
+        <li><strong>Cache Flushing:</strong> Flushed the Elementor CSS caches and purged the LiteSpeed edge caches to ensure visitors load the updated templates immediately.</li>
+      </ul>
+    </div>
+  </div>
+</div></section>
+
+<footer>
+  <div class="wrap">
+    <span>&copy; 2026 <b>GV BASKETBALL</b>. All rights reserved.</span>
+    <span>Site Version: 2.1 (July 2026 Revision Round)</span>
+  </div>
+</footer>
+
+</body>
+</html>
