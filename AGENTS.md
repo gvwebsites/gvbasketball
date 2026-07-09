@@ -176,7 +176,7 @@ identity is `info@`.
   Locations: Dasma Makati, Urdaneta Village, Corinthian Gardens (Metro Manila).
 - Pricing is **never** shown publicly — "shared during the consultation." No online payments.
 - Booking & Payment Flow: An informational "Flow of Purchase" graphic lives near the booking areas (e.g. `/book-a-consultation/`). The site collects **no** payment or bank details — payments are handled off-site directly with GV Basketball.
-- After meaningful changes, update `PROJECT_LOG.md` and commit (keep `.env` out of git).
+- After any changes, always update both `PROJECT_LOG.md` (technical changelog) and `PROGRESS_LOG.md` (plain-language client progress summary) and commit them (keep `.env` out of git).
 
 ---
 

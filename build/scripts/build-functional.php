@@ -55,10 +55,10 @@ echo "wpforms_id=$form_id\n";
 $book_a = <<<'HTML'
 <div class="gv-page">
 <section class="gv-hero">
-<div class="gv-wrap"><div class="gv-hero__inner" style="padding:88px 0 64px;max-width:760px;">
+<div class="gv-wrap"><div class="gv-hero__inner" style="padding:88px 0 72px;max-width:760px;">
 <span class="gv-eyebrow">Book a Consultation</span>
 <h1 class="gv-h1">Start Your Player's Journey</h1>
-<div class="gv-hero__rule" style="margin-top:20px;"></div>
+<div class="gv-hero__rule" style="margin-top:24px;"></div>
 <p class="gv-lead">Tell Coach Gino about your athlete and your preferred days and times. We'll follow up to confirm and map the right path forward.</p>
 </div></div></section>
 <section class="gv-section"><div class="gv-wrap">
@@ -111,10 +111,10 @@ echo gv_set_page_blocks(2982, array(
 $port_a = <<<'HTML'
 <div class="gv-page">
 <section class="gv-hero">
-<div class="gv-wrap"><div class="gv-hero__inner" style="padding:88px 0 64px;max-width:760px;">
+<div class="gv-wrap"><div class="gv-hero__inner" style="padding:88px 0 72px;max-width:760px;">
 <span class="gv-eyebrow">Member Portal</span>
 <h1 class="gv-h1">Member Booking</h1>
-<div class="gv-hero__rule" style="margin-top:20px;"></div>
+<div class="gv-hero__rule" style="margin-top:24px;"></div>
 <p class="gv-lead">Log in to book sessions, reschedule within policy, and view your upcoming training. New here? Start with a consultation.</p>
 <div class="gv-btn-row"><a class="gv-btn gv-btn--primary" href="/training-programs/">Book a Consultation</a></div>
 </div></div></section>
@@ -141,10 +141,10 @@ echo gv_set_page_blocks(2983, array(
 $contact_a = <<<'HTML'
 <div class="gv-page">
 <section class="gv-hero">
-<div class="gv-wrap"><div class="gv-hero__inner" style="padding:88px 0 64px;max-width:760px;">
+<div class="gv-wrap"><div class="gv-hero__inner" style="padding:88px 0 72px;max-width:760px;">
 <span class="gv-eyebrow">Get In Touch</span>
 <h1 class="gv-h1">Contact GV Basketball</h1>
-<div class="gv-hero__rule" style="margin-top:20px;"></div>
+<div class="gv-hero__rule" style="margin-top:24px;"></div>
 <p class="gv-lead">Questions about training, schedules, or programs? We'd love to hear from you.</p>
 </div></div></section>
 <section class="gv-section"><div class="gv-wrap">

@@ -91,7 +91,8 @@ body .site-content .ast-container,body #primary{margin-left:0;margin-right:0;}
 
 /* ---------- Hero ---------- */
 .gv-hero{position:relative;background:var(--gv-navy-deep);color:#fff;overflow:hidden;}
-.gv-hero__inner{position:relative;z-index:2;padding:120px 0 110px;max-width:760px;}
+/* Canonical interior-page hero padding (single source of truth; pages no longer need inline overrides). */
+.gv-hero__inner{position:relative;z-index:2;padding:88px 0 72px;max-width:760px;}
 .gv-hero h1{color:#fff;}
 .gv-hero .gv-lead{color:#c6d2e8;font-size:1.2rem;margin-top:20px;}
 .gv-hero__rule{width:64px;height:5px;background:var(--gv-orange);border-radius:3px;margin:0 0 26px;}
@@ -232,6 +233,10 @@ li.gv-navcta>a:hover{background:var(--gv-orange-dark)!important;}
 .ast-primary-header-bar .main-header-menu a{font-family:var(--gv-font-head);font-weight:600;}
 
 /* ---------- Custom Header (Elementor Theme Builder header, HTML widget) ---------- */
+/* Elementor wraps the header in .elementor-location-header (a direct child of <body>).
+   position:sticky on the inner .gv-nav alone can only travel within that wrapper's own
+   height, so the sticky must also live on the body-level wrapper to persist down the page. */
+.elementor-location-header{position:sticky;top:0;z-index:999;}
 .gv-nav{position:sticky;top:0;z-index:999;background:#fff;box-shadow:0 2px 18px -8px rgba(2,31,81,.28);font-family:var(--gv-font-head);}
 .gv-nav__wrap{max-width:1280px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:74px;gap:20px;}
 .gv-nav__logo{display:flex;align-items:center;}
@@ -275,7 +280,7 @@ li.gv-navcta>a:hover{background:var(--gv-orange-dark)!important;}
 .gv-newsletter-band .wpforms-confirmation-container-full{background:rgba(255,255,255,.1)!important;border:0!important;color:#fff!important;border-radius:8px;}
 
 /* ---------- Waiver form ---------- */
-.gv-waiverform-wrap{max-width:720px;margin:0 auto;padding:8px 20px 80px;}
+.gv-waiverform-wrap{max-width:720px;margin:0 auto;padding:8px 24px 80px;}
 .gv-waiverform-wrap .wpforms-container{margin:0;}
 .gv-waiverform-wrap .wpforms-form input[type=text],.gv-waiverform-wrap .wpforms-form input[type=email],.gv-waiverform-wrap .wpforms-form input[type=tel],.gv-waiverform-wrap .wpforms-form textarea{border-radius:8px!important;border:1px solid var(--gv-light)!important;}
 .gv-waiverform-wrap .wpforms-form button[type=submit]{background:var(--gv-orange)!important;border-radius:8px!important;font-family:var(--gv-font-head)!important;font-weight:700!important;text-transform:uppercase;letter-spacing:.03em;}
@@ -304,12 +309,12 @@ li.gv-navcta>a:hover{background:var(--gv-orange-dark)!important;}
 .gv-footer__bar-inner{max-width:var(--gv-maxw);margin:0 auto;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;font-size:.85rem;color:#9aa8c4;}
 
 /* ---------- LatePoint booking + WPForms embeds ---------- */
-.gv-bookform-wrap{background:var(--gv-light);padding:56px 20px;}
+.gv-bookform-wrap{background:var(--gv-light);padding:56px 24px;}
 .gv-bookform-wrap>div,.gv-bookform-wrap .latepoint-booking-form-w,.gv-bookform-wrap form{max-width:1000px;margin-left:auto;margin-right:auto;}
-.gv-dash-wrap{background:var(--gv-light);padding:56px 20px;min-height:46vh;}
+.gv-dash-wrap{background:var(--gv-light);padding:56px 24px;min-height:46vh;}
 .gv-dash-wrap>div,.gv-dash-wrap .latepoint-customer-dashboard-w{max-width:1040px;margin-left:auto;margin-right:auto;}
 /* Widget shrink-wraps in the Elementor flex container — force full width, then cap the inner form. */
-.gv-contactform-wrap{width:100%;margin:0 auto;padding:8px 20px 80px;}
+.gv-contactform-wrap{width:100%;margin:0 auto;padding:8px 24px 80px;}
 .gv-contactform-wrap .wpforms-container{width:100%;max-width:760px;margin:0 auto;}
 /* WPForms caps "medium" fields ~60% wide — make every field + input fill the form. */
 .gv-contactform-wrap .wpforms-field,.gv-contactform-wrap .wpforms-field-medium,.gv-contactform-wrap .wpforms-field-large,.gv-contactform-wrap .wpforms-field-small,.gv-contactform-wrap .wpforms-field-row{width:100%!important;max-width:100%!important;}

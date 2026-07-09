@@ -57,10 +57,10 @@ $waiver_page = gv_ensure_page('waiver', 'Player Waiver & Consent');
 $waiver_a = <<<'HTML'
 <div class="gv-page">
 <section class="gv-hero">
-<div class="gv-wrap"><div class="gv-hero__inner" style="padding:88px 0 60px;max-width:760px;">
+<div class="gv-wrap"><div class="gv-hero__inner" style="padding:88px 0 72px;max-width:760px;">
 <span class="gv-eyebrow">Before You Train</span>
 <h1 class="gv-h1">Player Waiver &amp; Consent</h1>
-<div class="gv-hero__rule" style="margin-top:20px;"></div>
+<div class="gv-hero__rule" style="margin-top:24px;"></div>
 <p class="gv-lead">Please complete this form before your athlete's first session. It confirms consent and helps us keep every player safe.</p>
 </div></div></section>
 <section class="gv-section" style="padding-bottom:14px;"><div class="gv-wrap">
