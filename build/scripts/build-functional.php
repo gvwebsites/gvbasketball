@@ -6,7 +6,7 @@ $cta = <<<'HTML'
 <h2 class="gv-section-title">Ready To Build A Better Player?</h2>
 <p class="gv-lead">Book a consultation and we'll map out the right path for your athlete.</p>
 <div class="gv-btn-row" style="justify-content:center;">
-<a class="gv-btn gv-btn--primary" href="/book-a-consultation/">Request Training</a>
+<a class="gv-btn gv-btn--primary" href="/book-a-consultation/">Book a Consultation</a>
 <a class="gv-btn gv-btn--ghost" href="https://ig.me/m/gvbasketballl" target="_blank" rel="noopener">Message on Instagram</a>
 </div></div></div></section></div>
 HTML;
@@ -56,7 +56,7 @@ $book_a = <<<'HTML'
 <div class="gv-page">
 <section class="gv-hero"><div class="gv-hero__bg" style="background-image:url('https://gvbasketball.com/wp-content/uploads/2026/07/gv-about-hero-real.webp');"></div><div class="gv-hero__overlay"></div>
 <div class="gv-wrap"><div class="gv-hero__inner" style="padding:88px 0 64px;max-width:760px;">
-<span class="gv-eyebrow">Request Training</span>
+<span class="gv-eyebrow">Book a Consultation</span>
 <h1 class="gv-h1">Start Your Player's Journey</h1>
 <div class="gv-hero__rule" style="margin-top:20px;"></div>
 <p class="gv-lead">Tell Coach Gino about your athlete and your preferred days and times. We'll follow up to confirm and map the right path forward.</p>
@@ -71,7 +71,7 @@ $book_a = <<<'HTML'
 <div class="gv-card"><h3 class="gv-card__title">Schedule Options</h3><p>Small-group days across Metro Manila (Dasma Makati, Urdaneta Village, Corinthian Gardens); Private &amp; Elite by appointment.</p></div>
 <div class="gv-card"><h3 class="gv-card__title">Best-Fit Program</h3><p>Private, Small Group, or Elite Performance.</p></div>
 </div>
-<div class="gv-head-block gv-center" style="margin-top:54px;margin-bottom:0;"><span class="gv-eyebrow">Tell Us About Your Player</span><h2 class="gv-section-title">Request Training</h2><p class="gv-lead">Send us a few details and your preferred days and times. Coach Gino's team will follow up to confirm — pricing is shared during your consultation.</p></div>
+<div class="gv-head-block gv-center" style="margin-top:54px;margin-bottom:0;"><span class="gv-eyebrow">Tell Us About Your Player</span><h2 class="gv-section-title">Book a Consultation</h2><p class="gv-lead">Send us a few details and your preferred days and times. Coach Gino's team will follow up to confirm — pricing is shared during your consultation.</p></div>
 </div></section>
 </div>
 HTML;
@@ -116,7 +116,7 @@ $port_a = <<<'HTML'
 <h1 class="gv-h1">Member Booking</h1>
 <div class="gv-hero__rule" style="margin-top:20px;"></div>
 <p class="gv-lead">Log in to book sessions, reschedule within policy, and view your upcoming training. New here? Start with a consultation.</p>
-<div class="gv-btn-row"><a class="gv-btn gv-btn--primary" href="/book-a-consultation/">Request Training</a></div>
+<div class="gv-btn-row"><a class="gv-btn gv-btn--primary" href="/book-a-consultation/">Book a Consultation</a></div>
 </div></div></section>
 </div>
 HTML;
