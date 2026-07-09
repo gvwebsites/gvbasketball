@@ -151,15 +151,6 @@ $contact_a = <<<'HTML'
 <div class="gv-contact-grid">
 <div class="gv-contact-item"><div class="gv-contact-item__ic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg></div><div><b>Instagram</b><br><a href="https://ig.me/m/gvbasketballl" target="_blank" rel="noopener">Message @gvbasketballl</a></div></div>
 <div class="gv-contact-item"><div class="gv-contact-item__ic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></div><div><b>Email</b><br><a href="mailto:gvbasketballcoaching@gmail.com">gvbasketballcoaching@gmail.com</a></div></div>
-</div>
-</div></section>
-<section class="gv-section gv-section--light"><div class="gv-wrap">
-<div class="gv-head-block gv-center"><span class="gv-eyebrow">Where We Train</span><h2 class="gv-section-title">Our Locations</h2><p class="gv-lead">Small-group sessions run across Metro Manila. Your exact venue is confirmed at your consultation.</p></div>
-<div class="gv-grid gv-grid--3">
-<div class="gv-card"><div class="gv-card__icon"><svg viewBox="0 0 24 24"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg></div><h3 class="gv-card__title">Dasma, Makati</h3><p>Small-group sessions — Mon, Wed &amp; Thu.</p><div style="margin-top:14px;"><a class="gv-btn gv-btn--outline" href="https://www.google.com/maps/search/?api=1&query=Dasmari%C3%B1as%20Village%2C%20Makati" target="_blank" rel="noopener">View on Google Maps</a></div></div>
-<div class="gv-card"><div class="gv-card__icon"><svg viewBox="0 0 24 24"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg></div><h3 class="gv-card__title">Urdaneta Village</h3><p>Small-group sessions — Fri &amp; Sun.</p><div style="margin-top:14px;"><a class="gv-btn gv-btn--outline" href="https://www.google.com/maps/search/?api=1&query=Urdaneta%20Village%2C%20Makati" target="_blank" rel="noopener">View on Google Maps</a></div></div>
-<div class="gv-card"><div class="gv-card__icon"><svg viewBox="0 0 24 24"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg></div><h3 class="gv-card__title">Corinthian Gardens</h3><p>Small-group sessions — Sun.</p><div style="margin-top:14px;"><a class="gv-btn gv-btn--outline" href="https://www.google.com/maps/search/?api=1&query=Corinthian%20Gardens%2C%20Quezon%20City" target="_blank" rel="noopener">View on Google Maps</a></div></div>
-</div>
 </div></section>
 <section class="gv-section" style="padding-bottom:14px;"><div class="gv-wrap">
 <div class="gv-head-block gv-center" style="margin-bottom:0;"><span class="gv-eyebrow">Send a Message</span><h2 class="gv-section-title">Contact Us</h2></div>
