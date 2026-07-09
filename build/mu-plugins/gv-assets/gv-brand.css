@@ -264,10 +264,10 @@ li.gv-navcta>a:hover{background:var(--gv-orange-dark)!important;}
 .gv-nav__menu a:hover{color:var(--gv-orange);}
 .gv-nav__cta,.gv-nav__menu a.gv-nav__cta{display:inline-flex;align-items:center;background:var(--gv-gold);color:var(--gv-navy-black);padding:12px 22px;min-height:44px;border-radius:8px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;font-size:.84rem;}
 .gv-nav__cta:hover,.gv-nav__menu a.gv-nav__cta:hover{background:var(--gv-gold-soft);color:var(--gv-navy-black);}
-.gv-nav__login{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:8px;color:var(--gv-navy);transition:color .2s,background .2s;}
-.gv-nav__login svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;display:block;}
-.gv-nav__login:hover{color:var(--gv-orange);background:var(--gv-light);}
-.gv-nav__login-label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;}
+.gv-nav__instagram{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:8px;color:#E1306C;transition:color .2s,background .2s,transform .2s;}
+.gv-nav__instagram svg{width:22px;height:22px;fill:currentColor;display:block;}
+.gv-nav__instagram:hover{color:#b31e50;background:var(--gv-light);transform:scale(1.05);}
+.gv-nav__instagram-label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;}
 .gv-nav__toggle{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;}
 .gv-nav__toggle:focus-visible+.gv-nav__burger{outline:3px solid var(--gv-orange);outline-offset:3px;border-radius:6px;}
 .gv-nav__burger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:10px;min-width:44px;min-height:44px;align-items:center;justify-content:center;background:transparent;border:0;}
@@ -278,9 +278,9 @@ li.gv-navcta>a:hover{background:var(--gv-orange-dark)!important;}
   #gv-nav-toggle:checked ~ .gv-nav__menu{display:flex;}
   .gv-nav__menu a{padding:13px 0;width:100%;border-bottom:1px solid var(--gv-light);}
   .gv-nav__menu a.gv-nav__cta{margin-top:12px;text-align:center;border-bottom:0;}
-  .gv-nav__login{width:100%;height:auto;justify-content:flex-start;gap:10px;padding:13px 0;border-radius:0;border-bottom:1px solid var(--gv-light);font-weight:600;font-size:.94rem;}
-  .gv-nav__login:hover{background:transparent;}
-  .gv-nav__login-label{position:static;width:auto;height:auto;clip:auto;}
+  .gv-nav__instagram{width:100%;height:auto;justify-content:flex-start;gap:10px;padding:13px 0;border-radius:0;border-bottom:1px solid var(--gv-light);font-weight:600;font-size:.94rem;color:#E1306C;transition:color .2s,background .2s;}
+  .gv-nav__instagram:hover{background:transparent;color:#b31e50;}
+  .gv-nav__instagram-label{position:static;width:auto;height:auto;clip:auto;}
 }
 
 /* ---------- Newsletter band (footer, WPForms) ---------- */
