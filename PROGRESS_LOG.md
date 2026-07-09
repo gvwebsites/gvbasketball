@@ -28,6 +28,9 @@ This is a plain-language summary of the work completed on the GV Basketball webs
    - **Locations moved**: The locations grid has been moved from the Contact page to the Home page for better flow.
    - **"Book a Consultation" Copy**: Replaced all site-facing occurrences of "Request Training" with "Book a Consultation" (including navigation, buttons, page titles, and forms).
    - **Button styling**: Hovering the gold buttons keeps the text white (previously turned orange), and the newsletter Subscribe button is now styled gold.
+7. **Branded Photo Filters Deployed**: We applied a unified, premium CSS-based photo filtering system to make all images consistent with the GV Basketball branding.
+   - **Action & Portrait Photos**: Applied a subtle **"Warm Hardwood"** filter (warm contrast) to all inline action and coach portrait photos to unify shots taken under different lighting while keeping skin tones natural. These photos transition back to their original color when hovered/focused.
+   - **Hero Backgrounds**: Connected hero background images to the deep navy brand color using a **"Luminosity Blend"** mode. This turns background images into a cohesive monochrome navy texture, elevating the visual appeal and ensuring high text readability.
 
 ---
 

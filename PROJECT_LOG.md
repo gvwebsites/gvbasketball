@@ -420,3 +420,12 @@ supply), keep the Phil Handy / Micah Lancaster mentor headshots, lean **5-sectio
   `home-2887-content.bak-*.html`, `home-2887-elementor_data.bak-*.json`). Note: `wp db export`
   (mysqldump) errors on this host — use targeted file/post backups (the baseline full backup
   `gvbasketball-20260627-015018/` remains the safety net).
+
+### 2026-07-09 — Branded photo filters application
+Implemented a unified, premium CSS-based photo filtering system to ensure visual consistency across all live photos.
+
+- **`build/mu-plugins/gv-assets/gv-brand.css`** — Updated image styling classes:
+  - Applied the **"Warm Hardwood"** filter (`contrast(1.08) saturate(0.9) brightness(0.98) sepia(8%)`) to inline/action photos (`.gv-split__media img`, `.gv-person__img`, `.gv-gallery img`) to bring out hardwood tones and unify diverse images while preserving natural skin tones. Added a hover state transition to restore original color upon focus/interaction.
+  - Applied the **"Luminosity Blend"** style (`grayscale(100%) contrast(1.15) brightness(0.9)` and `mix-blend-mode: luminosity`) to hero background images (`.gv-hero__bg`) to seamlessly blend background graphics with the Deep Navy (`var(--gv-navy-deep)`) base color. This creates custom-textured backdrops while keeping text highly legible.
+- **Deploy** — `gv-brand.css` deployed to server via SCP. Purged Elementor CSS cache and LiteSpeed cache (`wp elementor flush-css && wp litespeed-purge all`).
+
