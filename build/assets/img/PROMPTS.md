@@ -33,3 +33,19 @@ specific real coach, athlete, or testimonial.
 | gallery-1 | 3:2 | Ball going through a net, frozen, backlit, droplets |
 | gallery-2 | 3:2 | Sneakers planting on hardwood, low angle, squeak-of-motion energy |
 | gallery-3 | 3:2 | Empty bleachers + court from a high corner, moody, single light pool |
+
+## 2026-07-09 Training Programs replacement direction
+
+The three `/training-programs/` detail images now intentionally use real GV gallery/source photos as
+image-generation inputs and should stay close to those photos. Do not regenerate these with the
+heavy dark navy/orange campaign treatment above.
+
+| File | Source photo | Direction |
+|---|---|---|
+| `gv-private.webp` | `revisions/basketball-photos/IMG_7536.jpg` | 3:2 landscape edit/outpaint, preserve the one-on-one covered-court drill, clean neutral daylight/gym lighting, mild exposure/sharpness only |
+| `gv-group.webp` | `revisions/basketball-photos/IMG_7533.jpg` | 3:2 landscape edit/outpaint, preserve the small-group indoor court context, clean white gym lighting, mild cleanup only |
+| `gv-elite.webp` | `revisions/basketball-photos/IMG_7535.jpg` | 3:2 landscape edit/outpaint, preserve the athlete-versus-coach competitive drill, clean white gym lighting, mild cleanup only |
+
+Avoid for these three: sunset warmth, orange/blue color grading, dramatic rim lights, haze, glossy
+reflections, luxury ad styling, invented extra people, readable text, watermarks, or distorted court
+lines/limbs/balls.

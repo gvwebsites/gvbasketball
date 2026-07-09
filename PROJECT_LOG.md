@@ -597,3 +597,11 @@ Fixed the empty "Book a Consultation" modal on `/training-programs/` and added s
 - **Test harness** — Created `build/mu-plugins/tests/test-gv-request-form.php` (19 assertions, framework-free CLI test covering data model shape, validation edge cases, and rendered markup structure).
 - **New CSS** — `.gv-rform-days`, `.gv-rform-day`, `.gv-rform-day--hidden`, `.gv-rform-dayhint` for the pill-shaped day chip UI.
 - **Deploy** — Uploaded `gv-request-form.php` to mu-plugins, ran `deploy-training-programs.php` (page 2981 = 2 widgets), flushed Elementor CSS + LiteSpeed. Verified: 7 day checkboxes, 4 location options, filter JS, optional time field, and third-person modal subtitle all live.
+
+### 2026-07-09 — Training Programs images regenerated from real gallery sources
+Regenerated the three inline images shown on `/training-programs/` using real GV Basketball source photos and a restrained, neutral lighting direction.
+
+- **Source-first image generation** — Used `$imagegen`/Codex image generation with real gallery/source photos as inputs: `IMG_7536.jpg` for Private Training, `IMG_7533.jpg` for Small Group Training, and `IMG_7535.jpg` for Elite Performance. Initial dark orange/blue campaign-style outputs were rejected in favor of a closer-to-real edit direction.
+- **Final visual direction** — Replaced the prior heavy cinematic/photo-filter treatment with clean white gym/daylight lighting, mild exposure correction, and 3:2 landscape framing while keeping each scene close to its original training photo.
+- **Build assets** — Overwrote `build/assets/img/web/gv-private.webp`, `gv-group.webp`, and `gv-elite.webp` at 1536×1024 WebP. Updated `build/assets/img/PROMPTS.md` so future regenerations preserve the real-photo, neutral-lighting direction for these three assets.
+- **Deploy & verification** — Uploaded the three WebPs in place to `wp-content/uploads/2026/06/`, flushed Elementor CSS and LiteSpeed, purged the three image URLs from Cloudflare, and verified the plain public URLs now return the new 1536×1024 images.

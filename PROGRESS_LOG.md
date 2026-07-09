@@ -57,3 +57,9 @@ These updates fulfill the design revisions you approved. The following items rem
 ---
 
 *Questions or change requests? Reply with notes against any section above and we'll fold them in.*
+
+---
+
+## Update — July 9, 2026
+
+We refreshed the three Training Programs photos using real GV Basketball session images as the source. The new versions stay much closer to the actual gallery photos: clean indoor/covered-court lighting, natural colors, and light polish only. They are already live on the Training Programs page.
