@@ -36,7 +36,7 @@ function gv_rf_email_shell($heading, $intro, $inner) {
     <tr><td style="padding:24px 36px 0;"><hr style="border:none;border-top:1px solid #E6E7E9;margin:0;"></td></tr>
     <tr><td align="center" style="padding:16px 36px 30px;">
       <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.6;color:{$steel};">
-        GV Basketball &middot; Makati &amp; Ortigas, Metro Manila &middot; <a href="{$ig}" style="color:{$navy};text-decoration:none;">@gvbasketballl</a>
+        GV Basketball &middot; Metro Manila &middot; <a href="{$ig}" style="color:{$navy};text-decoration:none;">@gvbasketballl</a>
       </p>
     </td></tr>
   </table>

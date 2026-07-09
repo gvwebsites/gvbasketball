@@ -46,7 +46,7 @@ function gv_otp_email_html($code) {
     <tr><td align="center" style="padding:18px 36px 30px;">
       <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.6;color:{$steel};">
         Didn't try to sign in? You can safely ignore this email.<br>
-        GV Basketball · Makati &amp; Ortigas, Metro Manila · <a href="{$ig}" style="color:{$navy};text-decoration:none;">@gvbasketballl</a>
+        GV Basketball · Metro Manila · <a href="{$ig}" style="color:{$navy};text-decoration:none;">@gvbasketballl</a>
       </p>
     </td></tr>
   </table>
