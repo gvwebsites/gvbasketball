@@ -262,8 +262,9 @@ li.gv-navcta>a:hover{background:var(--gv-orange-dark)!important;}
 .gv-nav__menu{display:flex;align-items:center;gap:21px;}
 .gv-nav__menu a{color:var(--gv-navy);font-weight:600;font-size:.94rem;text-decoration:none;transition:color .2s;white-space:nowrap;}
 .gv-nav__menu a:hover{color:var(--gv-orange);}
-.gv-nav__cta,.gv-nav__menu a.gv-nav__cta{display:inline-flex;align-items:center;background:var(--gv-gold);color:var(--gv-navy-black);padding:12px 22px;min-height:44px;border-radius:8px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;font-size:.84rem;}
-.gv-nav__cta:hover,.gv-nav__menu a.gv-nav__cta:hover{background:var(--gv-gold-soft);color:var(--gv-navy-black);}
+/* Header "Book a Consultation" is chrome, not main-content → orange (only in-page CTAs are gold). */
+.gv-nav__cta,.gv-nav__menu a.gv-nav__cta{display:inline-flex;align-items:center;background:var(--gv-orange);color:#fff;padding:12px 22px;min-height:44px;border-radius:8px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;font-size:.84rem;}
+.gv-nav__cta:hover,.gv-nav__menu a.gv-nav__cta:hover{background:var(--gv-orange-dark);color:#fff;}
 .gv-nav__instagram{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:8px;color:#E1306C;transition:color .2s,background .2s,transform .2s;}
 .gv-nav__instagram svg{width:22px;height:22px;fill:currentColor;display:block;}
 .gv-nav__instagram:hover{color:#b31e50;background:var(--gv-light);transform:scale(1.05);}
@@ -307,7 +308,7 @@ li.gv-navcta>a:hover{background:var(--gv-orange-dark)!important;}
 /* Kill Elementor's default 20px flex gap between the newsletter band and footer (showed as a white strip). */
 .elementor-location-footer .e-con{gap:0!important;row-gap:0!important;}
 .gv-footer{background:var(--gv-navy-deep);color:#aeb9cf;font-family:var(--gv-font-body);}
-.gv-footer a{color:#cdd8ec;}
+.gv-footer a{color:#fff;}
 .gv-footer a:hover{color:var(--gv-orange);}
 .gv-footer__top{padding:64px 24px 40px;max-width:var(--gv-maxw);margin:0 auto;display:grid;grid-template-columns:1.4fr 1fr 1fr 1.2fr;gap:36px;}
 @media(max-width:900px){.gv-footer__top{grid-template-columns:1fr 1fr;}}
@@ -410,15 +411,14 @@ li.gv-navcta>a:hover{background:var(--gv-orange-dark)!important;}
 
 /* Minimalist premium footer styles */
 .gv-footer__top--minimal{grid-template-columns:1.6fr 1fr 1.3fr;border-top:1px solid rgba(244,123,32,.28);}
-/* Tablet (560–900px): brand spans full width on top, Explore + Connect side-by-side below. */
+/* Tablet (560–900px): brand spans full width on top, Explore + Connect side-by-side below.
+   Once we leave the 3-column desktop layout, the whole footer is centered. */
 @media(max-width:900px){
   .gv-footer__top--minimal{grid-template-columns:1fr 1fr;gap:32px 40px;}
   .gv-footer__top--minimal .gv-footer__brandcol{grid-column:1 / -1;}
-}
-@media(max-width:560px){
-  .gv-footer__top--minimal{grid-template-columns:1fr;padding:48px 20px 32px;gap:28px;}
   .gv-footer__brandcol{text-align:center;}
   .gv-footer__brandcol .gv-footer__logo{margin-left:auto;margin-right:auto;}
+  .gv-footer__brandcol p{margin-left:auto;margin-right:auto;}
   .gv-footer__socials{justify-content:center;}
   .gv-footer__linkcol{text-align:center;}
   .gv-footer__linkcol ul{align-items:center;}
@@ -426,8 +426,12 @@ li.gv-navcta>a:hover{background:var(--gv-orange-dark)!important;}
   .gv-footer__cta{display:inline-block;}
   .gv-footer__bar-inner{flex-direction:column;align-items:center;text-align:center;gap:8px;}
 }
-.gv-footer__cta{display:inline-block;margin-top:16px;background:var(--gv-gold);color:var(--gv-navy-black);font-family:var(--gv-font-head);font-weight:700;text-transform:uppercase;letter-spacing:.03em;font-size:.82rem;padding:11px 20px;border-radius:8px;}
-.gv-footer__cta:hover{background:var(--gv-gold-soft);color:var(--gv-navy-black);}
+@media(max-width:560px){
+  .gv-footer__top--minimal{grid-template-columns:1fr;padding:48px 20px 32px;gap:28px;}
+}
+/* Footer "Book a Consultation" is chrome, not main-content → orange (only in-page CTAs are gold). */
+.gv-footer__cta{display:inline-block;margin-top:16px;background:var(--gv-orange);color:#fff;font-family:var(--gv-font-head);font-weight:700;text-transform:uppercase;letter-spacing:.03em;font-size:.82rem;padding:11px 20px;border-radius:8px;}
+.gv-footer__cta:hover{background:var(--gv-orange-dark);color:#fff;}
 
 /* ---------- Modal (consultation form) ---------- */
 .gv-modal-overlay{display:none;position:fixed;inset:0;z-index:10000;background:rgba(2,31,81,.55);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:24px;overflow-y:auto;}
