@@ -226,6 +226,24 @@ band, SMTP (Gmail), readable white design across desktop + mobile. Demo content 
 
 ## 11. Changelog
 
+### 2026-07-09 — Client Revisions Polish (Home layout, high-res hero, logo watermark, gold hovers, footer logo, locations move)
+- **Coach Gino Added to Home**: Rebuilt the homepage mentor grid from 2-up to 3-up, placing Coach Gino first and framing him as *Founder & Head Coach* alongside his mentors Phil Handy and Micah Lancaster (R1).
+- **High-Res AI Hero**: Replaced `gv-home-hero-real.webp` with a crisp, new, high-resolution AI-generated hero `gv-home-hero-v2.webp` (R2).
+- **Emblem Watermark**: Swapped the text-based watermark ("GV") on the navy CTA panel with the real white GV monogram SVG logo (R3).
+- **Gold Hover State Fix**: Added CSS overrides so hovering any `gv-btn--gold` button keeps the text white rather than turning orange (R4).
+- **Gold Newsletter Button**: Styled the newsletter subscribe submit button as brand gold, turning gold-soft on hover (R5).
+- **Footer Wordmark Logo**: Replaced the text-based "GVBASKETBALL" wordmark in the footer with the real white long brand logo SVG (R6).
+- **Locations Block Relocation**: Moved the 3-venue locations block from the Contact page to the Home page, removing it from `/contact/` (R7).
+- **Site-Wide Copy Sweep**: Conducted a copy sweep to prefer "Book a Consultation" over "Request Training" site-wide across all templates, pages, headers, footers, menus, and script outputs, while preserving the two internal identifiers (R8).
+
+### 2026-07-09 — Client Revisions (Training programs, venues sweep, gold CTA, footer, booking flow)
+- **Training Programs Rewrite**: Rewrote `training-programs.html` (page 2981) with new copy (Private, Small Group max 6, Elite Performance with aqua training), new photos, new venue table (Dasma, Makati; Urdaneta Village; Corinthian Gardens), and updated pricing message. Mirror cards on the Home page (page 2887) were updated to match.
+- **Venue & Schedule Sweep**: Updated all venue references across the site to the new three-venue model (Dasma Makati, Urdaneta Village, Corinthian Gardens) and short name "Metro Manila", including `faq.html`, `gallery.html`, `about.html`, the contact page (via `build-functional.php`), and the footers of the OTP email (`gv-otp-email.php`) and request form (`gv-request-form.php`).
+- **LatePoint Reconfiguration**: Reconfigured LatePoint locations (Dasma Makati, Urdaneta Village, Corinthian Gardens) and customized their active day work periods (Dasma = Mon/Wed/Thu, Urdaneta = Fri/Sun, Corinthian = Sun) to reflect the new schedule. Database table backup saved in `~/latepoint-backup/`.
+- **Premium Elevation**: Modified `gv-brand.css` to add gold tokens (`--gv-gold`, `--gv-gold-soft`, `--gv-navy-black`) and restyled the `.gv-cta` globally with a premium dark navy gradient, a gold divider (with basketball SVG icon), a GV watermark, and a new trust badge row (Personalized Plan, Measurable Progress, Elite Standards, Results That Last). Replaced the CTA blocks on Home, About, and Training Programs with this gold treatment. Streamlined the footer to a minimalist, premium 3-column layout with gold hairline details, Instagram-only social, and updated location references.
+- **Booking Flow Graphic**: Created a styled `.gv-flow` component and embedded it on the `/book-a-consultation/` page (2982) near the request form, describing the 5-step booking and payment process (Book Online, We Confirm, Reserve Your Spot, Booking Confirmed, Train) to clarify that the site does not collect payment or bank details.
+- **Real Photo Assets**: Audited and optimized 8 real portrait photos provided by the client into WebP (quality 82, stripped EXIF, resize to 1200px long edge). Generated 16:9 widescreen hero versions for the Home, About, and Training Programs pages. Imported all assets to the WordPress media library and verified they return HTTP 200.
+
 ### 2026-06-29 — Cloudflare zone optimized for WordPress (TLS + performance)
 - Tuned the live `gvbasketball.com` zone (Free plan, id `4efc307b…`) via the CF API using the
   `.env` token. Applied: `always_use_https=on` (force HTTPS at the edge — verified HTTP `301`→HTTPS),
@@ -402,3 +420,82 @@ supply), keep the Phil Handy / Micah Lancaster mentor headshots, lean **5-sectio
   `home-2887-content.bak-*.html`, `home-2887-elementor_data.bak-*.json`). Note: `wp db export`
   (mysqldump) errors on this host — use targeted file/post backups (the baseline full backup
   `gvbasketball-20260627-015018/` remains the safety net).
+
+### 2026-07-09 — Branded photo filters application
+Implemented a unified, premium CSS-based photo filtering system to ensure visual consistency across all live photos.
+
+- **`build/mu-plugins/gv-assets/gv-brand.css`** — Updated image styling classes:
+  - Applied the **"Warm Hardwood"** filter (`contrast(1.08) saturate(0.9) brightness(0.98) sepia(8%)`) to inline/action photos (`.gv-split__media img`, `.gv-person__img`, `.gv-gallery img`) to bring out hardwood tones and unify diverse images while preserving natural skin tones. Added a hover state transition to restore original color upon focus/interaction.
+  - Applied the **"Luminosity Blend"** style (`grayscale(100%) contrast(1.15) brightness(0.9)` and `mix-blend-mode: luminosity`) to hero background images (`.gv-hero__bg`) to seamlessly blend background graphics with the Deep Navy (`var(--gv-navy-deep)`) base color. This creates custom-textured backdrops while keeping text highly legible.
+- **Deploy** — `gv-brand.css` deployed to server via SCP. Purged Elementor CSS cache and LiteSpeed cache (`wp elementor flush-css && wp litespeed-purge all`).
+
+### 2026-07-09 — Post-revision fixes: hero re-shoot, color, Gino crop, footer nit
+Executed the four fixes flagged by `docs/HANDOFF-post-revision-review.md` (C1/C2/M1/L2). M2 (sepia
+tint), L1 (watermark opacity), L3 (Contact copy) were intentionally left untouched pending a client
+decision.
+
+- **C1 — New high-res hero.** `gv-home-hero-v2.webp` was a soft, upscaled 1024×1024 square. Generated
+  a new landscape hero via `codex exec` (`gpt-image-2`, the codex-imagegen skill): a photoreal
+  basketball-training scene at dusk, dramatic side light, navy/charcoal palette, at 1536×1024 (3:2).
+  Upscaled with ImageMagick (Lanczos + light unsharp) to **2880×1920** and encoded to webp
+  (`cwebp -q 82`, ~198 KB) → `build/assets/photos/gv-home-hero-v3.webp`. Uploaded as admin (media ID
+  3076, guid confirmed 2880×1920 on the server — WP's own `-scaled.webp` derivative at 2560×1707 is a
+  separate size, not what's wired in). `build/pages/home.html` hero background now points at
+  `gv-home-hero-v3.webp`.
+- **C2 — Home hero shows in color.** The `fc6b57b` "Luminosity Blend" pass forced every
+  `.gv-hero__bg` to `grayscale(100%)` + `mix-blend-mode:luminosity`, which would have washed out the
+  new color hero. Added a scoped override, `.gv-hero--home .gv-hero__bg{filter:contrast(1.08)
+  brightness(.95);mix-blend-mode:normal;}`, directly under the existing `.gv-hero--home
+  .gv-hero__bg{opacity:.62;}` rule in `build/mu-plugins/gv-assets/gv-brand.css`. Only the home hero is
+  affected — every other page's hero keeps the grayscale/luminosity treatment.
+- **M1 — Gino portrait crop.** `gv-coach-gino-portrait.webp` is portrait 900×1200 inside a
+  `.gv-person__img` 4:3 cover box, which was center-cropping his head. Added
+  `style="object-position:center top;"` to just the Gino `<img>` in `build/pages/home.html`; Phil and
+  Micah untouched.
+- **L2 — Footer logo height nit.** Removed the redundant inline `height:40px` from the footer
+  `<img class="gv-footer__logo">` in `build/templates/footer.html` (kept `width:auto;display:block;`)
+  so the CSS `.gv-footer__logo{height:38px}` rule is the only source of truth.
+- **Deploy** — `gv-brand.css` scp'd; `home.html` + `footer.html` applied via a targeted eval script
+  mirroring `gv_set_theme_part_blocks`/`gv_set_page_html` (didn't touch success-stories.html or the
+  testimonials draft flag, unlike the broader `apply-hide.php`/`build-extras.php` scripts). Elementor
+  CSS + LiteSpeed purged, then a Cloudflare cache purge for the CSS/hero/home URLs (edge cache had
+  briefly served the pre-purge CSS before that). Verified live: hero URL is `gv-home-hero-v3.webp`
+  (2880×1920, 203176 bytes at the guid URL); `.gv-grid--3` + all 3 mentor cards intact; 0 "Request
+  Training"; live CSS contains the `.gv-hero--home .gv-hero__bg{filter:…mix-blend-mode:normal}`
+  override; Gino `<img>` carries `object-position:center top;`; footer logo `<img>` no longer carries
+  inline `height:40px`.
+
+### 2026-07-09 — Final revisions: remove all hero images, fix footer logo carve, keep Gino crop
+Client's final round: heroes should be clean solid navy (no photo at all), and the white footer
+wordmark reads as a shapeless blob.
+
+- **Heroes → clean navy.** Removed the `<div class="gv-hero__bg" style="background-image:...">` and
+  `<div class="gv-hero__overlay">` elements from all 15 occurrences: `build/pages/{home,about,
+  training-programs,athlete-development,success-stories,testimonials,faq,gallery}.html` and the hero
+  heredocs in `build/scripts/build-functional.php` (book 2982/portal 2983/contact 2989) and
+  `build/scripts/build-extras.php` (waiver 3009). In `build/mu-plugins/gv-assets/gv-brand.css` removed
+  the now-dead `.gv-hero__bg`/`.gv-hero__overlay` rules and the `.gv-hero--home .gv-hero__bg`
+  opacity/filter overrides; `.gv-hero` keeps `background:var(--gv-navy-deep)` with white heading/lead
+  text. This orphans `gv-home-hero-v3.webp` (added last commit) — expected, no cleanup needed.
+- **Footer logo fix.** Root cause: `logo/gvbasketball-long.svg` has three fills — `#021F51` (navy GV
+  mark), `#FE5A08` (orange underline), `#FFFFFF` (a negative-space detail carved into the mark). The
+  prior white footer variant recolored only `#021F51`→white, leaving the mark and the carved detail
+  both white so they merged into a blob. Built `logo/gvbasketball-wordmark-footer.svg` with
+  `#021F51`→`#ffffff` (mark), `#FFFFFF`→`#021F51` (carve — matches the footer's navy-deep background
+  so it reads correctly), `#FE5A08` unchanged (verified path data byte-identical to the source, only
+  fill values swapped). Uploaded as admin (`wp media import … --user=1`, media ID 3077) →
+  `https://gvbasketball.com/wp-content/uploads/2026/07/gvbasketball-wordmark-footer.svg`. Updated the
+  footer `<img>` in `build/templates/footer.html` to point at it (kept `width:auto;display:block;`, no
+  inline height — `.gv-footer__logo{height:38px}` still governs).
+- **M1 kept.** The Gino portrait `object-position:center top;` crop from the prior partial run is
+  retained in `build/pages/home.html`.
+- **Deploy** — CSS scp'd to `mu-plugins/gv-assets/`; 7 marketing pages via `apply-pages.php`; home via
+  `gv_set_page_html(2887,...)`; book/portal/contact via `build-functional.php`; waiver + footer via
+  `build-extras.php`. `wp elementor flush-css && wp litespeed-purge all`.
+- **Verified live** (browser UA) across all 11 public pages (`/`, `/about/`, `/training-programs/`,
+  `/athlete-development/`, `/success-stories/`, `/gallery/`, `/faq/`, `/book-a-consultation/`,
+  `/booking/`, `/contact/`, `/waiver/`): HTTP 200, **0** `gv-hero__bg` occurrences, hero `<h1>` renders
+  on every page. Live `gv-brand.css` has 0 `gv-hero__bg`/`gv-hero__overlay` rules and `.gv-hero{
+  background:var(--gv-navy-deep);...}`. Live footer references `gvbasketball-wordmark-footer.svg`;
+  fetched it directly and confirmed exactly three fills: `#ffffff`, `#021F51`, `#FE5A08`.
+

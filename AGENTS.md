@@ -111,8 +111,8 @@ Light `#E6E7E9`. Fonts: **Bebas Neue** (display), **Montserrat** (UI), **Inter**
 `gv-steps`/`gv-step`, `gv-person`, `gv-quote`, `gv-acc` (FAQ), `gv-gallery`, `gv-nav`, `gv-footer`.
 
 ### Booking (LatePoint, payments OFF)
-Agent Coach Gino (1) · locations Makati (1)/Ortigas (2) · services Consultation/Private/Small
-Group/Elite · work periods Mon/Tue/Fri/Sun 900–1080 (mins; weekday 1=Mon…7=Sun). Shortcodes:
+Agent Coach Gino (1) · locations Dasma, Makati (1) / Urdaneta Village (2) / Corinthian Gardens (3) · services Consultation/Private/Small
+Group/Elite · work periods: Dasma (Mon/Wed/Thu), Urdaneta (Fri/Sun), Corinthian (Sun) 900–1080 (mins; weekday 1=Mon…7=Sun). Shortcodes:
 `[latepoint_book_form]`, `[latepoint_customer_dashboard]`. Edit via `build/scripts/setup-latepoint.php`.
 
 ### Member login & signup (passwordless email OTP)
@@ -173,6 +173,41 @@ identity is `info@`.
   `gvbasketballcoaching@gmail.com` (sending identity is still `info@gvbasketball.com`).
   **WhatsApp and Facebook were removed from the site** — do not re-add them. (Off-site refs still exist:
   WhatsApp `+63 917 882 4466`, FB `/GvBasketball`, Google reviews `https://g.page/r/CS7s3B4R726oEAE/review`.)
-  Locations Makati & Ortigas.
+  Locations: Dasma Makati, Urdaneta Village, Corinthian Gardens (Metro Manila).
 - Pricing is **never** shown publicly — "shared during the consultation." No online payments.
+- Booking & Payment Flow: An informational "Flow of Purchase" graphic lives near the booking areas (e.g. `/book-a-consultation/`). The site collects **no** payment or bank details — payments are handled off-site directly with GV Basketball.
 - After meaningful changes, update `PROJECT_LOG.md` and commit (keep `.env` out of git).
+
+---
+
+## 7. Knowledge graph (graphify)
+
+A pre-built knowledge graph lives in `graphify-out/` (gitignored). It maps the relationships
+between business code, design tokens, deploy scripts, docs, and external dependencies.
+
+### Rebuild after major changes
+```bash
+# Full rebuild (local repo + upstream WordPress via SSH)
+/graphify .
+
+# Incremental update (only re-extract changed files)
+/graphify . --update
+```
+
+The graph focuses on **business code** (`build/`, `logo/`, `docs/`, mu-plugins) and treats
+WordPress plugins/themes as single external-dependency nodes (`ext_latepoint`, `ext_elementor`, etc.).
+
+### Query the graph
+```bash
+/graphify query "how does the booking system work"        # BFS — broad context
+/graphify query "how does OTP login reach email" --dfs    # DFS — trace a path
+/graphify path "gv-brand.css" "LatePoint"                 # shortest path between two concepts
+/graphify explain "gv_rf_handle"                          # plain-language explanation of a node
+```
+
+### Outputs
+| File | Purpose |
+|---|---|
+| `graphify-out/graph.html` | Interactive graph (open in browser) |
+| `graphify-out/graph.json` | Raw graph data (GraphRAG-ready) |
+| `graphify-out/GRAPH_REPORT.md` | Audit report: god nodes, surprising connections, communities |

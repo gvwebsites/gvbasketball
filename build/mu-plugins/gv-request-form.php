@@ -8,6 +8,15 @@ if (!defined('ABSPATH')) exit;
 
 if (!defined('GV_RF_RECIPIENT')) define('GV_RF_RECIPIENT', 'gvbasketballcoaching@gmail.com');
 
+/* Redirect /book-a-consultation/ (2982) → /training-programs/ (302) */
+function gv_rf_redirect_book_page() {
+    if (is_page(2982)) {
+        wp_redirect(home_url('/training-programs/'), 302);
+        exit;
+    }
+}
+add_action('template_redirect', 'gv_rf_redirect_book_page');
+
 function gv_rf_types() {
     return array('Private Training', 'Small Group', 'Elite Performance');
 }
@@ -36,7 +45,7 @@ function gv_rf_email_shell($heading, $intro, $inner) {
     <tr><td style="padding:24px 36px 0;"><hr style="border:none;border-top:1px solid #E6E7E9;margin:0;"></td></tr>
     <tr><td align="center" style="padding:16px 36px 30px;">
       <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.6;color:{$steel};">
-        GV Basketball &middot; Makati &amp; Ortigas, Metro Manila &middot; <a href="{$ig}" style="color:{$navy};text-decoration:none;">@gvbasketballl</a>
+        GV Basketball &middot; Metro Manila &middot; <a href="{$ig}" style="color:{$navy};text-decoration:none;">@gvbasketballl</a>
       </p>
     </td></tr>
   </table>
@@ -62,7 +71,7 @@ function gv_rf_verify_turnstile($token, $ip) {
 /* ---------------- Submission handler ---------------- */
 function gv_rf_handle() {
     $ref = wp_get_referer();
-    if (!$ref) $ref = home_url('/book-a-consultation/');
+    if (!$ref) $ref = home_url('/training-programs/');
     $back = function ($status) use ($ref) {
         $url = add_query_arg('gv_request', $status, remove_query_arg('gv_request', $ref)) . '#gv-request-form';
         wp_safe_redirect($url);

@@ -1,108 +1,55 @@
 # GV Basketball Website — Progress Update
 
-*Prepared for the client · June 2026*
+*Prepared for the client · July 2026*
 
-This is a plain-language summary of the work completed on the GV Basketball website over the last two
-work sessions. No technical knowledge needed — it's meant to be something you can read and share.
+This is a plain-language summary of the work completed on the GV Basketball website in the latest revision round. No technical knowledge needed — it's meant to be something you can read and share.
 
 ---
 
 ## The headlines
 
-1. **The website got a full professional makeover** — cleaner, more modern, and consistent on every page.
-2. **All the old/placeholder photos are gone**, replaced with a set of cinematic, on-brand basketball
-   images (dark, dramatic, navy + orange) that match your brand mood board.
-3. **The homepage now opens with a bold full-screen hero image** instead of a plain panel — it feels
-   premium and minimalist, in line with the reference site you shared.
-4. **The site is simpler and more focused** — we trimmed the menu, removed clutter, and made everything
-   easier to read on phones.
-5. **Contact is now Instagram-first** — WhatsApp and Facebook were removed everywhere per your request.
-6. **Members can now sign up and log in with a verified email** — no passwords to remember; they get a
-   one-time code by email each time, which also confirms the email is real.
-7. **The "Book a Consultation" page is now a simple "Request Training" form** — no more picking a date
-   and time on a calendar. A parent just enters their name, the player's name and age, their email
-   (plus phone or Instagram if they like), the type of training they want, and the days/times that
-   suit them. You get a clean, branded email at info@gvbasketball.com with all the details, and the
-   parent automatically gets a friendly "we got your request" reply. The form is protected against
-   spam/bots by Cloudflare, so your inbox stays clean.
+1. **Real Photos Deployed**: We have replaced the previous placeholder imagery with actual photos of Coach Gino and GV Basketball training sessions (optimized to WebP format for fast loading). A widescreen crop of your training session now serves as the Home hero background, Coach Gino's official portrait is on the About page hero and story section, and relevant action shots are placed on each program detail.
+2. **Training Programs Content & Schedule Re-write**:
+   - Swapped out the Makati & Ortigas references for your three actual venues: **Dasma, Makati** (Mon, Wed, Thu), **Urdaneta Village** (Fri, Sun), and **Corinthian Gardens** (Sun).
+   - Removed the old time grids (3–4 PM / 4–6 PM) in favor of a clean Venue & Day schedule table.
+   - Updated the Small Group maximum capacity to **6 athletes** (previously 4–5) and added the **all-skill-levels inclusivity note**.
+   - Updated Elite Performance to feature **aqua training** as part of its integrated system.
+   - Simplified the pricing message to indicate that program options and investment are customized and shared during the consultation.
+3. **Premium Scoped Gold Elevation**: We introduced a premium gold accent color (`#C9A24B`) strictly in specific blocks to elevate the academy's feel without diluting the primary orange branding.
+   - The shared call-to-action (CTA) section ("Ready To Become Your Best?") now features a deep navy gradient background, gold typography, a subtle GV watermark, a basketball icon divider, and a gold button ("Request Training") with a gold-outline Instagram button.
+   - Added a **Trust Badge row** in the CTA section to highlight your academy standards: *Personalized Plan · Measurable Progress · Elite Standards · Results That Last*.
+   - Streamlined the site footer into a minimalist, premium layout featuring gold accents, an Instagram-only social icon, a clean three-column address structure, and a compact link menu.
+4. **Informational Booking & Payment Flow Graphic**: Near the request form on the consultation page, we added a clean, styled 5-step visual flow (*Book Online → We Confirm → Reserve Your Spot → Booking Confirmed → Train*) explaining how purchase and scheduling work. It explicitly states that payments are handled directly off-site and **no credit card or bank details** are collected on the website, reassuring premium clients.
+5. **LatePoint Scheduler Updates**: We reconfigured the booking engine behind the scenes to map the three new venues and set active work periods matching your days (Dasma = Mon/Wed/Thu, Urdaneta = Fri/Sun, Corinthian = Sun). A database backup was taken first for safety.
+6. **Polished Design & Copy Alignment**: Based on your feedback, we completed a final polish pass to align the homepage, footer, and buttons with your design peg:
+   - **Coach Gino side by side**: Featured Coach Gino first in the mentors block, side-by-side with Phil Handy and Micah Lancaster, as Founder & Head Coach.
+   - **New Widescreen Hero**: Installed a crisp, high-resolution AI-generated home hero image that displays clearly at high density.
+   - **Real Brand Logos**: Replaced the plain-text footer "GVBASKETBALL" with the official white wordmark logo, and the plain-text watermark ("GV") with the white monogram emblem.
+   - **Locations moved**: The locations grid has been moved from the Contact page to the Home page for better flow.
+   - **"Book a Consultation" Copy**: Replaced all site-facing occurrences of "Request Training" with "Book a Consultation" (including navigation, buttons, page titles, and forms).
+   - **Button styling**: Hovering the gold buttons keeps the text white (previously turned orange), and the newsletter Subscribe button is now styled gold.
+7. **Branded Photo Filters Deployed**: We applied a unified, premium CSS-based photo filtering system to make all images consistent with the GV Basketball branding.
+   - **Action & Portrait Photos**: Applied a subtle **"Warm Hardwood"** filter (warm contrast) to all inline action and coach portrait photos to unify shots taken under different lighting while keeping skin tones natural. These photos transition back to their original color when hovered/focused.
+   - **Hero Backgrounds**: Connected hero background images to the deep navy brand color using a **"Luminosity Blend"** mode. This turns background images into a cohesive monochrome navy texture, elevating the visual appeal and ensuring high text readability.
 
 ---
 
 ## How to view the site
 
-Just visit **https://gvbasketball.com** on your phone or computer. Everything described here is already
-live. If a page looks like an older version, refresh it (it's just your browser remembering the old one).
+Just visit **https://gvbasketball.com** on your phone or computer. Everything described here is already live. If a page looks like an older version, refresh it (it's just your browser remembering the old one).
 
-Worth checking on both a **phone and a desktop** — a lot of the polish is in how it adapts to phones.
-
----
-
-## What we changed
-
-**Look & feel**
-- New full-screen homepage hero with the headline and buttons centered over a basketball image.
-- Consistent, professional headers on every page.
-- Fixed readability problems (e.g. faded light-blue text that was hard to read).
-- Removed amateur-looking elements and tightened spacing throughout.
-- Made the site full-width so sections stretch edge to edge (more modern, less boxed-in).
-
-**Photos**
-- Replaced every old image with a new, cohesive set of basketball photos in your brand style.
-- Kept the two mentor photos (Coach Phil Handy and Coach Micah Lancaster) and your logos.
-- Rebuilt the gallery into a clean, non-repeating grid of strong images.
-
-**Navigation & structure**
-- Simplified the top menu to: **Home · About · Programs · FAQ · Contact**.
-- Added a small **member login icon** in the menu (links to the booking/member area).
-- (The Gallery, Success Stories, and Development pages still exist and work — we just removed them
-  from the main menu to keep it minimal. Easy to add back anytime.)
-
-**Contact & messaging**
-- Every "WhatsApp" button is now **"Message on Instagram."**
-- Removed WhatsApp and Facebook from the footer and contact page.
-- Contact page now shows **Instagram + Email**, with a wider, easier-to-use message form.
-
-**Polish**
-- Fixed small spacing and alignment issues across the Programs and About pages.
-- Made forms larger and easier to tap on phones.
-
-**Security & speed (behind the scenes)**
-- Tuned the site's protection/delivery layer (Cloudflare) for safety and speed: visitors are always
-  sent to the secure (padlock) version of the site, the connection now uses modern encryption
-  end-to-end, and a cached copy can stay up even if the host has a brief hiccup. Nothing looks
-  different — the site just loads a touch faster and is a bit more secure.
+Worth checking on both a **phone and a desktop** — a lot of the polish is in how it adapts to mobile layouts.
 
 ---
 
-## Branding applied throughout
-- **Colors:** navy, deep navy, and orange (your brand palette), with charcoal/grey for text.
-- **Fonts:** a bold condensed display font for headlines, clean modern fonts for everything else.
-- **Photography style:** dark, cinematic, navy-and-orange, faces kept subtle — consistent across the site.
-- **Logos:** your official GV Basketball logos are used in the header and footer.
+## Where we stand (Pending Input)
+
+These updates fulfill the design revisions you approved. The following items remain deferred / waiting for your final input before next steps:
+
+1. **FAQ Detailed Answers**: We updated the location answer to list your three new venues, but the other FAQ answers remain untouched. Let us know when you're ready to revise the rest of the FAQ content.
+2. **Testimonials Page**: The Testimonials page (and references to client quotes) remains draft/hidden until you are ready to send real testimonials with photos.
+3. **Payments**: The site remains strictly informational for payment. If you decide to transition to online booking payments in the future, we will need to integrate a payment provider (like Stripe or GCash), which is out of scope for this revision.
 
 ---
 
-## Where we'd love your input
-
-A few things are working but would benefit from your eyes or a content decision:
-
-1. **Training programs** — please confirm the program names, descriptions, age ranges, and schedule
-   (Mon/Tue/Fri/Sun, 3–6 PM, Makati & Ortigas) are accurate.
-2. **FAQ section** — review the questions and answers; tell us anything to add, remove, or correct.
-3. **Coach Gino's photo** — right now the site shows mentor photos and stylized basketball imagery, but
-   **no real photo of Coach Gino**. Would you like to feature an actual photo of him (e.g. on the About
-   page)? It would add a strong personal/trust element.
-4. **Testimonials / Success Stories** — these are currently light on real content. If you can share
-   genuine client results or quotes, we can build them out properly.
-5. **Pricing** — still intentionally not shown publicly ("shared during consultation"). Confirm that's
-   still how you want it.
-6. **Member login & booking experience** — members can now **sign up and log in on the Member Login
-   page** using just their email: they receive a one-time code, enter it, and they're in (no password
-   to remember, and the email is verified in the process). Two things would help us polish it further:
-   what should members be able to do once logged in (just see upcoming sessions, or reschedule/manage
-   more?), and would you like the login/code email to carry GV branding (right now it's plain text)?
-
----
-
-*Questions or change requests? Reply with notes against any section above and we'll fold them into the
-next round.*
+*Questions or change requests? Reply with notes against any section above and we'll fold them in.*

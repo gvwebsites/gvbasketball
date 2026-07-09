@@ -6,7 +6,7 @@ $cta = <<<'HTML'
 <h2 class="gv-section-title">Ready To Build A Better Player?</h2>
 <p class="gv-lead">Book a consultation and we'll map out the right path for your athlete.</p>
 <div class="gv-btn-row" style="justify-content:center;">
-<a class="gv-btn gv-btn--primary" href="/book-a-consultation/">Request Training</a>
+<a class="gv-btn gv-btn--primary" href="/training-programs/">Book a Consultation</a>
 <a class="gv-btn gv-btn--ghost" href="https://ig.me/m/gvbasketballl" target="_blank" rel="noopener">Message on Instagram</a>
 </div></div></div></section></div>
 HTML;
@@ -54,9 +54,9 @@ echo "wpforms_id=$form_id\n";
 // ===== 2) Book a Consultation (2982) =====
 $book_a = <<<'HTML'
 <div class="gv-page">
-<section class="gv-hero"><div class="gv-hero__bg" style="background-image:url('https://gvbasketball.com/wp-content/uploads/2026/06/gv-about-hero.webp');"></div><div class="gv-hero__overlay"></div>
+<section class="gv-hero">
 <div class="gv-wrap"><div class="gv-hero__inner" style="padding:88px 0 64px;max-width:760px;">
-<span class="gv-eyebrow">Request Training</span>
+<span class="gv-eyebrow">Book a Consultation</span>
 <h1 class="gv-h1">Start Your Player's Journey</h1>
 <div class="gv-hero__rule" style="margin-top:20px;"></div>
 <p class="gv-lead">Tell Coach Gino about your athlete and your preferred days and times. We'll follow up to confirm and map the right path forward.</p>
@@ -68,10 +68,10 @@ $book_a = <<<'HTML'
 <div class="gv-card"><h3 class="gv-card__title">Current Skill Level</h3><p>Where your athlete is today and the gaps to close first.</p></div>
 <div class="gv-card"><h3 class="gv-card__title">Training History</h3><p>Past experience so we build on the right foundation.</p></div>
 <div class="gv-card"><h3 class="gv-card__title">Recommended Plan</h3><p>A clear, personalized development direction.</p></div>
-<div class="gv-card"><h3 class="gv-card__title">Schedule Options</h3><p>Times and locations (Makati &amp; Ortigas) that fit your week.</p></div>
+<div class="gv-card"><h3 class="gv-card__title">Schedule Options</h3><p>Small-group days across Metro Manila (Dasma Makati, Urdaneta Village, Corinthian Gardens); Private &amp; Elite by appointment.</p></div>
 <div class="gv-card"><h3 class="gv-card__title">Best-Fit Program</h3><p>Private, Small Group, or Elite Performance.</p></div>
 </div>
-<div class="gv-head-block gv-center" style="margin-top:54px;margin-bottom:0;"><span class="gv-eyebrow">Tell Us About Your Player</span><h2 class="gv-section-title">Request Training</h2><p class="gv-lead">Send us a few details and your preferred days and times. Coach Gino's team will follow up to confirm — pricing is shared during your consultation.</p></div>
+<div class="gv-head-block gv-center" style="margin-top:54px;margin-bottom:0;"><span class="gv-eyebrow">Tell Us About Your Player</span><h2 class="gv-section-title">Book a Consultation</h2><p class="gv-lead">Send us a few details and your preferred days and times. Coach Gino's team will follow up to confirm — pricing is shared during your consultation.</p></div>
 </div></section>
 </div>
 HTML;
@@ -88,8 +88,21 @@ $book_c = <<<'HTML'
 </div></section>
 </div>
 HTML;
+$booking_flow = '<section class="gv-section gv-section--light"><div class="gv-wrap">
+<div class="gv-head-block gv-center"><span class="gv-eyebrow">How Booking Works</span><h2 class="gv-section-title">Simple, Personal, Secure</h2><p class="gv-lead">Booking starts here on the site — everything else we handle with you directly.</p></div>
+<div class="gv-flow">
+<div class="gv-flow__step"><span class="gv-flow__num"></span><h4>Book Online</h4><p>Choose your session or consultation and submit your details.</p></div>
+<div class="gv-flow__step"><span class="gv-flow__num"></span><h4>We Confirm</h4><p>GV Basketball reaches out to finalize your slot and answer questions.</p></div>
+<div class="gv-flow__step"><span class="gv-flow__num"></span><h4>Reserve Your Spot</h4><p>Payment is arranged directly with GV Basketball — handled personally, not on this site.</p></div>
+<div class="gv-flow__step"><span class="gv-flow__num"></span><h4>Booking Confirmed</h4><p>Once payment is received, your session is locked in.</p></div>
+<div class="gv-flow__step"><span class="gv-flow__num"></span><h4>Train</h4><p>Show up and get to work — your development starts.</p></div>
+</div>
+<p class="gv-flow__note">Payments are handled directly with GV Basketball — no payment or bank details are collected on this website.</p>
+</div></section>';
+
 echo gv_set_page_blocks(2982, array(
   array('type'=>'html','content'=>$book_a),
+  array('type'=>'html','content'=>$booking_flow),
   array('type'=>'shortcode','content'=>'[gv_request_form]','css'=>'gv-bookform-wrap'),
   array('type'=>'html','content'=>$book_c),
 )) . "\n";
@@ -97,13 +110,13 @@ echo gv_set_page_blocks(2982, array(
 // ===== 3) Member Booking portal (2983) =====
 $port_a = <<<'HTML'
 <div class="gv-page">
-<section class="gv-hero"><div class="gv-hero__bg" style="background-image:url('https://gvbasketball.com/wp-content/uploads/2026/06/gv-about-hero.webp');"></div><div class="gv-hero__overlay"></div>
+<section class="gv-hero">
 <div class="gv-wrap"><div class="gv-hero__inner" style="padding:88px 0 64px;max-width:760px;">
 <span class="gv-eyebrow">Member Portal</span>
 <h1 class="gv-h1">Member Booking</h1>
 <div class="gv-hero__rule" style="margin-top:20px;"></div>
 <p class="gv-lead">Log in to book sessions, reschedule within policy, and view your upcoming training. New here? Start with a consultation.</p>
-<div class="gv-btn-row"><a class="gv-btn gv-btn--primary" href="/book-a-consultation/">Request Training</a></div>
+<div class="gv-btn-row"><a class="gv-btn gv-btn--primary" href="/training-programs/">Book a Consultation</a></div>
 </div></div></section>
 </div>
 HTML;
@@ -127,7 +140,7 @@ echo gv_set_page_blocks(2983, array(
 // ===== 4) Contact (2989) =====
 $contact_a = <<<'HTML'
 <div class="gv-page">
-<section class="gv-hero"><div class="gv-hero__bg" style="background-image:url('https://gvbasketball.com/wp-content/uploads/2026/06/gv-contact-hero.webp');"></div><div class="gv-hero__overlay"></div>
+<section class="gv-hero">
 <div class="gv-wrap"><div class="gv-hero__inner" style="padding:88px 0 64px;max-width:760px;">
 <span class="gv-eyebrow">Get In Touch</span>
 <h1 class="gv-h1">Contact GV Basketball</h1>
@@ -138,14 +151,6 @@ $contact_a = <<<'HTML'
 <div class="gv-contact-grid">
 <div class="gv-contact-item"><div class="gv-contact-item__ic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg></div><div><b>Instagram</b><br><a href="https://ig.me/m/gvbasketballl" target="_blank" rel="noopener">Message @gvbasketballl</a></div></div>
 <div class="gv-contact-item"><div class="gv-contact-item__ic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></div><div><b>Email</b><br><a href="mailto:gvbasketballcoaching@gmail.com">gvbasketballcoaching@gmail.com</a></div></div>
-</div>
-</div></section>
-<section class="gv-section gv-section--light"><div class="gv-wrap">
-<div class="gv-head-block gv-center"><span class="gv-eyebrow">Where We Train</span><h2 class="gv-section-title">Our Locations</h2><p class="gv-lead">Sessions run in Makati and Ortigas, Metro Manila. Your exact venue is confirmed at your consultation.</p></div>
-<div class="gv-grid gv-grid--2">
-<div class="gv-card"><div class="gv-card__icon"><svg viewBox="0 0 24 24"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg></div><h3 class="gv-card__title">Makati</h3><p>Skills training in Makati, Metro Manila — convenient for families across the city.</p><div style="margin-top:14px;"><a class="gv-btn gv-btn--outline" href="https://www.google.com/maps/search/?api=1&query=Makati%2C%20Metro%20Manila" target="_blank" rel="noopener">View on Google Maps</a></div></div>
-<div class="gv-card"><div class="gv-card__icon"><svg viewBox="0 0 24 24"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg></div><h3 class="gv-card__title">Ortigas</h3><p>Skills training in Ortigas Center, Pasig — accessible from across Metro Manila.</p><div style="margin-top:14px;"><a class="gv-btn gv-btn--outline" href="https://www.google.com/maps/search/?api=1&query=Ortigas%20Center%2C%20Pasig" target="_blank" rel="noopener">View on Google Maps</a></div></div>
-</div>
 </div></section>
 <section class="gv-section" style="padding-bottom:14px;"><div class="gv-wrap">
 <div class="gv-head-block gv-center" style="margin-bottom:0;"><span class="gv-eyebrow">Send a Message</span><h2 class="gv-section-title">Contact Us</h2></div>
