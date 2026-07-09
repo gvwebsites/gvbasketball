@@ -556,8 +556,8 @@ problem.
 Replaced placeholder AI-generated images on the Gallery page with 9 real basketball action and coaching photos, and integrated the Gallery page into both the header navigation and the footer Explore links.
 
 - **Gallery page revamp** — Modified `build/pages/gallery.html` to load a balanced 3x3 grid containing all 9 real photos from `revisions/basketball-photos`.
-- **Photo normalization** — Processed the remaining two raw photos (`IMG_4721.jpg` and `IMG_4722.jpg`) using `normalize-photo.sh` to generate the normalized WebP equivalents `gv-coaching-dribble.webp` and `gv-coaching-focus.webp`.
-- **Media import** — Uploaded and imported the two new WebP files to the WordPress media library (`uploads/2026/07/gv-coaching-dribble.webp` and `gv-coaching-focus.webp`).
+- **Photo normalization** — Processed the new raw photos (`IMG_4721.jpg` and `IMG_4722.jpg`) into `gv-coaching-dribble.webp` and `gv-coaching-focus.webp` using `normalize-photo.sh`. Also normalized the three remaining gallery images (`gv-skills-session.webp`, `gv-group-training.webp`, `gv-home-hero-real.webp`) in-place to apply the uniform cool-neutral color filter.
+- **Media import & Upload** — Imported the two new WebP files as attachments (IDs 3087 and 3088) and synced/overwrote the other three normalized WebP files in-place on the remote server's filesystem under `wp-content/uploads/2026/07/`.
 - **Header & Footer templates** — Updated `build/templates/header.html` to display the "Gallery" link in the navigation menu (between "Programs" and "FAQ"). Updated `build/templates/footer.html` to add the "Gallery" link in the "Explore" column.
 - **Menu script alignment** — Updated `build/scripts/build-menu.php` to align the Astra primary menu layout with the updated header navigation.
-- **Deploy & Verification** — Created and executed `build/scripts/deploy-gallery-revamp.php` to sync templates and menus on the server, flushed the Elementor CSS and LiteSpeed caches, and verified that all 9 images and menu links render properly on the live site.
+- **Deploy & Verification** — Created and executed `build/scripts/deploy-gallery-revamp.php` to sync templates and menus on the server, flushed the Elementor CSS and LiteSpeed caches, purged the Cloudflare edge cache for the updated image URLs, and verified that all 9 images and menu links render properly on the live site.
