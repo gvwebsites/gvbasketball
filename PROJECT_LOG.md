@@ -226,6 +226,14 @@ band, SMTP (Gmail), readable white design across desktop + mobile. Demo content 
 
 ## 11. Changelog
 
+### 2026-07-09 — Client Revisions (Training programs, venues sweep, gold CTA, footer, booking flow)
+- **Training Programs Rewrite**: Rewrote `training-programs.html` (page 2981) with new copy (Private, Small Group max 6, Elite Performance with aqua training), new photos, new venue table (Dasma, Makati; Urdaneta Village; Corinthian Gardens), and updated pricing message. Mirror cards on the Home page (page 2887) were updated to match.
+- **Venue & Schedule Sweep**: Updated all venue references across the site to the new three-venue model (Dasma Makati, Urdaneta Village, Corinthian Gardens) and short name "Metro Manila", including `faq.html`, `gallery.html`, `about.html`, the contact page (via `build-functional.php`), and the footers of the OTP email (`gv-otp-email.php`) and request form (`gv-request-form.php`).
+- **LatePoint Reconfiguration**: Reconfigured LatePoint locations (Dasma Makati, Urdaneta Village, Corinthian Gardens) and customized their active day work periods (Dasma = Mon/Wed/Thu, Urdaneta = Fri/Sun, Corinthian = Sun) to reflect the new schedule. Database table backup saved in `~/latepoint-backup/`.
+- **Premium Elevation**: Modified `gv-brand.css` to add gold tokens (`--gv-gold`, `--gv-gold-soft`, `--gv-navy-black`) and restyled the `.gv-cta` globally with a premium dark navy gradient, a gold divider (with basketball SVG icon), a GV watermark, and a new trust badge row (Personalized Plan, Measurable Progress, Elite Standards, Results That Last). Replaced the CTA blocks on Home, About, and Training Programs with this gold treatment. Streamlined the footer to a minimalist, premium 3-column layout with gold hairline details, Instagram-only social, and updated location references.
+- **Booking Flow Graphic**: Created a styled `.gv-flow` component and embedded it on the `/book-a-consultation/` page (2982) near the request form, describing the 5-step booking and payment process (Book Online, We Confirm, Reserve Your Spot, Booking Confirmed, Train) to clarify that the site does not collect payment or bank details.
+- **Real Photo Assets**: Audited and optimized 8 real portrait photos provided by the client into WebP (quality 82, stripped EXIF, resize to 1200px long edge). Generated 16:9 widescreen hero versions for the Home, About, and Training Programs pages. Imported all assets to the WordPress media library and verified they return HTTP 200.
+
 ### 2026-06-29 — Cloudflare zone optimized for WordPress (TLS + performance)
 - Tuned the live `gvbasketball.com` zone (Free plan, id `4efc307b…`) via the CF API using the
   `.env` token. Applied: `always_use_https=on` (force HTTPS at the edge — verified HTTP `301`→HTTPS),
