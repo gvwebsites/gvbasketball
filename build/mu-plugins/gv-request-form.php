@@ -21,6 +21,27 @@ function gv_rf_types() {
     return array('Private Training', 'Small Group', 'Elite Performance');
 }
 
+/* ---------------- Locations & day model (single source of truth) ---------------- */
+function gv_rf_locations() {
+    return array(
+        'dasma'    => array('label' => 'Dasma, Makati',       'days_label' => 'Mon, Wed & Thu', 'days' => array('Mon','Wed','Thu')),
+        'urdaneta' => array('label' => 'Urdaneta Village',    'days_label' => 'Fri & Sun',      'days' => array('Fri','Sun')),
+        'corinth'  => array('label' => 'Corinthian Gardens',  'days_label' => 'Sun',            'days' => array('Sun')),
+        'any'      => array('label' => 'Open to any location','days_label' => '',               'days' => array('Mon','Tue','Wed','Thu','Fri','Sat','Sun')),
+    );
+}
+
+function gv_rf_validate_location_days($location, $days) {
+    $locs = gv_rf_locations();
+    if (!is_string($location) || !isset($locs[$location])) return false;
+    if (!is_array($days) || count($days) === 0) return false;
+    $allowed = $locs[$location]['days'];
+    foreach ($days as $d) {
+        if (!in_array($d, $allowed, true)) return false;
+    }
+    return true;
+}
+
 /* ---------------- Branded email shell (mirrors gv-otp-email.php) ---------------- */
 function gv_rf_email_shell($heading, $intro, $inner) {
     $logo   = 'https://gvbasketball.com/wp-content/uploads/2025/07/GV_Logo_Main.png';
@@ -92,9 +113,18 @@ function gv_rf_handle() {
     $type   = sanitize_text_field(wp_unslash($_POST['training_type'] ?? ''));
     $times  = sanitize_textarea_field(wp_unslash($_POST['preferred_times'] ?? ''));
 
-    if (!$parent || !$player || !is_email($email) || $age < 4 || $age > 25 || !in_array($type, gv_rf_types(), true) || !$times) $back('err');
+    $location = sanitize_key(wp_unslash($_POST['location'] ?? ''));
+    $days_in  = (isset($_POST['preferred_days']) && is_array($_POST['preferred_days']))
+        ? array_map('sanitize_text_field', wp_unslash($_POST['preferred_days']))
+        : array();
+
+    if (!$parent || !$player || !is_email($email) || $age < 4 || $age > 25 || !in_array($type, gv_rf_types(), true)) $back('err');
+    if (!gv_rf_validate_location_days($location, $days_in)) $back('err');
 
     // ---- Admin notification ----
+    $locs      = gv_rf_locations();
+    $loc_label = $locs[$location]['label'];
+    $days_str  = implode(', ', $days_in);
     $rows = array(
         'Parent / Guardian'      => esc_html($parent),
         'Player'                 => esc_html($player),
@@ -102,7 +132,9 @@ function gv_rf_handle() {
         'Email'                  => esc_html($email),
         'Phone / Instagram'      => $alt ? esc_html($alt) : '&mdash;',
         'Training type'          => esc_html($type),
-        'Preferred days &amp; times' => nl2br(esc_html($times)),
+        'Preferred location'     => esc_html($loc_label),
+        'Preferred day(s)'       => esc_html($days_str),
+        'Preferred time / notes' => $times ? nl2br(esc_html($times)) : '&mdash;',
     );
     $tbl = '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#1C1C1E;border-collapse:collapse;">';
     foreach ($rows as $k => $v) {
@@ -125,7 +157,9 @@ function gv_rf_handle() {
         . 'Thanks for reaching out about <strong>' . esc_html($player) . '</strong>! We\'ve received your request for '
         . '<strong>' . esc_html($type) . '</strong> and Coach Gino\'s team will get back to you to confirm days, times, and the best-fit plan.</p>'
         . '<p style="margin:14px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.6;color:#1C1C1E;">'
-        . 'Your preferred times: <em>' . nl2br(esc_html($times)) . '</em></p>'
+        . 'Location: <em>' . esc_html($loc_label) . '</em><br>'
+        . 'Preferred day(s): <em>' . esc_html($days_str) . '</em>'
+        . ($times ? '<br>Notes: <em>' . nl2br(esc_html($times)) . '</em>' : '') . '</p>'
         . '<p style="margin:18px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.6;color:#6B6F76;">'
         . 'Want to chat sooner? Message us on Instagram: '
         . '<a href="https://ig.me/m/gvbasketballl" style="color:#123B78;">@gvbasketballl</a>.</p>';
@@ -159,6 +193,11 @@ function gv_rf_styles() {
     .gv-rform-field input:focus,.gv-rform-field select:focus,.gv-rform-field textarea:focus{
       outline:none;border-color:#F47B20;box-shadow:0 0 0 3px rgba(244,123,32,.15);}
     .gv-rform-field textarea{resize:vertical;}
+    .gv-rform-days{display:flex;flex-wrap:wrap;gap:10px;margin-top:2px;}
+    .gv-rform-day{display:inline-flex;align-items:center;gap:7px;padding:9px 14px;border:1px solid #d6d9de;border-radius:999px;font:600 14px/1 Inter,Arial,sans-serif;color:#1C1C1E;cursor:pointer;user-select:none;}
+    .gv-rform-day input{width:auto;margin:0;accent-color:#F47B20;}
+    .gv-rform-day--hidden{display:none;}
+    .gv-rform-dayhint{font:600 13px/1.4 Inter,Arial,sans-serif;color:#6B6F76;margin-top:2px;}
     .gv-rform .cf-turnstile{margin:22px 0 4px;}
     .gv-rform-submit{margin-top:22px;width:100%;justify-content:center;}
     .gv-rform-fine{margin:14px 0 0;font:400 12.5px/1.5 Inter,Arial,sans-serif;color:#6B6F76;text-align:center;}
@@ -203,13 +242,59 @@ function gv_rf_shortcode() {
     $html .= '<label class="gv-rform-field"><span>Player age <i>*</i></span><input type="number" name="player_age" min="4" max="25" required></label>';
     $html .= '<label class="gv-rform-field"><span>Email <i>*</i></span><input type="email" name="email" required autocomplete="email"></label>';
     $html .= '<label class="gv-rform-field gv-rform-field--full"><span>Phone or Instagram handle <small>(optional)</small></span><input type="text" name="contact_alt"></label>';
+    // Location <option>s
+    $locs = gv_rf_locations();
+    $loc_opts = '<option value="" disabled selected>Choose a location…</option>';
+    foreach ($locs as $key => $info) {
+        $label = $info['label'];
+        if ($info['days_label'] !== '') $label .= ' — ' . $info['days_label'];
+        $loc_opts .= '<option value="' . esc_attr($key) . '">' . esc_html($label) . '</option>';
+    }
+
+    // All 7 day checkboxes (JS shows/hides per location)
+    $all_days = array('Mon','Tue','Wed','Thu','Fri','Sat','Sun');
+    $day_boxes = '';
+    foreach ($all_days as $d) {
+        $day_boxes .= '<label class="gv-rform-day gv-rform-day--hidden" data-day="' . esc_attr($d) . '">'
+                    . '<input type="checkbox" name="preferred_days[]" value="' . esc_attr($d) . '">'
+                    . '<span>' . esc_html($d) . '</span></label>';
+    }
+
+    // location -> valid days map for the client
+    $loc_days_json = wp_json_encode(array_map(function ($i) { return $i['days']; }, $locs));
+
     $html .= '<label class="gv-rform-field gv-rform-field--full"><span>Training type <i>*</i></span><select name="training_type" required>' . $opts . '</select></label>';
-    $html .= '<label class="gv-rform-field gv-rform-field--full"><span>Preferred days &amp; times to meet <i>*</i></span><textarea name="preferred_times" rows="3" placeholder="e.g. Weekday afternoons after 4pm, or Saturday mornings" required></textarea></label>';
+    $html .= '<label class="gv-rform-field gv-rform-field--full"><span>Preferred location <i>*</i></span><select name="location" id="gv-rf-location" required>' . $loc_opts . '</select></label>';
+    $html .= '<div class="gv-rform-field gv-rform-field--full"><span>Preferred day(s) <i>*</i></span>'
+           . '<div class="gv-rform-days" id="gv-rf-days">' . $day_boxes . '</div>'
+           . '<p class="gv-rform-dayhint" id="gv-rf-dayhint">Choose a location to see available days.</p></div>';
+    $html .= '<label class="gv-rform-field gv-rform-field--full"><span>Preferred time of day / notes <small>(optional)</small></span><textarea name="preferred_times" rows="2" placeholder="e.g. after 4pm on weekdays, or Sunday mornings"></textarea></label>';
     $html .= '</div>';
     $html .= $ts_widget;
     $html .= '<button type="submit" class="gv-btn gv-btn--primary gv-rform-submit">Send Request</button>';
     $html .= '<p class="gv-rform-fine">We\'ll only use your details to follow up about training. Pricing is shared during your consultation.</p>';
-    $html .= '</form></div>' . $ts_script;
+    $filter_script = '<script>(function(){'
+        . 'var MAP=' . $loc_days_json . ';'
+        . 'var sel=document.getElementById("gv-rf-location");'
+        . 'var wrap=document.getElementById("gv-rf-days");'
+        . 'var hint=document.getElementById("gv-rf-dayhint");'
+        . 'if(!sel||!wrap)return;'
+        . 'function apply(){'
+        . 'var allowed=MAP[sel.value]||[];'
+        . 'var boxes=wrap.querySelectorAll(".gv-rform-day");'
+        . 'var any=false;'
+        . 'boxes.forEach(function(b){'
+        . 'var day=b.getAttribute("data-day");'
+        . 'var ok=allowed.indexOf(day)!==-1;'
+        . 'b.classList.toggle("gv-rform-day--hidden",!ok);'
+        . 'var cb=b.querySelector("input");'
+        . 'if(ok){any=true;}else if(cb){cb.checked=false;}'
+        . '});'
+        . 'if(hint)hint.style.display=any?"none":"block";'
+        . '}'
+        . 'sel.addEventListener("change",apply);apply();'
+        . '})();</script>';
+    $html .= '</form></div>' . $ts_script . $filter_script;
     return $html;
 }
 add_shortcode('gv_request_form', 'gv_rf_shortcode');

@@ -100,6 +100,10 @@ $booking_flow = '<section class="gv-section gv-section--light"><div class="gv-wr
 <p class="gv-flow__note">Payments are handled directly with GV Basketball — no payment or bank details are collected on this website.</p>
 </div></section>';
 
+// NOTE: Page 2982 (/book-a-consultation/) is 302-redirected to /training-programs/
+// by gv-request-form.php. The LIVE consultation form + modal lives on page 2981
+// and is owned SOLELY by build/scripts/deploy-training-programs.php.
+// Do NOT deploy the training-programs form/modal from here (this HTML has no modal).
 echo gv_set_page_blocks(2982, array(
   array('type'=>'html','content'=>$book_a),
   array('type'=>'html','content'=>$booking_flow),
