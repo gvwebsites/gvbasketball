@@ -23,8 +23,9 @@ function gv_loc($name, $addr) {
     $l->name = $name; $l->full_address = $addr; $l->status = 'active';
     $l->save(); return $l->id;
 }
-$makati  = gv_loc('Makati', 'Makati, Metro Manila');
-$ortigas = gv_loc('Ortigas', 'Ortigas, Metro Manila');
+$dasma   = gv_loc('Dasma, Makati', 'Dasmariñas Village, Makati, Metro Manila');
+$urdaneta= gv_loc('Urdaneta Village', 'Urdaneta Village, Makati, Metro Manila');
+$corinth = gv_loc('Corinthian Gardens', 'Corinthian Gardens, Quezon City, Metro Manila');
 
 // --- Services ---
 function gv_svc($name, $dur, $capmin, $capmax, $desc) {
@@ -45,10 +46,10 @@ function gv_svc($name, $dur, $capmin, $capmax, $desc) {
 }
 $consult = gv_svc('Player Consultation', 45, 1, 1, 'Discuss goals, current level, and the best-fit program.');
 $private = gv_svc('Private Training', 60, 1, 1, '1-on-1 individualized development.');
-$group   = gv_svc('Small Group Training', 90, 1, 5, 'Maximum 4-5 athletes, competitive reps.');
-$elite   = gv_svc('Elite Performance', 90, 1, 5, 'Basketball + strength, conditioning & recovery.');
+$group   = gv_svc('Small Group Training', 90, 1, 6, 'Maximum 6 athletes, competitive reps.');
+$elite   = gv_svc('Elite Performance', 90, 1, 6, 'Basketball + strength, conditioning & aqua training.');
 $services  = array($consult, $private, $group, $elite);
-$locations = array($makati, $ortigas);
+$locations = array($dasma, $urdaneta, $corinth);
 
 // --- Connectors (agent x service x location) ---
 foreach ($services as $sid) {
@@ -59,20 +60,47 @@ foreach ($services as $sid) {
     }
 }
 
-// --- Work periods: Mon(1) Tue(2) Fri(5) Sun(7), 15:00-18:00 (900-1080), per location, all services ---
-$days = array(1, 2, 5, 7);
-foreach ($locations as $lid) {
-    foreach ($days as $d) {
-        $w = new OsWorkPeriodModel();
-        $w->agent_id = $agent_id;
-        $w->location_id = $lid;
-        $w->service_id = 0;
-        $w->week_day = $d;
-        $w->start_time = 900;
-        $w->end_time = 1080;
-        $w->chain_id = 0;
-        $w->save();
-    }
+// --- Work periods: 15:00-18:00 (900-1080) per venue's day pattern ---
+// Dasma, Makati: Mon(1), Wed(3), Thu(4)
+$dasma_days = array(1, 3, 4);
+foreach ($dasma_days as $d) {
+    $w = new OsWorkPeriodModel();
+    $w->agent_id = $agent_id;
+    $w->location_id = $dasma;
+    $w->service_id = 0;
+    $w->week_day = $d;
+    $w->start_time = 900;
+    $w->end_time = 1080;
+    $w->chain_id = 0;
+    $w->save();
+}
+
+// Urdaneta Village: Fri(5), Sun(7)
+$urdaneta_days = array(5, 7);
+foreach ($urdaneta_days as $d) {
+    $w = new OsWorkPeriodModel();
+    $w->agent_id = $agent_id;
+    $w->location_id = $urdaneta;
+    $w->service_id = 0;
+    $w->week_day = $d;
+    $w->start_time = 900;
+    $w->end_time = 1080;
+    $w->chain_id = 0;
+    $w->save();
+}
+
+// Corinthian Gardens: Sun(7)
+$corinth_days = array(7);
+foreach ($corinth_days as $d) {
+    $w = new OsWorkPeriodModel();
+    $w->agent_id = $agent_id;
+    $w->location_id = $corinth;
+    $w->service_id = 0;
+    $w->week_day = $d;
+    $w->start_time = 900;
+    $w->end_time = 1080;
+    $w->chain_id = 0;
+    $w->save();
 }
 
 // --- Settings: hide empty category steps + timezone selector for a clean flow ---
@@ -92,5 +120,5 @@ foreach ($set as $k => $v) {
     $wpdb->query($wpdb->prepare("INSERT INTO {$p}latepoint_settings (name, value) VALUES (%s,%s)", $k, $v));
 }
 
-echo "agent=$agent_id makati=$makati ortigas=$ortigas consult=$consult private=$private group=$group elite=$elite\n";
+echo "agent=$agent_id dasma=$dasma urdaneta=$urdaneta corinth=$corinth consult=$consult private=$private group=$group elite=$elite\n";
 echo "connectors=" . $wpdb->get_var("SELECT COUNT(*) FROM {$p}latepoint_agents_services") . " work_periods=" . $wpdb->get_var("SELECT COUNT(*) FROM {$p}latepoint_work_periods") . "\n";
