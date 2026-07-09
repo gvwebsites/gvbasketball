@@ -226,6 +226,16 @@ band, SMTP (Gmail), readable white design across desktop + mobile. Demo content 
 
 ## 11. Changelog
 
+### 2026-07-09 — Client Revisions Polish (Home layout, high-res hero, logo watermark, gold hovers, footer logo, locations move)
+- **Coach Gino Added to Home**: Rebuilt the homepage mentor grid from 2-up to 3-up, placing Coach Gino first and framing him as *Founder & Head Coach* alongside his mentors Phil Handy and Micah Lancaster (R1).
+- **High-Res AI Hero**: Replaced `gv-home-hero-real.webp` with a crisp, new, high-resolution AI-generated hero `gv-home-hero-v2.webp` (R2).
+- **Emblem Watermark**: Swapped the text-based watermark ("GV") on the navy CTA panel with the real white GV monogram SVG logo (R3).
+- **Gold Hover State Fix**: Added CSS overrides so hovering any `gv-btn--gold` button keeps the text white rather than turning orange (R4).
+- **Gold Newsletter Button**: Styled the newsletter subscribe submit button as brand gold, turning gold-soft on hover (R5).
+- **Footer Wordmark Logo**: Replaced the text-based "GVBASKETBALL" wordmark in the footer with the real white long brand logo SVG (R6).
+- **Locations Block Relocation**: Moved the 3-venue locations block from the Contact page to the Home page, removing it from `/contact/` (R7).
+- **Site-Wide Copy Sweep**: Conducted a copy sweep to prefer "Book a Consultation" over "Request Training" site-wide across all templates, pages, headers, footers, menus, and script outputs, while preserving the two internal identifiers (R8).
+
 ### 2026-07-09 — Client Revisions (Training programs, venues sweep, gold CTA, footer, booking flow)
 - **Training Programs Rewrite**: Rewrote `training-programs.html` (page 2981) with new copy (Private, Small Group max 6, Elite Performance with aqua training), new photos, new venue table (Dasma, Makati; Urdaneta Village; Corinthian Gardens), and updated pricing message. Mirror cards on the Home page (page 2887) were updated to match.
 - **Venue & Schedule Sweep**: Updated all venue references across the site to the new three-venue model (Dasma Makati, Urdaneta Village, Corinthian Gardens) and short name "Metro Manila", including `faq.html`, `gallery.html`, `about.html`, the contact page (via `build-functional.php`), and the footers of the OTP email (`gv-otp-email.php`) and request form (`gv-request-form.php`).

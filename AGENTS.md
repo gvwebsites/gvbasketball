@@ -177,3 +177,37 @@ identity is `info@`.
 - Pricing is **never** shown publicly — "shared during the consultation." No online payments.
 - Booking & Payment Flow: An informational "Flow of Purchase" graphic lives near the booking areas (e.g. `/book-a-consultation/`). The site collects **no** payment or bank details — payments are handled off-site directly with GV Basketball.
 - After meaningful changes, update `PROJECT_LOG.md` and commit (keep `.env` out of git).
+
+---
+
+## 7. Knowledge graph (graphify)
+
+A pre-built knowledge graph lives in `graphify-out/` (gitignored). It maps the relationships
+between business code, design tokens, deploy scripts, docs, and external dependencies.
+
+### Rebuild after major changes
+```bash
+# Full rebuild (local repo + upstream WordPress via SSH)
+/graphify .
+
+# Incremental update (only re-extract changed files)
+/graphify . --update
+```
+
+The graph focuses on **business code** (`build/`, `logo/`, `docs/`, mu-plugins) and treats
+WordPress plugins/themes as single external-dependency nodes (`ext_latepoint`, `ext_elementor`, etc.).
+
+### Query the graph
+```bash
+/graphify query "how does the booking system work"        # BFS — broad context
+/graphify query "how does OTP login reach email" --dfs    # DFS — trace a path
+/graphify path "gv-brand.css" "LatePoint"                 # shortest path between two concepts
+/graphify explain "gv_rf_handle"                          # plain-language explanation of a node
+```
+
+### Outputs
+| File | Purpose |
+|---|---|
+| `graphify-out/graph.html` | Interactive graph (open in browser) |
+| `graphify-out/graph.json` | Raw graph data (GraphRAG-ready) |
+| `graphify-out/GRAPH_REPORT.md` | Audit report: god nodes, surprising connections, communities |

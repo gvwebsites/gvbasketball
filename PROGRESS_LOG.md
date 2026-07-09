@@ -21,6 +21,13 @@ This is a plain-language summary of the work completed on the GV Basketball webs
    - Streamlined the site footer into a minimalist, premium layout featuring gold accents, an Instagram-only social icon, a clean three-column address structure, and a compact link menu.
 4. **Informational Booking & Payment Flow Graphic**: Near the request form on the consultation page, we added a clean, styled 5-step visual flow (*Book Online → We Confirm → Reserve Your Spot → Booking Confirmed → Train*) explaining how purchase and scheduling work. It explicitly states that payments are handled directly off-site and **no credit card or bank details** are collected on the website, reassuring premium clients.
 5. **LatePoint Scheduler Updates**: We reconfigured the booking engine behind the scenes to map the three new venues and set active work periods matching your days (Dasma = Mon/Wed/Thu, Urdaneta = Fri/Sun, Corinthian = Sun). A database backup was taken first for safety.
+6. **Polished Design & Copy Alignment**: Based on your feedback, we completed a final polish pass to align the homepage, footer, and buttons with your design peg:
+   - **Coach Gino side by side**: Featured Coach Gino first in the mentors block, side-by-side with Phil Handy and Micah Lancaster, as Founder & Head Coach.
+   - **New Widescreen Hero**: Installed a crisp, high-resolution AI-generated home hero image that displays clearly at high density.
+   - **Real Brand Logos**: Replaced the plain-text footer "GVBASKETBALL" with the official white wordmark logo, and the plain-text watermark ("GV") with the white monogram emblem.
+   - **Locations moved**: The locations grid has been moved from the Contact page to the Home page for better flow.
+   - **"Book a Consultation" Copy**: Replaced all site-facing occurrences of "Request Training" with "Book a Consultation" (including navigation, buttons, page titles, and forms).
+   - **Button styling**: Hovering the gold buttons keeps the text white (previously turned orange), and the newsletter Subscribe button is now styled gold.
 
 ---
 

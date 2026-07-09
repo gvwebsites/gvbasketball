@@ -164,9 +164,9 @@
 <div class="cover">
   <div class="wrap">
     <div class="eyebrow">Client Revisions &middot; Verification &amp; Release</div>
-    <h1>GV Basketball<br>Revisions Report</h1>
+    <h1>GV Basketball<br>Revisions &amp; Polish Report</h1>
     <div class="accent"></div>
-    <p>A comprehensive report of the July 2026 website revisions based on the approved design specifications. We have deployed your actual training photographs, reconfigured the scheduling logic for three new venues, introduced premium gold branding elements, and integrated booking flow graphics.</p>
+    <p>A comprehensive report of the July 2026 website revisions and final polish pass. We have deployed your actual training photographs, reconfigured the scheduling logic for three new venues, introduced premium gold branding elements, integrated booking flow graphics, and executed a site-wide copy sweep aligning all headers and buttons to "Book a Consultation".</p>
     <div class="meta">
       <span>gvbasketball.com</span><span>Prepared for Coach Gino</span><span>July 2026</span>
     </div>
@@ -180,12 +180,12 @@
     <p class="lead">All requirements outlined in the <a href="file:///Users/rico/Git/gvbasketball/docs/superpowers/specs/2026-07-09-client-revisions-design.md">Revisions Specification Sheet</a> have been fully implemented, deployed, and verified on the live server.</p>
   </div>
   <div class="feature-grid">
-    <div class="feat"><b>Real Photo Assets Deployed</b><span>10 portrait/action training photos optimized to WebP and deployed as primary hero and content visuals.</span></div>
-    <div class="feat"><b>3-Venue Schedule Rebuild</b><span>Replaced "Makati &amp; Ortigas" with Dasma Makati, Urdaneta Village, and Corinthian Gardens across all pages.</span></div>
-    <div class="feat"><b>Premium Gold Branding</b><span>Scoped gold color accents, watermark, divider, trust badges, and a minimalist premium footer.</span></div>
-    <div class="feat"><b>Informational Booking Flow</b><span>A 5-step booking and payment graphic explaining off-site billing near the request form.</span></div>
-    <div class="feat"><b>LatePoint Reconfiguration</b><span>Re-mapped DB tables to 3 venues and customized work day availability per location.</span></div>
-    <div class="feat"><b>Email &amp; System Clean-up</b><span>Updated transactional email footers, removed Facebook/WhatsApp leftovers, and flushed all cache layers.</span></div>
+    <div class="feat"><b>Real Photo Assets &amp; Crisp Hero</b><span>10 training photos deployed, with the Home hero updated to a high-res, non-pixelated premium AI version.</span></div>
+    <div class="feat"><b>Coach Gino Featured First</b><span>The Home mentors grid is now 3-up, placing Coach Gino side-by-side with his mentors Phil Handy and Micah Lancaster.</span></div>
+    <div class="feat"><b>Real SVG Brand Logos</b><span>Replaced text watermark with white monogram SVG and text footer "GVBASKETBALL" with white long wordmark logo.</span></div>
+    <div class="feat"><b>Locations Block Moved</b><span>Relocated the 3-venue locations block from the Contact page to the Home page for streamlined flow.</span></div>
+    <div class="feat"><b>Premium Gold Button Styling</b><span>CSS overrides ensure gold CTA buttons keep white text on hover (no orange text) and style the Subscribe button gold.</span></div>
+    <div class="feat"><b>"Book a Consultation" Sweep</b><span>Replaced all site-facing "Request Training" references with "Book a Consultation" across all buttons, pages, and menus.</span></div>
   </div>
 </div></section>
 
@@ -208,7 +208,7 @@
       <div class="card card--accent">
         <h3>Crop &amp; Pipeline Details</h3>
         <ul class="clean">
-          <li><strong>Home Hero:</strong> Cropped with <code>-gravity Center</code> to maintain the vertical height of the backboard and the baseline workout.</li>
+          <li><strong>Home Hero (Crisp v2):</strong> Replaced with high-res, non-pixelated AI-generated background <code>gv-home-hero-v2.webp</code> for a premium look on 2× DPR displays.</li>
           <li><strong>Programs Hero:</strong> Cropped with <code>-gravity North</code> to prevent cutting off the faces of Coach Gino and the athlete during active drills.</li>
           <li><strong>About Hero &amp; Story:</strong> Deployed Coach Gino's portrait in high definition on the About hero background and story columns.</li>
           <li><strong>Asset Verification:</strong> All WebP images return 200 HTTP codes on the live site. Source files are tracked under `revisions/`.</li>
@@ -259,10 +259,10 @@
       <div class="card card--navy">
         <h3>Branding &amp; Layout Polish</h3>
         <ul class="clean">
-          <li><strong>Premium CTA:</strong> The bottom section of the marketing pages now features a deep navy gradient, gold heading typography, a subtle GV watermark, a custom basketball icon divider, and a gold button ("Request Training") paired with a gold-outline Instagram CTA.</li>
-          <li><strong>Trust Badge Row:</strong> Embedded a horizontal trust grid below the buttons highlighting: <em>Personalized Plan · Measurable Progress · Elite Standards · Results That Last</em>.</li>
-          <li><strong>Minimalist Footer:</strong> Completely rebuilt from 4 columns to a clean, premium 3-column layout. It features thin gold hairline borders, an Instagram-only social icon, email, and a location listing showing the three new venues.</li>
-          <li><strong>Email Footers:</strong> Replaced "Makati &amp; Ortigas" with "Metro Manila" in the footers of the OTP login email (<code>gv-otp-email.php</code>) and request form (<code>gv-request-form.php</code>).</li>
+          <li><strong>Premium CTA:</strong> Styled with deep navy gradient, gold heading, and a gold button ("Book a Consultation"). watermarked with the official white GV monogram SVG instead of text.</li>
+          <li><strong>Button Hovers:</strong> Fixed CSS specificity so gold CTA buttons keep white text on hover instead of turning orange. Styled the newsletter Subscribe button in gold.</li>
+          <li><strong>Minimalist Footer:</strong> Rebuilt to 3 columns with gold hairline borders and the official white long GV wordmark logo replacing the "GVBASKETBALL" text.</li>
+          <li><strong>Coach Gino Featured:</strong> Prepend Coach Gino's card (Founder &amp; Head Coach) to the mentors grid on the Home page, reframing the grid as 3-up.</li>
         </ul>
       </div>
     </div>
@@ -281,15 +281,15 @@
     </div>
     <figcaption>Consultation page showing the Booking &amp; Payment Flow stepper near the request form.</figcaption>
   </figure>
-  <div class="card card--accent">
-    <h3>Functional Integration</h3>
-    <ul class="clean">
-      <li><strong>5-Step Stepper Graphic:</strong> Renders inline on the consultation and booking pages (<em>1. Book Online &rarr; 2. We Confirm &rarr; 3. Reserve Your Spot &rarr; 4. Booking Confirmed &rarr; 5. Train</em>) detailing that payments are handled directly off-site.</li>
-      <li><strong>LatePoint DB Update:</strong> Restructured the database locations table to register Dasma Makati (ID 1), Urdaneta Village (ID 2), and Corinthian Gardens (ID 3).</li>
-      <li><strong>Work Day Restrictions:</strong> Customized LatePoint work periods so Coach Gino is bookable at specific venues on their exact days (Dasma = Mon/Wed/Thu, Urdaneta = Fri/Sun, Corinthian = Sun).</li>
-      <li><strong>Database Backup:</strong> Prior to reconfiguring, a database snapshot of all LatePoint settings, locations, services, and work periods was taken and stored securely in <code>~/latepoint-backup/</code>.</li>
-    </ul>
-  </div>
+    <div class="card card--accent">
+      <h3>Functional &amp; Venue Integration</h3>
+      <ul class="clean">
+        <li><strong>5-Step Stepper Graphic:</strong> Renders inline on the consultation and booking pages (<em>1. Book Online &rarr; 2. We Confirm &rarr; 3. Reserve Your Spot &rarr; 4. Booking Confirmed &rarr; 5. Train</em>) detailing that payments are handled directly off-site.</li>
+        <li><strong>Locations Moved:</strong> Relocated the 3-venue locations block from the Contact page to the Home page. Removed from <code>/contact/</code> entirely.</li>
+        <li><strong>LatePoint DB Update:</strong> Restructured the database locations table to register Dasma Makati (ID 1), Urdaneta Village (ID 2), and Corinthian Gardens (ID 3) with location day restrictions.</li>
+        <li><strong>Database Backup:</strong> Prior to reconfiguring, a database snapshot of all LatePoint settings, locations, services, and work periods was taken and stored securely in <code>~/latepoint-backup/</code>.</li>
+      </ul>
+    </div>
 </section>
 
 <section><div class="wrap">
@@ -308,9 +308,9 @@
     <div class="card card--accent">
       <h3>QA &amp; Verification Checks</h3>
       <ul class="clean">
-        <li><strong>Markup Audit:</strong> Verified that the gold classes (<code>gv-btn--gold</code>) and trust badges (<code>gv-cta__trust</code>) are active on the Home, About, and Training Programs pages.</li>
-        <li><strong>No Leftover References:</strong> A global sweep confirmed that the old "Makati &amp; Ortigas" references have been completely replaced by the new venues and the "Metro Manila" shorthand.</li>
-        <li><strong>Cache Flushing:</strong> Flushed the Elementor CSS caches and purged the LiteSpeed edge caches to ensure visitors load the updated templates immediately.</li>
+        <li><strong>Markup Audit:</strong> Verified that gold buttons, watermarks, footers, and logo SVGs are active and render correctly. Gold buttons stay white on hover.</li>
+        <li><strong>"Book a Consultation" Copy Sweep:</strong> A global check confirmed 0 public site-facing instances of "Request Training" remain (swapped to "Book a Consultation"). Internal identifiers are correctly kept.</li>
+        <li><strong>Cache &amp; CDN Flush:</strong> Re-flushed all CSS caches and LiteSpeed edge caches to ensure immediate release of the revisions.</li>
       </ul>
     </div>
   </div>
@@ -319,7 +319,7 @@
 <footer>
   <div class="wrap">
     <span>&copy; 2026 <b>GV BASKETBALL</b>. All rights reserved.</span>
-    <span>Site Version: 2.1 (July 2026 Revision Round)</span>
+    <span>Site Version: 2.2 (July 2026 Revision Polish Pass)</span>
   </div>
 </footer>
 
