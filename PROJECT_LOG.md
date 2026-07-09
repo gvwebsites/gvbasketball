@@ -499,3 +499,31 @@ wordmark reads as a shapeless blob.
   background:var(--gv-navy-deep);...}`. Live footer references `gvbasketball-wordmark-footer.svg`;
   fetched it directly and confirmed exactly three fills: `#ffffff`, `#021F51`, `#FE5A08`.
 
+### 2026-07-09 — Site-wide content photo normalization
+Resolved the deferred M2 sepia-tint question by removing the warm CSS photo filters and baking a
+cool-neutral correction into the visible content-photo files themselves.
+
+- **CSS cleanup** — Removed the ad-hoc `sepia(8%)` / hover-reset filters from content image classes in
+  `build/mu-plugins/gv-assets/gv-brand.css` (`.gv-split__media img`, `.gv-person__img`,
+  `.gv-gallery img`). Live CSS now returns no `sepia(...)` matches. Hero background rules were already
+  removed by the parallel solid-navy hero task, so no hero image styling was reintroduced.
+- **Reusable tool** — Added `build/scripts/normalize-photo.sh`, a local ImageMagick + `cwebp -q 82`
+  helper for the GV cool-neutral look: per-image level/gamma normalization, restrained saturation,
+  gentle contrast, and a slight cool balance. The tool is dev-only and not deployed.
+- **Normalized files** — Corrected the in-scope 2026/06 content/gallery WebPs, 2026/07 program/Gino
+  WebPs, and the two real mentor headshots. Pulled server-only originals into
+  `build/assets/photos/real/` first: `PHIL_HANDY.webp` (960×627) and
+  `MICAH_LANCASTER-scaled.jpg` (2560×1558). Micah's source is grayscale, so its correction preserves
+  grayscale instead of applying color white-balance. `gv-ballhandling.webp` exposed severe source
+  compression artifacts under the full lift, so it was replaced at the same URL with a cleaner existing
+  action/dribbling image normalized to the same look.
+- **Deploy safety** — Before overwriting live media originals, backed up all 17 target files on the
+  server to `~/backups/gv-photo-normalization-20260709-091049/`. Uploaded corrected files in place to
+  their existing `wp-content/uploads/<yyyy>/<mm>/` paths, preserving all HTML URLs and avoiding duplicate
+  media-library imports.
+- **Cache + QA** — Purged Elementor CSS and LiteSpeed after CSS/media deploys. Cloudflare API purge via
+  the local `.env` token returned 401, but cache-busted public image checks showed `cf-cache-status:
+  MISS` and content lengths matching the corrected local files. Verified live pages (`/`, `/about/`,
+  `/training-programs/`, `/athlete-development/`, `/success-stories/`, `/gallery/`) return HTTP 200,
+  retain expected image references, and render with the unified cool-neutral tone in Playwright
+  screenshots after scroll-loading lazy images.
