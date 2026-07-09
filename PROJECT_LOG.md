@@ -527,3 +527,27 @@ cool-neutral correction into the visible content-photo files themselves.
   `/training-programs/`, `/athlete-development/`, `/success-stories/`, `/gallery/`) return HTTP 200,
   retain expected image references, and render with the unified cool-neutral tone in Playwright
   screenshots after scroll-loading lazy images.
+
+### 2026-07-09 — Deeper photo audit: Training Programs + real session crops
+Ran a second visual audit across the photo-bearing pages after the first normalization pass. The AI/editorial
+library (`/athlete-development/`, `/gallery/`, `/success-stories/`) was cohesive, but
+`/training-programs/` still felt inconsistent because its three section images were tall real-session
+phone photos with a documentary feel. About's "Training Method" image had the same oversized phone-photo
+problem.
+
+- **Training Programs image swap** — Updated `build/pages/training-programs.html` so the three program
+  sections use the existing editorial GV assets instead of the raw 2026/07 session snapshots:
+  `gv-private.webp` for Private Training, `gv-group.webp` for Small Group Training, and `gv-elite.webp`
+  for Elite Performance. Updated alt text to match the new action/editorial imagery.
+- **Image edits** — Re-normalized `build/assets/img/web/gv-private.webp` and `gv-group.webp` into the
+  same cool-neutral look as the existing editorial set. Reframed
+  `build/assets/photos/gv-coaching-athlete.webp` to a 1200×900 landscape crop for About, preserving a
+  real GV session moment while making it fit the split-media layout better.
+- **Deploy safety** — Backed up the three overwritten live originals to
+  `~/backups/gv-photo-deeper-audit-20260709-094430/`, then uploaded the edited media in place and
+  rebuilt `/training-programs/` via `gv_set_page_html(2981, ...)`.
+- **Verified live** — Elementor CSS and LiteSpeed caches purged. Confirmed `/training-programs/`
+  references `gv-private.webp`, `gv-group.webp`, and `gv-elite.webp`; cache-busted image checks returned
+  HTTP 200, `cf-cache-status: MISS`, and content lengths matching the local edited files. Playwright
+  screenshots of Training and About confirmed the photos now share the tighter editorial tone and
+  landscape section rhythm.
