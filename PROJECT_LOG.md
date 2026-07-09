@@ -429,3 +429,73 @@ Implemented a unified, premium CSS-based photo filtering system to ensure visual
   - Applied the **"Luminosity Blend"** style (`grayscale(100%) contrast(1.15) brightness(0.9)` and `mix-blend-mode: luminosity`) to hero background images (`.gv-hero__bg`) to seamlessly blend background graphics with the Deep Navy (`var(--gv-navy-deep)`) base color. This creates custom-textured backdrops while keeping text highly legible.
 - **Deploy** — `gv-brand.css` deployed to server via SCP. Purged Elementor CSS cache and LiteSpeed cache (`wp elementor flush-css && wp litespeed-purge all`).
 
+### 2026-07-09 — Post-revision fixes: hero re-shoot, color, Gino crop, footer nit
+Executed the four fixes flagged by `docs/HANDOFF-post-revision-review.md` (C1/C2/M1/L2). M2 (sepia
+tint), L1 (watermark opacity), L3 (Contact copy) were intentionally left untouched pending a client
+decision.
+
+- **C1 — New high-res hero.** `gv-home-hero-v2.webp` was a soft, upscaled 1024×1024 square. Generated
+  a new landscape hero via `codex exec` (`gpt-image-2`, the codex-imagegen skill): a photoreal
+  basketball-training scene at dusk, dramatic side light, navy/charcoal palette, at 1536×1024 (3:2).
+  Upscaled with ImageMagick (Lanczos + light unsharp) to **2880×1920** and encoded to webp
+  (`cwebp -q 82`, ~198 KB) → `build/assets/photos/gv-home-hero-v3.webp`. Uploaded as admin (media ID
+  3076, guid confirmed 2880×1920 on the server — WP's own `-scaled.webp` derivative at 2560×1707 is a
+  separate size, not what's wired in). `build/pages/home.html` hero background now points at
+  `gv-home-hero-v3.webp`.
+- **C2 — Home hero shows in color.** The `fc6b57b` "Luminosity Blend" pass forced every
+  `.gv-hero__bg` to `grayscale(100%)` + `mix-blend-mode:luminosity`, which would have washed out the
+  new color hero. Added a scoped override, `.gv-hero--home .gv-hero__bg{filter:contrast(1.08)
+  brightness(.95);mix-blend-mode:normal;}`, directly under the existing `.gv-hero--home
+  .gv-hero__bg{opacity:.62;}` rule in `build/mu-plugins/gv-assets/gv-brand.css`. Only the home hero is
+  affected — every other page's hero keeps the grayscale/luminosity treatment.
+- **M1 — Gino portrait crop.** `gv-coach-gino-portrait.webp` is portrait 900×1200 inside a
+  `.gv-person__img` 4:3 cover box, which was center-cropping his head. Added
+  `style="object-position:center top;"` to just the Gino `<img>` in `build/pages/home.html`; Phil and
+  Micah untouched.
+- **L2 — Footer logo height nit.** Removed the redundant inline `height:40px` from the footer
+  `<img class="gv-footer__logo">` in `build/templates/footer.html` (kept `width:auto;display:block;`)
+  so the CSS `.gv-footer__logo{height:38px}` rule is the only source of truth.
+- **Deploy** — `gv-brand.css` scp'd; `home.html` + `footer.html` applied via a targeted eval script
+  mirroring `gv_set_theme_part_blocks`/`gv_set_page_html` (didn't touch success-stories.html or the
+  testimonials draft flag, unlike the broader `apply-hide.php`/`build-extras.php` scripts). Elementor
+  CSS + LiteSpeed purged, then a Cloudflare cache purge for the CSS/hero/home URLs (edge cache had
+  briefly served the pre-purge CSS before that). Verified live: hero URL is `gv-home-hero-v3.webp`
+  (2880×1920, 203176 bytes at the guid URL); `.gv-grid--3` + all 3 mentor cards intact; 0 "Request
+  Training"; live CSS contains the `.gv-hero--home .gv-hero__bg{filter:…mix-blend-mode:normal}`
+  override; Gino `<img>` carries `object-position:center top;`; footer logo `<img>` no longer carries
+  inline `height:40px`.
+
+### 2026-07-09 — Final revisions: remove all hero images, fix footer logo carve, keep Gino crop
+Client's final round: heroes should be clean solid navy (no photo at all), and the white footer
+wordmark reads as a shapeless blob.
+
+- **Heroes → clean navy.** Removed the `<div class="gv-hero__bg" style="background-image:...">` and
+  `<div class="gv-hero__overlay">` elements from all 15 occurrences: `build/pages/{home,about,
+  training-programs,athlete-development,success-stories,testimonials,faq,gallery}.html` and the hero
+  heredocs in `build/scripts/build-functional.php` (book 2982/portal 2983/contact 2989) and
+  `build/scripts/build-extras.php` (waiver 3009). In `build/mu-plugins/gv-assets/gv-brand.css` removed
+  the now-dead `.gv-hero__bg`/`.gv-hero__overlay` rules and the `.gv-hero--home .gv-hero__bg`
+  opacity/filter overrides; `.gv-hero` keeps `background:var(--gv-navy-deep)` with white heading/lead
+  text. This orphans `gv-home-hero-v3.webp` (added last commit) — expected, no cleanup needed.
+- **Footer logo fix.** Root cause: `logo/gvbasketball-long.svg` has three fills — `#021F51` (navy GV
+  mark), `#FE5A08` (orange underline), `#FFFFFF` (a negative-space detail carved into the mark). The
+  prior white footer variant recolored only `#021F51`→white, leaving the mark and the carved detail
+  both white so they merged into a blob. Built `logo/gvbasketball-wordmark-footer.svg` with
+  `#021F51`→`#ffffff` (mark), `#FFFFFF`→`#021F51` (carve — matches the footer's navy-deep background
+  so it reads correctly), `#FE5A08` unchanged (verified path data byte-identical to the source, only
+  fill values swapped). Uploaded as admin (`wp media import … --user=1`, media ID 3077) →
+  `https://gvbasketball.com/wp-content/uploads/2026/07/gvbasketball-wordmark-footer.svg`. Updated the
+  footer `<img>` in `build/templates/footer.html` to point at it (kept `width:auto;display:block;`, no
+  inline height — `.gv-footer__logo{height:38px}` still governs).
+- **M1 kept.** The Gino portrait `object-position:center top;` crop from the prior partial run is
+  retained in `build/pages/home.html`.
+- **Deploy** — CSS scp'd to `mu-plugins/gv-assets/`; 7 marketing pages via `apply-pages.php`; home via
+  `gv_set_page_html(2887,...)`; book/portal/contact via `build-functional.php`; waiver + footer via
+  `build-extras.php`. `wp elementor flush-css && wp litespeed-purge all`.
+- **Verified live** (browser UA) across all 11 public pages (`/`, `/about/`, `/training-programs/`,
+  `/athlete-development/`, `/success-stories/`, `/gallery/`, `/faq/`, `/book-a-consultation/`,
+  `/booking/`, `/contact/`, `/waiver/`): HTTP 200, **0** `gv-hero__bg` occurrences, hero `<h1>` renders
+  on every page. Live `gv-brand.css` has 0 `gv-hero__bg`/`gv-hero__overlay` rules and `.gv-hero{
+  background:var(--gv-navy-deep);...}`. Live footer references `gvbasketball-wordmark-footer.svg`;
+  fetched it directly and confirmed exactly three fills: `#ffffff`, `#021F51`, `#FE5A08`.
+
