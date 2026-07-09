@@ -25,3 +25,6 @@ backups/
 
 # Graphify output (generated knowledge graph)
 graphify-out/
+
+# Git worktrees
+.worktrees/
