@@ -551,3 +551,13 @@ problem.
   HTTP 200, `cf-cache-status: MISS`, and content lengths matching the local edited files. Playwright
   screenshots of Training and About confirmed the photos now share the tighter editorial tone and
   landscape section rhythm.
+
+### 2026-07-09 — Gallery real photos and menu navigation revamp
+Replaced placeholder AI-generated images on the Gallery page with 9 real basketball action and coaching photos, and integrated the Gallery page into both the header navigation and the footer Explore links.
+
+- **Gallery page revamp** — Modified `build/pages/gallery.html` to load a balanced 3x3 grid containing all 9 real photos from `revisions/basketball-photos`.
+- **Photo normalization** — Processed the remaining two raw photos (`IMG_4721.jpg` and `IMG_4722.jpg`) using `normalize-photo.sh` to generate the normalized WebP equivalents `gv-coaching-dribble.webp` and `gv-coaching-focus.webp`.
+- **Media import** — Uploaded and imported the two new WebP files to the WordPress media library (`uploads/2026/07/gv-coaching-dribble.webp` and `gv-coaching-focus.webp`).
+- **Header & Footer templates** — Updated `build/templates/header.html` to display the "Gallery" link in the navigation menu (between "Programs" and "FAQ"). Updated `build/templates/footer.html` to add the "Gallery" link in the "Explore" column.
+- **Menu script alignment** — Updated `build/scripts/build-menu.php` to align the Astra primary menu layout with the updated header navigation.
+- **Deploy & Verification** — Created and executed `build/scripts/deploy-gallery-revamp.php` to sync templates and menus on the server, flushed the Elementor CSS and LiteSpeed caches, and verified that all 9 images and menu links render properly on the live site.

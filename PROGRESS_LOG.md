@@ -31,6 +31,7 @@ This is a plain-language summary of the work completed on the GV Basketball webs
 7. **Branded Photo Filters Deployed**: We applied a unified, premium CSS-based photo filtering system to make all images consistent with the GV Basketball branding.
    - **Action & Portrait Photos**: Applied a subtle **"Warm Hardwood"** filter (warm contrast) to all inline action and coach portrait photos to unify shots taken under different lighting while keeping skin tones natural. These photos transition back to their original color when hovered/focused.
    - **Hero Backgrounds**: Connected hero background images to the deep navy brand color using a **"Luminosity Blend"** mode. This turns background images into a cohesive monochrome navy texture, elevating the visual appeal and ensuring high text readability.
+8. **Gallery Page Revamp with Real Photos**: We updated the Gallery page (`/gallery/`) to feature a balanced 3x3 grid of 9 real, high-performance training and coaching photos from your sessions, completely replacing the previous AI-generated placeholders. The Gallery page has also been integrated into both the main header navigation menu and the footer Explore links.
 
 ---
 
