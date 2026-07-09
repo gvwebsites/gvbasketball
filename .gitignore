@@ -11,6 +11,17 @@
 *.jpg
 *.png
 !logo/*.png
+!revisions/gino.jpeg
+!revisions/basketball-photos/IMG_7536.jpg
+!revisions/basketball-photos/IMG_7535.jpg
+!revisions/basketball-photos/IMG_7534.jpg
+!revisions/basketball-photos/IMG_5504.jpeg
+!revisions/basketball-photos/IMG_7533.jpg
+!revisions/basketball-photos/IMG_4720.jpg
+!revisions/basketball-photos/IMG_7532.jpg
 
 # Local DB / settings backups (never commit)
 backups/
+
+# Graphify output (generated knowledge graph)
+graphify-out/
