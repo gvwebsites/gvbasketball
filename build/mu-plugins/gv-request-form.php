@@ -298,3 +298,73 @@ function gv_rf_shortcode() {
     return $html;
 }
 add_shortcode('gv_request_form', 'gv_rf_shortcode');
+
+/* ---------------- Global consultation modal (injected on every page via wp_footer) ---------------- */
+function gv_rf_global_modal() {
+    $form = gv_rf_shortcode();
+    ?>
+<div class="gv-modal-overlay" id="gv-consult-modal">
+  <div class="gv-modal" role="dialog" aria-modal="true" aria-labelledby="gv-modal-title">
+    <button class="gv-modal__close" aria-label="Close">&times;</button>
+    <div class="gv-modal__header">
+      <span class="gv-eyebrow">Book a Consultation</span>
+      <h2 id="gv-modal-title" class="gv-section-title">Start Your Player's Journey</h2>
+      <p class="gv-lead">Share a few details about your athlete and the team will follow up to confirm the consultation.</p>
+    </div>
+    <div class="gv-modal__body"><?php echo $form; ?></div>
+  </div>
+</div>
+<script>
+(function(){
+  var modal=document.getElementById('gv-consult-modal');
+  if(!modal)return;
+  var closeBtn=modal.querySelector('.gv-modal__close');
+  var lastTrigger=null;
+
+  function openModal(trigger){
+    lastTrigger=trigger||null;
+    modal.classList.add('gv-modal-overlay--open');
+    document.body.style.overflow='hidden';
+    var first=modal.querySelector('input,select,textarea,button:not(.gv-modal__close)');
+    if(first)setTimeout(function(){first.focus();},100);
+  }
+  function closeModal(){
+    modal.classList.remove('gv-modal-overlay--open');
+    document.body.style.overflow='';
+    if(lastTrigger)lastTrigger.focus();
+  }
+
+  document.addEventListener('click',function(e){
+    var t=e.target.closest('[data-gv-open-modal]');
+    if(t){e.preventDefault();openModal(t);}
+  });
+  if(closeBtn)closeBtn.addEventListener('click',closeModal);
+  modal.addEventListener('click',function(e){
+    if(e.target===modal)closeModal();
+  });
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape'&&modal.classList.contains('gv-modal-overlay--open'))closeModal();
+  });
+
+  /* Auto-open modal when redirected back with ?gv_request= param */
+  function checkAutoOpen(){
+    var params=new URLSearchParams(window.location.search);
+    if(params.has('gv_request')){
+      openModal();
+      if(window.history&&window.history.replaceState){
+        var u=new URL(window.location.href);
+        u.searchParams.delete('gv_request');
+        window.history.replaceState({},'',u.toString());
+      }
+    }
+  }
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',checkAutoOpen);
+  }else{
+    checkAutoOpen();
+  }
+})();
+</script>
+<?php
+}
+add_action('wp_footer', 'gv_rf_global_modal', 50);

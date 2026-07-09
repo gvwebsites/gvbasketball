@@ -6,7 +6,7 @@ $cta = <<<'HTML'
 <h2 class="gv-section-title">Ready To Build A Better Player?</h2>
 <p class="gv-lead">Book a consultation and we'll map out the right path for your athlete.</p>
 <div class="gv-btn-row" style="justify-content:center;">
-<a class="gv-btn gv-btn--gold" href="/training-programs/">Book a Consultation</a>
+<a class="gv-btn gv-btn--gold" href="#" data-gv-open-modal>Book a Consultation</a>
 <a class="gv-btn gv-btn--ghost" href="https://ig.me/m/gvbasketballl" target="_blank" rel="noopener">Message on Instagram</a>
 </div></div></div></section></div>
 HTML;
@@ -120,7 +120,7 @@ $port_a = <<<'HTML'
 <h1 class="gv-h1">Member Booking</h1>
 <div class="gv-hero__rule" style="margin-top:24px;"></div>
 <p class="gv-lead">Log in to book sessions, reschedule within policy, and view your upcoming training. New here? Start with a consultation.</p>
-<div class="gv-btn-row"><a class="gv-btn gv-btn--primary" href="/training-programs/">Book a Consultation</a></div>
+<div class="gv-btn-row"><a class="gv-btn gv-btn--primary" href="#" data-gv-open-modal>Book a Consultation</a></div>
 </div></div></section>
 </div>
 HTML;

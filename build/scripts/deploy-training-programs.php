@@ -16,5 +16,4 @@ if (!$page_html) {
 
 echo gv_set_page_blocks(2981, array(
     array('type' => 'html', 'content' => $page_html),
-    array('type' => 'shortcode', 'content' => '[gv_request_form]', 'css' => 'gv-bookform-wrap'),
 )) . "\n";

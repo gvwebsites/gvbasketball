@@ -20,7 +20,7 @@ gv_item($menu_id, 'Programs', '/training-programs/');
 gv_item($menu_id, 'Gallery', '/gallery/');
 gv_item($menu_id, 'FAQ', '/faq/');
 gv_item($menu_id, 'Contact', '/contact/');
-gv_item($menu_id, 'Book a Consultation', '/training-programs/', 0, 'gv-navcta');
+gv_item($menu_id, 'Book a Consultation', '#', 0, 'gv-navcta');
 
 $locs = get_theme_mod('nav_menu_locations', array());
 $locs['primary'] = $menu_id;
