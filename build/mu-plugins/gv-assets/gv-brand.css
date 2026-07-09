@@ -448,3 +448,30 @@ li.gv-navcta>a:hover{background:var(--gv-orange-dark)!important;}
   .gv-modal__body{padding:20px 20px 32px;}
   .gv-modal__close{top:12px;right:12px;}
 }
+
+/* ---------- About Page Carousel ---------- */
+.gv-carousel {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: var(--gv-radius-lg);
+  box-shadow: var(--gv-shadow);
+}
+.gv-carousel img {
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out !important;
+}
+.gv-carousel img.active {
+  opacity: 1;
+  z-index: 2;
+}

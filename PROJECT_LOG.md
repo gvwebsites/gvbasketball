@@ -226,6 +226,20 @@ band, SMTP (Gmail), readable white design across desktop + mobile. Demo content 
 
 ## 11. Changelog
 
+### 2026-07-09 — Header: Replace Member Login with Instagram link
+- **Goal**: In the header navigation, replace the Member Login icon/link with a pink Instagram icon linking to the GV Basketball Instagram page.
+- **CSS Changes** (`build/mu-plugins/gv-assets/gv-brand.css`):
+  - Replaced `.gv-nav__login` with `.gv-nav__instagram` (and associated child/state selectors).
+  - Styled the icon with the Instagram pink brand color (`#E1306C`) and `fill: currentColor`.
+  - Added desktop hover scale-up (`transform: scale(1.05)`) and dark pink hover color (`#b31e50`).
+  - Adjusted mobile styling rules to support `.gv-nav__instagram`.
+- **Template Changes** (`build/templates/header.html`):
+  - Swapped the member login link pointing to `/booking/` with the Instagram page link `https://instagram.com/gvbasketballl` (target="_blank").
+  - Replaced the user SVG with the Instagram camera SVG.
+  - Replaced the label "Member Login" with "Instagram".
+- **Deploy & Cache**: Deployed CSS and HTML, evaluated `gv_set_theme_part_blocks` to rebuild the "GV Header" post content (post 3002), and updated conditions. Flushed Elementor CSS cache and LiteSpeed cache.
+- **Verify**: Confirmed live page markup contains the updated Instagram link and classes.
+
 ### 2026-07-09 — Home hero background video (portrait clip, framed-right / mobile cover)
 - **Source**: `~/Downloads/gvbasketball.MOV` — portrait clip (H.264, stored 1920×1080 with `rotation=-90` → displays 1080×1920, 8.4s, with audio).
 - **Encode** (local ffmpeg, autorotates + strips audio): 900×1600 H.264 MP4, `-crf 30 -preset slow -movflags +faststart`, no audio → **2.0 MB**; first-frame poster → `gvbasketball-hero-poster.webp` (91 KB). WebM VP9 was tried but came out 4.2 MB (larger than the MP4) so it was dropped — MP4-only. Assets committed to `build/assets/video/`.

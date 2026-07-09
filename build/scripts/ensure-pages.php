@@ -1,6 +1,6 @@
 <?php
 $pages = array(
-  'about'                => 'About Coach Gino',
+  'about'                => 'About GV Basketball',
   'training-programs'    => 'Training Programs',
   'book-a-consultation'  => 'Book a Consultation',
   'booking'              => 'Member Booking',
@@ -17,7 +17,7 @@ foreach ($pages as $slug => $title) {
 }
 // Retitle the existing About page properly
 if (!empty($out['about'])) {
-    wp_update_post(array('ID'=>$out['about'], 'post_title'=>'About Coach Gino'));
+    wp_update_post(array('ID'=>$out['about'], 'post_title'=>'About GV Basketball'));
 }
 wp_update_post(array('ID'=>2887, 'post_title'=>'Home'));
 $out['home'] = 2887;

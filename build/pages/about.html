@@ -4,10 +4,10 @@
   <section class="gv-hero">
     <div class="gv-wrap">
       <div class="gv-hero__inner" style="padding:88px 0 72px;">
-        <span class="gv-eyebrow">About GV Basketball</span>
-        <h1 class="gv-h1">About Coach Gino</h1>
+        <span class="gv-eyebrow">Our Story</span>
+        <h1 class="gv-h1">About GV Basketball</h1>
         <div class="gv-hero__rule" style="margin-top:24px;"></div>
-        <p class="gv-lead">Coach Gino Victorino builds complete basketball players — athletes with elite fundamentals, game IQ, strength, and the character to compete at the highest level.</p>
+        <p class="gv-lead">Founded by Coach Gino Victorino, GV Basketball builds complete basketball players — athletes with elite fundamentals, game IQ, strength, and the character to compete at the highest level.</p>
       </div>
     </div>
   </section>
@@ -97,7 +97,67 @@
     <div class="gv-wrap">
       <div class="gv-split gv-split--media-right">
         <div class="gv-split__media">
-          <img src="https://gvbasketball.com/wp-content/uploads/2026/07/gv-coaching-athlete.webp" alt="Coach Gino guiding an athlete through a ball-handling drill" loading="lazy">
+          <div class="gv-carousel" id="about-carousel">
+            <img class="gv-carousel__img active" src="https://gvbasketball.com/wp-content/uploads/2026/07/gv-coaching-dribble.webp" alt="GV Basketball training - dribble drill" loading="lazy">
+            <img class="gv-carousel__img" src="https://gvbasketball.com/wp-content/uploads/2026/07/gv-coaching-focus.webp" alt="GV Basketball training - focus and control" loading="lazy">
+          </div>
+          <script>
+          (function() {
+            function initCarousel() {
+              const carousel = document.getElementById('about-carousel');
+              if (!carousel) return;
+              const imgs = carousel.querySelectorAll('.gv-carousel__img');
+              if (imgs.length < 2) return;
+
+              let currentIndex = 0;
+              let intervalId = null;
+              let isHovered = false;
+
+              function setIndex(index) {
+                currentIndex = index;
+                imgs.forEach((img, i) => {
+                  if (i === currentIndex) {
+                    img.style.opacity = '1';
+                    img.style.zIndex = '2';
+                    img.classList.add('active');
+                  } else {
+                    img.style.opacity = '0';
+                    img.style.zIndex = '1';
+                    img.classList.remove('active');
+                  }
+                });
+              }
+
+              function startCycle() {
+                if (intervalId) clearInterval(intervalId);
+                intervalId = setInterval(() => {
+                  if (!isHovered) {
+                    const nextIndex = (currentIndex + 1) % imgs.length;
+                    setIndex(nextIndex);
+                  }
+                }, 2000);
+              }
+
+              carousel.addEventListener('mouseenter', () => {
+                isHovered = true;
+                const nextIndex = (currentIndex + 1) % imgs.length;
+                setIndex(nextIndex);
+              });
+
+              carousel.addEventListener('mouseleave', () => {
+                isHovered = false;
+              });
+
+              startCycle();
+            }
+
+            if (document.readyState === 'loading') {
+              document.addEventListener('DOMContentLoaded', initCarousel);
+            } else {
+              initCarousel();
+            }
+          })();
+          </script>
         </div>
         <div>
           <span class="gv-eyebrow">How Sessions Work</span>
