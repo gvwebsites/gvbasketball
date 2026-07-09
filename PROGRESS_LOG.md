@@ -8,6 +8,7 @@ This is a plain-language summary of the work completed on the GV Basketball webs
 
 ## The headlines
 
+0. **Home Hero Video**: The homepage hero now features a live training video. On desktop it plays in a clean, phone-shaped frame beside the headline (crisp, no stretching); on phones it fills the screen behind the text with a subtle dark overlay so the words stay easy to read. The clip is muted, loops automatically, and was compressed to ~2 MB so it loads fast.
 1. **Real Photos Deployed**: We have replaced the previous placeholder imagery with actual photos of Coach Gino and GV Basketball training sessions (optimized to WebP format for fast loading). A widescreen crop of your training session now serves as the Home hero background, Coach Gino's official portrait is on the About page hero and story section, and relevant action shots are placed on each program detail.
 2. **Training Programs Content & Schedule Re-write**:
    - Swapped out the Makati & Ortigas references for your three actual venues: **Dasma, Makati** (Mon, Wed, Thu), **Urdaneta Village** (Fri, Sun), and **Corinthian Gardens** (Sun).

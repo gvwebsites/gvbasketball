@@ -226,6 +226,13 @@ band, SMTP (Gmail), readable white design across desktop + mobile. Demo content 
 
 ## 11. Changelog
 
+### 2026-07-09 — Home hero background video (portrait clip, framed-right / mobile cover)
+- **Source**: `~/Downloads/gvbasketball.MOV` — portrait clip (H.264, stored 1920×1080 with `rotation=-90` → displays 1080×1920, 8.4s, with audio).
+- **Encode** (local ffmpeg, autorotates + strips audio): 900×1600 H.264 MP4, `-crf 30 -preset slow -movflags +faststart`, no audio → **2.0 MB**; first-frame poster → `gvbasketball-hero-poster.webp` (91 KB). WebM VP9 was tried but came out 4.2 MB (larger than the MP4) so it was dropped — MP4-only. Assets committed to `build/assets/video/`.
+- **Design**: portrait 9:16 clip can't fill a landscape hero without hard crop or upscaling, so — desktop: copy left, video in a rounded/shadowed portrait frame on the right at native aspect (crisp, no crop), reusing the two-column hero pattern; mobile: same clip as a full-bleed cover background + navy scrim + centered text (portrait matches portrait). New `.gv-hero--video` modifier in `gv-brand.css`; hero markup rebuilt in `build/pages/home.html` (`.gv-hero__inner` grid → `.gv-hero__copy` + `.gv-hero__video-wrap`).
+- **Verify (local)**: Playwright (Chrome) at 1280 + 390 — zero horizontal overflow both breakpoints, video crisp and correctly placed.
+- **Deploy**: `wp media import` MP4 + poster (`--user=1`) → `uploads/2026/07/`; `gv-brand.css` scp'd to `mu-plugins/gv-assets/`; `home.html` applied via `gv_set_page_html(2887,…)`; `wp elementor flush-css && wp litespeed-purge all`. Backed up prior home content + CSS on server first.
+
 ### 2026-07-09 — Client Revisions Polish (Home layout, high-res hero, logo watermark, gold hovers, footer logo, locations move)
 - **Coach Gino Added to Home**: Rebuilt the homepage mentor grid from 2-up to 3-up, placing Coach Gino first and framing him as *Founder & Head Coach* alongside his mentors Phil Handy and Micah Lancaster (R1).
 - **High-Res AI Hero**: Replaced `gv-home-hero-real.webp` with a crisp, new, high-resolution AI-generated hero `gv-home-hero-v2.webp` (R2).
