@@ -582,3 +582,18 @@ Replaced placeholder AI-generated images on the Gallery page with 9 real basketb
 - **Header & Footer templates** — Updated `build/templates/header.html` to display the "Gallery" link in the navigation menu (between "Programs" and "FAQ"). Updated `build/templates/footer.html` to add the "Gallery" link in the "Explore" column.
 - **Menu script alignment** — Updated `build/scripts/build-menu.php` to align the Astra primary menu layout with the updated header navigation.
 - **Deploy & Verification** — Created and executed `build/scripts/deploy-gallery-revamp.php` to sync templates and menus on the server, flushed the Elementor CSS and LiteSpeed caches, purged the Cloudflare edge cache for the updated image URLs, and verified that all 9 images and menu links render properly on the live site.
+
+### 2026-07-09 — Consultation modal fix + location/day selection
+Fixed the empty "Book a Consultation" modal on `/training-programs/` and added structured location/day fields to the request form.
+
+- **Location/day data model** — Added `gv_rf_locations()` as the single source of truth (Dasma → Mon/Wed/Thu, Urdaneta → Fri/Sun, Corinthian → Sun, Open to any → all 7) plus `gv_rf_validate_location_days()` for server-side validation. Both in `build/mu-plugins/gv-request-form.php`.
+- **Location dropdown** — New `<select name="location">` with four options showing venue name + available days (e.g. "Dasma, Makati — Mon, Wed & Thu").
+- **Conditional day checkboxes** — Seven day-chip checkboxes (`<label class="gv-rform-day">`) filtered client-side via an inline IIFE that reads a `MAP` JSON object (mirroring the PHP data model). Selecting a location shows only that venue's valid days; switching locations unchecks now-invalid days.
+- **Time field optional** — Renamed "Preferred days & times to meet" → "Preferred time of day / notes (optional)" and removed the `required` attribute. Server validation no longer requires it.
+- **Server-side validation** — `gv_rf_handle()` now validates `$location` and `$days_in` via `gv_rf_validate_location_days()`. Invalid combos redirect to the error banner.
+- **Email updates** — Both admin notification and auto-reply emails now include "Preferred location" and "Preferred day(s)" rows. The auto-reply conditionally shows notes only if provided.
+- **Modal subtitle copy** — Changed "Tell Coach Gino about your athlete…" → "Share a few details about your athlete and the team will follow up…" (third-person, no Coach Gino per brand convention).
+- **Regression guard** — Added a comment in `build/scripts/build-functional.php` documenting that page 2981 is owned solely by `deploy-training-programs.php` to prevent accidental overwrites.
+- **Test harness** — Created `build/mu-plugins/tests/test-gv-request-form.php` (19 assertions, framework-free CLI test covering data model shape, validation edge cases, and rendered markup structure).
+- **New CSS** — `.gv-rform-days`, `.gv-rform-day`, `.gv-rform-day--hidden`, `.gv-rform-dayhint` for the pill-shaped day chip UI.
+- **Deploy** — Uploaded `gv-request-form.php` to mu-plugins, ran `deploy-training-programs.php` (page 2981 = 2 widgets), flushed Elementor CSS + LiteSpeed. Verified: 7 day checkboxes, 4 location options, filter JS, optional time field, and third-person modal subtitle all live.
