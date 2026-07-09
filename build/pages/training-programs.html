@@ -24,7 +24,7 @@
               <li>Available by appointment</li>
               <li>Ages 3 to professional athletes</li>
             </ul>
-            <div class="gv-program__foot"><a class="gv-btn gv-btn--outline" href="/book-a-consultation/">Book a Consultation</a></div>
+            <div class="gv-program__foot"><a class="gv-btn gv-btn--outline" href="#" data-gv-open-modal>Book a Consultation</a></div>
           </div>
         </div>
         <div class="gv-program">
@@ -35,7 +35,7 @@
               <li>All skill levels welcome — drills are adapted to each player</li>
               <li>Skill development + team concepts</li>
             </ul>
-            <div class="gv-program__foot"><a class="gv-btn gv-btn--outline" href="/book-a-consultation/">Book a Consultation</a></div>
+            <div class="gv-program__foot"><a class="gv-btn gv-btn--outline" href="#" data-gv-open-modal>Book a Consultation</a></div>
           </div>
         </div>
         <div class="gv-program">
@@ -46,7 +46,7 @@
               <li>An integrated performance system</li>
               <li>Built for next-level athletes</li>
             </ul>
-            <div class="gv-program__foot"><a class="gv-btn gv-btn--outline" href="/book-a-consultation/">Book a Consultation</a></div>
+            <div class="gv-program__foot"><a class="gv-btn gv-btn--outline" href="#" data-gv-open-modal>Book a Consultation</a></div>
           </div>
         </div>
       </div>
@@ -76,7 +76,7 @@
           <h3 class="gv-subhead">Scheduling</h3>
           <p>Available by appointment. We'll match frequency and timing to your goals during your consultation.</p>
           <div class="gv-btn-row" style="margin-top:28px;">
-            <a class="gv-btn gv-btn--primary" href="/book-a-consultation/">Book a Consultation</a>
+            <a class="gv-btn gv-btn--primary" href="#" data-gv-open-modal>Book a Consultation</a>
           </div>
         </div>
       </div>
@@ -106,7 +106,7 @@
           <h3 class="gv-subhead">Locations &amp; Days</h3>
           <p>Dasma, Makati — Mon, Wed &amp; Thu · Urdaneta Village — Fri &amp; Sun · Corinthian Gardens — Sun.</p>
           <div class="gv-btn-row" style="margin-top:28px;">
-            <a class="gv-btn gv-btn--primary" href="/book-a-consultation/">Book a Consultation</a>
+            <a class="gv-btn gv-btn--primary" href="#" data-gv-open-modal>Book a Consultation</a>
           </div>
         </div>
       </div>
@@ -136,7 +136,7 @@
           <h3 class="gv-subhead">Scheduling</h3>
           <p>Available by appointment, designed for athletes ready to commit to next-level development.</p>
           <div class="gv-btn-row" style="margin-top:28px;">
-            <a class="gv-btn gv-btn--primary" href="/book-a-consultation/">Book a Consultation</a>
+            <a class="gv-btn gv-btn--primary" href="#" data-gv-open-modal>Book a Consultation</a>
           </div>
         </div>
       </div>
@@ -202,7 +202,7 @@
         <h2 class="gv-section-title">Ready To Become Your Best?</h2>
         <p class="gv-lead">Every athlete has a next level. Let's build your path.</p>
         <div class="gv-btn-row" style="justify-content:center;">
-          <a class="gv-btn gv-btn--gold" href="/book-a-consultation/">Book a Consultation</a>
+          <a class="gv-btn gv-btn--gold" href="#" data-gv-open-modal>Book a Consultation</a>
           <a class="gv-btn gv-btn--ghost" href="https://ig.me/m/gvbasketballl" target="_blank" rel="noopener">Message on Instagram</a>
         </div>
         <div class="gv-cta__trust">
@@ -214,5 +214,82 @@
       </div>
     </div>
   </section>
+
+  <!-- CONSULTATION MODAL -->
+  <div class="gv-modal-overlay" id="gv-consult-modal">
+    <div class="gv-modal" role="dialog" aria-modal="true" aria-labelledby="gv-modal-title">
+      <button class="gv-modal__close" aria-label="Close">&times;</button>
+      <div class="gv-modal__header">
+        <span class="gv-eyebrow">Book a Consultation</span>
+        <h2 id="gv-modal-title" class="gv-section-title">Start Your Player's Journey</h2>
+        <p class="gv-lead">Tell Coach Gino about your athlete. We'll follow up to confirm your consultation.</p>
+      </div>
+      <div class="gv-modal__body">
+        <div id="gv-modal-form-slot"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  (function(){
+    var modal=document.getElementById('gv-consult-modal');
+    if(!modal)return;
+    var closeBtn=modal.querySelector('.gv-modal__close');
+    var lastTrigger=null;
+
+    function openModal(trigger){
+      lastTrigger=trigger||null;
+      modal.classList.add('gv-modal-overlay--open');
+      document.body.style.overflow='hidden';
+      var first=modal.querySelector('input,select,textarea,button:not(.gv-modal__close)');
+      if(first)setTimeout(function(){first.focus();},100);
+    }
+    function closeModal(){
+      modal.classList.remove('gv-modal-overlay--open');
+      document.body.style.overflow='';
+      if(lastTrigger)lastTrigger.focus();
+    }
+
+    document.addEventListener('click',function(e){
+      var t=e.target.closest('[data-gv-open-modal]');
+      if(t){e.preventDefault();openModal(t);}
+    });
+    if(closeBtn)closeBtn.addEventListener('click',closeModal);
+    modal.addEventListener('click',function(e){
+      if(e.target===modal)closeModal();
+    });
+    document.addEventListener('keydown',function(e){
+      if(e.key==='Escape'&&modal.classList.contains('gv-modal-overlay--open'))closeModal();
+    });
+
+    /* Move form widget into modal slot */
+    function moveForm(){
+      var slot=document.getElementById('gv-modal-form-slot');
+      var formWrap=document.querySelector('.gv-rform-wrap');
+      if(slot&&formWrap&&!slot.contains(formWrap)){
+        slot.appendChild(formWrap);
+      }
+    }
+    if(document.readyState==='loading'){
+      document.addEventListener('DOMContentLoaded',function(){moveForm();checkAutoOpen();});
+    }else{
+      moveForm();checkAutoOpen();
+    }
+
+    /* Auto-open modal when redirected back with ?gv_request= param */
+    function checkAutoOpen(){
+      var params=new URLSearchParams(window.location.search);
+      if(params.has('gv_request')){
+        openModal();
+        /* Clean up URL without reload */
+        if(window.history&&window.history.replaceState){
+          var u=new URL(window.location.href);
+          u.searchParams.delete('gv_request');
+          window.history.replaceState({},'',u.toString());
+        }
+      }
+    }
+  })();
+  </script>
 
 </div>
