@@ -1309,6 +1309,55 @@ $change_mailto = gv_members_change_mailto('REFA2');
 gv_assert_contains('mailto:gvbasketballcoaching@gmail.com', $change_mailto, 'change email points to coach');
 gv_assert_contains('REFA2', $change_mailto, 'change email contains booking reference');
 
+// ==================== TASK 9 CONTRACT TESTS ====================
+// The old email-only consultation modal is retired: gv-request-form.php keeps
+// compatibility helpers only, and every public entry point routes through the
+// native LatePoint wizard (crawlable /book-a-consultation/ + data-gv-consultation).
+
+$legacy_plugin_src = file_get_contents(__DIR__ . '/../gv-request-form.php');
+check('legacy plugin: no admin_post_nopriv_gv_request_form registration',
+    strpos($legacy_plugin_src, 'admin_post_nopriv_gv_request_form') === false);
+check('legacy plugin: no wp_footer modal hook',
+    strpos($legacy_plugin_src, 'wp_footer') === false);
+check('legacy plugin: no gv_open_modal redirect',
+    strpos($legacy_plugin_src, 'gv_open_modal') === false);
+check('legacy plugin: no [gv_request_form] shortcode registration',
+    strpos($legacy_plugin_src, 'add_shortcode') === false);
+
+$legacy_page_sources = [
+    'training-programs.html'       => __DIR__ . '/../../pages/training-programs.html',
+    'deploy-training-programs.php' => __DIR__ . '/../../scripts/deploy-training-programs.php',
+    'build-functional.php'         => __DIR__ . '/../../scripts/build-functional.php',
+];
+foreach ($legacy_page_sources as $name => $path) {
+    $src = file_exists($path) ? file_get_contents($path) : '';
+    check("source $name: exists", $src !== '');
+    gv_assert_not_contains('[gv_request_form]', $src, "source $name: no [gv_request_form] shortcode");
+    gv_assert_not_contains('data-gv-open-modal', $src, "source $name: no data-gv-open-modal trigger");
+}
+
+// Training Programs CTAs stay crawlable and bridge to the native wizard.
+$tp_src = file_get_contents(__DIR__ . '/../../pages/training-programs.html');
+gv_assert_contains('href="/book-a-consultation/" data-gv-consultation', $tp_src,
+    'training-programs CTAs are crawlable and carry data-gv-consultation');
+
+// Header/footer source templates: member links go to /members/, book links stay
+// crawlable at /book-a-consultation/ with the data-gv-consultation bridge.
+$header_src = file_get_contents(__DIR__ . '/../../templates/header.html');
+$footer_src = file_get_contents(__DIR__ . '/../../templates/footer.html');
+
+gv_assert_contains('href="/members/"', $header_src, 'header: member link points to /members/');
+gv_assert_not_contains('href="/booking/"', $header_src, 'header: no legacy /booking/ member link');
+gv_assert_contains('href="/book-a-consultation/" data-gv-consultation', $header_src,
+    'header: consultation CTA is crawlable and carries data-gv-consultation');
+gv_assert_not_contains('data-gv-open-modal', $header_src, 'header: no data-gv-open-modal trigger');
+
+gv_assert_contains('href="/members/"', $footer_src, 'footer: member link points to /members/');
+gv_assert_not_contains('href="/booking/"', $footer_src, 'footer: no legacy /booking/ member link');
+gv_assert_contains('href="/book-a-consultation/" data-gv-consultation', $footer_src,
+    'footer: consultation CTA is crawlable and carries data-gv-consultation');
+gv_assert_not_contains('data-gv-open-modal', $footer_src, 'footer: no data-gv-open-modal trigger');
+
 echo $failures ? "\n$failures FAILED\n" : "\nALL PASS\n";
 exit($failures ? 1 : 0);
 }

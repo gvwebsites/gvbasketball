@@ -52,31 +52,6 @@ check('valid: any + [Tue,Sat] (only valid under any)',
 check('invalid: days not an array',
     gv_rf_validate_location_days('dasma', 'Mon') === false);
 
-// --- gv_rf_shortcode() rendered markup ---
-$html = gv_rf_shortcode();
-check('renders a location select', strpos($html, 'name="location"') !== false);
-check('location select has dasma option', strpos($html, 'value="dasma"') !== false);
-check('location option shows its days', strpos($html, 'Mon, Wed &amp; Thu') !== false
-    || strpos($html, 'Mon, Wed & Thu') !== false);
-check('renders day checkboxes', strpos($html, 'name="preferred_days[]"') !== false);
-check('day checkbox carries data-day', strpos($html, 'data-day="Mon"') !== false);
-check('exposes location-days JSON map', strpos($html, '"dasma":["Mon","Wed","Thu"]') !== false);
-check('time field relabeled to optional note',
-    stripos($html, 'time of day') !== false);
-
-// --- legacy consultation redirects should auto-open the modal ---
-check('training programs modal URL adds open flag',
-    gv_rf_training_programs_url(true) === 'https://example.test/training-programs/?gv_open_modal=1');
-$modal = (function () {
-    ob_start();
-    gv_rf_global_modal();
-    return ob_get_clean();
-})();
-check('modal script auto-opens for gv_open_modal flag',
-    strpos($modal, "params.has('gv_open_modal')") !== false);
-check('modal script intercepts legacy consultation links',
-    strpos($modal, "pathname==='/book-a-consultation/'") !== false);
-
 // --- gv_rf_next_weekday_date() ---
 $fixed = new DateTime('2026-07-13 15:30', new DateTimeZone('Asia/Manila'));
 function gv_days_between($from, $ymd) {
@@ -116,6 +91,36 @@ check('gcal: all-day range is date/next-day', strpos($gc, 'dates=20260713%2F2026
 check('gcal: prefills guest email', strpos(urldecode($gc), 'add=parent@example.com') !== false);
 check('gcal: carries title', strpos(urldecode($gc), 'GV Consultation') !== false);
 check('gcal: carries location', strpos(urldecode($gc), 'Metro Manila') !== false);
+
+// --- Task 9: legacy modal retirement (source contracts) ---
+// gv-request-form.php must be compatibility helpers only: no POST handlers,
+// no shortcode, no footer modal, no /book-a-consultation/ -> modal redirect.
+$plugin_src = file_get_contents(__DIR__ . '/../gv-request-form.php');
+check('legacy: no admin_post_nopriv_gv_request_form registration',
+    strpos($plugin_src, 'admin_post_nopriv_gv_request_form') === false);
+check('legacy: no admin_post_gv_request_form registration',
+    strpos($plugin_src, "'admin_post_gv_request_form'") === false);
+check('legacy: no wp_footer modal hook',
+    strpos($plugin_src, 'wp_footer') === false);
+check('legacy: no [gv_request_form] shortcode registration',
+    strpos($plugin_src, 'add_shortcode') === false);
+check('legacy: no gv_open_modal redirect or URL flag',
+    strpos($plugin_src, 'gv_open_modal') === false);
+
+// Deployed page sources must not be able to restore the modal.
+$legacy_sources = array(
+    'training-programs.html'        => __DIR__ . '/../../pages/training-programs.html',
+    'deploy-training-programs.php'  => __DIR__ . '/../../scripts/deploy-training-programs.php',
+    'build-functional.php'          => __DIR__ . '/../../scripts/build-functional.php',
+);
+foreach ($legacy_sources as $name => $path) {
+    $src = file_exists($path) ? file_get_contents($path) : '';
+    check("legacy: $name exists", $src !== '');
+    check("legacy: $name has no [gv_request_form] shortcode",
+        strpos($src, '[gv_request_form]') === false);
+    check("legacy: $name has no data-gv-open-modal trigger",
+        strpos($src, 'data-gv-open-modal') === false);
+}
 
 echo $failures ? "\n$failures FAILED\n" : "\nALL PASS\n";
 exit($failures ? 1 : 0);
