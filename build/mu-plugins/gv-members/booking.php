@@ -7,10 +7,12 @@ defined('ABSPATH') || exit;
 
 defined('LATEPOINT_STATUS_ERROR') || define('LATEPOINT_STATUS_ERROR', 'error');
 
-// Register wizard field hooks
+// Register wizard field hooks.
+// latepoint_process_step is a do_action with 3 args: ($step_code, $booking_object, $params) —
+// see latepoint/lib/controllers/steps_controller.php. Core handler runs at priority 10.
 add_action('latepoint_booking_steps_contact_after', 'gv_members_booking_fields', 10, 1);
-add_filter('latepoint_process_step', 'gv_members_process_step_validation', 1, 4);
-add_filter('latepoint_process_step', 'gv_members_process_step_persistence', 20, 4);
+add_action('latepoint_process_step', 'gv_members_process_step_validation', 1, 3);
+add_action('latepoint_process_step', 'gv_members_process_step_persistence', 20, 3);
 
 /**
  * Render custom fields on the LatePoint contact step for Player Consultation.
@@ -64,7 +66,7 @@ function gv_members_booking_fields($booking) {
 
         <div class="gv-field-wrap gv-checkbox-wrap">
             <label class="gv-checkbox-label">
-                <input type="checkbox" name="gv_consult[member_opt_in]" value="yes" checked>
+                <input type="checkbox" name="gv_consult[member_opt_in]" value="yes">
                 <span>Send me access to the GV Members site</span>
             </label>
         </div>
@@ -88,22 +90,22 @@ function gv_members_booking_fields($booking) {
 /**
  * Validate step submission and verify Turnstile before LatePoint advances.
  */
-function gv_members_process_step_validation($response, $step_code, $booking_object, $params) {
+function gv_members_process_step_validation($step_code, $booking_object, $params) {
     if ($step_code !== 'customer') {
-        return $response;
+        return;
     }
 
     if (!is_object($booking_object) || empty($booking_object->service_id)) {
-        return $response;
+        return;
     }
 
     if (!class_exists('OsServiceModel')) {
-        return $response;
+        return;
     }
 
     $service = new OsServiceModel($booking_object->service_id);
     if (!$service || $service->is_new_record() || $service->name !== 'Player Consultation') {
-        return $response;
+        return;
     }
 
     $checked = gv_members_validate_payload($params['gv_consult'] ?? []);
@@ -134,29 +136,27 @@ function gv_members_process_step_validation($response, $step_code, $booking_obje
             'fields_to_update' => []
         ]);
     }
-
-    return $response;
 }
 
 /**
  * Persist payload to Cart Meta.
  */
-function gv_members_process_step_persistence($response, $step_code, $booking_object, $params) {
+function gv_members_process_step_persistence($step_code, $booking_object, $params) {
     if ($step_code !== 'customer') {
-        return $response;
+        return;
     }
 
     if (!is_object($booking_object) || empty($booking_object->service_id)) {
-        return $response;
+        return;
     }
 
     if (!class_exists('OsServiceModel')) {
-        return $response;
+        return;
     }
 
     $service = new OsServiceModel($booking_object->service_id);
     if (!$service || $service->is_new_record() || $service->name !== 'Player Consultation') {
-        return $response;
+        return;
     }
 
     $checked = gv_members_validate_payload($params['gv_consult'] ?? []);
@@ -165,8 +165,6 @@ function gv_members_process_step_persistence($response, $step_code, $booking_obj
             OsStepsHelper::$cart_object->save_meta_by_key('gv_consult_payload', wp_json_encode($checked['data']));
         }
     }
-
-    return $response;
 }
 
 /**

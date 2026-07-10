@@ -492,8 +492,8 @@ $turnstile_success = true;
 
 // A. Test valid submission (should pass without exception)
 try {
-    $res = gv_members_process_step_validation('original_response', 'customer', $booking, $params);
-    check('validation passes valid parameters', $res === 'original_response');
+    gv_members_process_step_validation('customer', $booking, $params);
+    check('validation passes valid parameters', true);
 } catch (Exception $e) {
     check('validation passes valid parameters (threw ' . get_class($e) . ')', false);
 }
@@ -502,7 +502,7 @@ try {
 $params_bad_age = $params;
 $params_bad_age['gv_consult']['player_age'] = '2';
 try {
-    gv_members_process_step_validation('original_response', 'customer', $booking, $params_bad_age);
+    gv_members_process_step_validation('customer', $booking, $params_bad_age);
     check('validation fails age < 3', false);
 } catch (WpSendJsonException $e) {
     check('validation fails age < 3', $e->response['status'] === 'error' && strpos($e->response['message'], 'age') !== false);
@@ -512,7 +512,7 @@ try {
 $params_bad_age_high = $params;
 $params_bad_age_high['gv_consult']['player_age'] = '100';
 try {
-    gv_members_process_step_validation('original_response', 'customer', $booking, $params_bad_age_high);
+    gv_members_process_step_validation('customer', $booking, $params_bad_age_high);
     check('validation fails age > 99', false);
 } catch (WpSendJsonException $e) {
     check('validation fails age > 99', $e->response['status'] === 'error' && strpos($e->response['message'], 'age') !== false);
@@ -522,7 +522,7 @@ try {
 $params_honeypot = $params;
 $params_honeypot['gv_website'] = 'im-a-bot';
 try {
-    gv_members_process_step_validation('original_response', 'customer', $booking, $params_honeypot);
+    gv_members_process_step_validation('customer', $booking, $params_honeypot);
     check('validation fails if honeypot has value', false);
 } catch (WpSendJsonException $e) {
     check('validation fails if honeypot has value', $e->response['status'] === 'error' && $e->response['message'] === 'Please refresh and try again.');
@@ -532,7 +532,7 @@ try {
 $params_bad_turnstile = $params;
 $turnstile_success = false;
 try {
-    gv_members_process_step_validation('original_response', 'customer', $booking, $params_bad_turnstile);
+    gv_members_process_step_validation('customer', $booking, $params_bad_turnstile);
     check('validation fails if Turnstile verification fails', false);
 } catch (WpSendJsonException $e) {
     check('validation fails if Turnstile verification fails', $e->response['status'] === 'error' && $e->response['message'] === 'Please complete the security check.');
@@ -541,8 +541,7 @@ $turnstile_success = true;
 
 // 4. Persistence Handler Check (Priority 20)
 OsStepsHelper::$cart_object = new OsCartModel();
-$res = gv_members_process_step_persistence('original_response', 'customer', $booking, $params);
-check('persistence returns response', $res === 'original_response');
+gv_members_process_step_persistence('customer', $booking, $params);
 
 $saved_payload_json = OsStepsHelper::$cart_object->meta['gv_consult_payload'] ?? null;
 check('persistence saves payload to cart metadata', $saved_payload_json !== null);
