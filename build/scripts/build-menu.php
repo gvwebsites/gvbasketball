@@ -19,6 +19,7 @@ gv_item($menu_id, 'About', '/about/');
 gv_item($menu_id, 'Programs', '/training-programs/');
 gv_item($menu_id, 'Gallery', '/gallery/');
 gv_item($menu_id, 'FAQ', '/faq/');
+gv_item($menu_id, 'GV Elite Academy', '/elite-academy/');
 gv_item($menu_id, 'Contact', '/contact/');
 gv_item($menu_id, 'Book a Consultation', '#', 0, 'gv-navcta');
 
