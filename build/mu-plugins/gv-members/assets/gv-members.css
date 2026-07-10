@@ -614,6 +614,37 @@
     display: none !important;
 }
 
+/* ==================== Consultation day action ==================== */
+/* The visible action requests a day; the exact 45-minute time is coordinated later. */
+
+.timeslots .dp-label {
+    display: flex;
+    justify-content: center;
+}
+
+.timeslots .dp-label .gv-consult-day-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: calc(100% - 16px);
+    min-height: 52px;
+    margin: 4px 8px;
+    padding: 12px 18px;
+    border-radius: 10px;
+    background: var(--gv-brand-orange);
+    color: var(--gv-brand-white);
+    font-size: 15px;
+    font-weight: 800;
+    line-height: 1.2;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.timeslots .dp-timebox:hover .gv-consult-day-action,
+.timeslots .dp-timebox:focus-within .gv-consult-day-action {
+    background: #D9630C;
+}
+
 /* Chooser loading state: shown between picking a venue and the LatePoint
    wizard finishing its first render, so there is no dead gap. */
 
