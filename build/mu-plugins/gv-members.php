@@ -72,11 +72,9 @@ function gv_members_legacy_redirect() {
 add_action('wp_enqueue_scripts', 'gv_members_enqueue_assets', 30);
 
 function gv_members_enqueue_assets() {
-    // Only load on members/booking pages or when finalize query parameter is active
-    if (!is_page(2983) && !is_page(2982) && !isset($_GET['gv_finalize_consultation'])) {
-        return;
-    }
-
+    // Site-wide: consultation CTAs live in the header/footer of every page and the
+    // hidden wizard trigger prints on wp_footer globally, so the CTA bridge JS and
+    // wizard/portal CSS must be available everywhere.
     $css_path = __DIR__ . '/gv-members/assets/gv-members.css';
     $js_path = __DIR__ . '/gv-members/assets/gv-members.js';
 
