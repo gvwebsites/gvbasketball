@@ -266,3 +266,24 @@ This is the chronological log of all tasks, updates, and releases completed on t
   - Created `build/scripts/configure-consultation-page.php` to configure the consultation landing fallback page (2982) with the native wizard shortcode.
   - Modified `build/scripts/enable-member-auth.php` and `build/scripts/build-functional.php` to point LatePoint options to `/members/` and match the new portal shortcode conventions.
   - Created `build/mu-plugins/tests/test-gv-members-contracts.php` static contract test to assert configuration scripts are non-destructive and contain necessary configuration directives.
+
+## [2026-07-10] task | Bootstrap, cache protection, redirects, and CTA bridge (Task 3)
+- **Goal:** Bootstrap the GV Members integration and implement cache-protection headers, old dashboard redirects, assets versioning, and the consultation wizard CTA bridge.
+- **Changes:**
+  - Updated `build/mu-plugins/gv-members.php` to load core module immediately and load LatePoint-dependent modules on `plugins_loaded` priority 20.
+  - Implemented template cache protection `gv_members_private_response` (nocache_headers, DONOTCACHEPAGE, litespeed_control_set_nocache, private no-store) for the members page, AJAX actions, and finalization screens.
+  - Configured 301 legacy redirects for `/booking/` and `/customer-cabinet/` front-end GET requests while bypassing AJAX, REST, admin, and WP-CLI.
+  - Enqueued custom scoped portal/wizard scripts and stylesheets using `filemtime` dynamic versioning.
+  - Added hidden `[latepoint_book_button]` markup resolving Player Consultation dynamically by name and enqueued Javascript to intercept bookings CTAs.
+  - Extended contract test harness in `build/mu-plugins/tests/test-gv-members-contracts.php` to assert correct loading, redirects, headers, and asset versions.
+
+## [2026-07-10] task | Native wizard fields, Turnstile, OTP, and cart payload (Task 4)
+- **Goal:** Integrate custom player, training interest, honeypot, and Turnstile fields into the native LatePoint booking wizard and persist validated payloads to cart metadata.
+- **Changes:**
+  - Implemented custom wizard fields rendering inside the contact step (`latepoint_booking_steps_contact_after`) with fields: player name, age (3-99), training interest, optional contact/note details, and members promotion checkbox.
+  - Added priority 1 validation handler `gv_members_process_step_validation` rejecting invalid payloads, honeypot (`gv_website`) submissions, or missing/failed Cloudflare Turnstile verification.
+  - Added priority 20 persistence handler `gv_members_process_step_persistence` encoding validated fields as JSON and saving to `gv_consult_payload` cart metadata.
+  - Formatted responsive input fields and coordination notes explaining the day-only selection process in `assets/gv-members.css` and `assets/gv-members.js`.
+  - Added client-side double-submission prevention by disabling the forward/verify controls during active AJAX requests.
+  - Updated contract tests in `test-gv-members-contracts.php` to assert field rendering, validation error shapes, Turnstile verification, and cart payload persistence.
+
