@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>GV Basketball &mdash; July Updates, Part 2</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Round 2 of July changes to the GV Basketball website: your approved copy revisions applied, plus the new GV Elite Academy preview.">
+  <style>
+    :root {
+      --deep: #021F51;
+      --navy: #123B78;
+      --gold: #C9A24B;
+      --gold-soft: #dfc17f;
+      --ink: #16223b;
+      --muted: #5b6678;
+      --paper: #F4F6F9;
+      --card: #ffffff;
+      --line: #dde3ec;
+      --live: #1f8a4c;
+      --amber: #9a7b1f;
+      --maxw: 920px;
+      --disp: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      --body: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--body);
+      line-height: 1.62;
+      font-size: 17px;
+      -webkit-font-smoothing: antialiased;
+    }
+    .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+    h1, h2, h3 {
+      font-family: var(--disp);
+      text-transform: uppercase;
+      font-weight: 800;
+      letter-spacing: .01em;
+      text-wrap: balance;
+      line-height: 1.1;
+      margin: 0;
+    }
+    p { margin: 0 0 14px; }
+    a { color: var(--navy); text-decoration: none; font-weight: 600; }
+    a:hover { text-decoration: underline; }
+    .eyebrow {
+      font-family: var(--disp);
+      text-transform: uppercase;
+      letter-spacing: .18em;
+      font-weight: 700;
+      font-size: .75rem;
+      color: var(--gold);
+    }
+    .cover {
+      background: var(--deep);
+      color: #fff;
+      padding: 64px 0 56px;
+      background-image: linear-gradient(135deg, #021F51 0%, #0a2c63 55%, #123B78 100%);
+    }
+    .cover .eyebrow { color: var(--gold-soft); }
+    .cover h1 { font-size: clamp(2.2rem, 5vw, 3.4rem); color: #fff; margin: 14px 0 0; }
+    .cover .accent { height: 5px; width: 74px; background: var(--gold); border-radius: 3px; margin: 22px 0; }
+    .cover p { color: #c6d2e8; max-width: 65ch; margin: 0; }
+    .meta { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 26px; }
+    .meta span {
+      font-family: var(--mono);
+      font-size: .78rem;
+      color: #aebbd6;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 999px;
+      padding: 5px 12px;
+    }
+    section { padding: 44px 0; border-bottom: 1px solid var(--line); }
+    section:last-of-type { border-bottom: 0; }
+    h2 { font-size: clamp(1.4rem, 3vw, 1.9rem); color: var(--deep); }
+    h2 .num { color: var(--gold); margin-right: .4em; }
+    .lead { font-size: 1.08rem; color: var(--muted); max-width: 68ch; margin: 10px 0 0; }
+    .sec-head { margin-bottom: 28px; }
+    figure { margin: 0 0 8px; }
+    .screen {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 18px 40px -26px rgba(2, 31, 81, 0.5);
+    }
+    .screen__bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      background: #eef1f6;
+      border-bottom: 1px solid var(--line);
+    }
+    .dot { width: 10px; height: 10px; border-radius: 50%; background: #cbd3df; }
+    .screen__url {
+      font-family: var(--mono);
+      font-size: .74rem;
+      color: var(--muted);
+      margin-left: 8px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 3px 10px;
+    }
+    .screen img { display: block; width: 100%; height: auto; }
+    figcaption { font-size: .82rem; color: var(--muted); margin-top: 8px; text-align: center; }
+    .two { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+    @media(max-width: 768px) { .two { grid-template-columns: 1fr; } }
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 22px 24px; margin-top: 22px; }
+    .card--navy {
+      background: var(--deep);
+      color: #fff;
+      border: 0;
+      background-image: linear-gradient(135deg, #021F51, #123B78);
+    }
+    .card.card--navy h3 { color: #fff; }
+    .card--navy p { color: #cdd8ec; }
+    .card--navy a { color: var(--gold-soft); }
+    .card--accent { border-left: 4px solid var(--gold); }
+    .card h3 { font-size: 1.1rem; color: var(--deep); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.02em; }
+    ul.clean { margin: 8px 0 0; padding-left: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    ul.clean li { padding-left: 26px; position: relative; }
+    ul.clean li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: .55em;
+      width: 9px;
+      height: 9px;
+      border-radius: 2px;
+      background: var(--gold);
+    }
+    .card--navy ul.clean li::before { background: var(--gold-soft); }
+    .note { margin-top: 14px; font-size: .92rem; color: var(--amber); background: #f9f4e6; border-radius: 8px; padding: 10px 14px; }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-family: var(--disp);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-weight: 700;
+      font-size: .7rem;
+      padding: 5px 11px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+    .chip::before { content: ""; width: 8px; height: 8px; border-radius: 50%; }
+    .chip--live { background: #e7f3ec; color: var(--live); }
+    .chip--live::before { background: var(--live); }
+    .chip--next { background: #eef1f6; color: var(--muted); }
+    .chip--next::before { background: #9aa6b8; }
+    footer { background: var(--deep); color: #aebbd6; padding: 34px 0; font-size: .86rem; border-top: 1px solid rgba(255, 255, 255, 0.1); }
+    footer .wrap { display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
+    footer b { color: #fff; font-family: var(--disp); letter-spacing: .04em; }
+  </style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="wrap">
+    <div class="eyebrow">Client Update &mdash; Round 2</div>
+    <h1>July Updates, Part 2</h1>
+    <div class="accent"></div>
+    <p>This round applies your approved copy revisions &mdash; the GV Elite Performance rebrand, the new Apply Now button, and removing pricing talk from the site &mdash; and introduces the GV Elite Academy preview page. The new features from the creative-direction brief are designed and scheduled for a future round; they&rsquo;re listed at the end so nothing gets lost. Everything above that list is live now at gvbasketball.com.</p>
+    <div class="meta">
+      <span>JULY 2026 &middot; V2</span><span>gvbasketball.com</span><span>Prepared for Coach Gino</span>
+    </div>
+  </div>
+</div>
+
+<section><div class="wrap">
+  <div class="sec-head">
+    <div class="chips"><span class="chip chip--live">Live</span></div>
+    <h2><span class="num">01</span>GV Elite Performance</h2>
+    <p class="lead">Elite Performance is now <strong>GV Elite Performance</strong> &mdash; positioned as the complete performance system, with admission by application.</p>
+  </div>
+  <figure>
+    <div class="screen"><div class="screen__bar"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span class="screen__url">gvbasketball.com/training-programs/</span></div>
+    <img src="screenshots/v2-elite-card.png" alt="Training Programs page with the GV Elite Performance card: Application Required, Limited Enrollment, four pillars, and an Apply Now button">
+    </div>
+    <figcaption>The new GV Elite Performance card &mdash; Application Required &middot; Limited Enrollment, with the four pillars and Apply Now.</figcaption>
+  </figure>
+  <div class="card card--accent">
+    <ul class="clean">
+      <li><strong>New name and positioning:</strong> &ldquo;GV Elite Performance &mdash; Application Required &middot; Limited Enrollment&rdquo; on the home page, Training Programs page, and FAQ.</li>
+      <li><strong>The four pillars:</strong> Court Training &middot; Strength &amp; Conditioning &middot; Recovery &middot; Nutrition &mdash; replacing the old &ldquo;aqua training&rdquo; wording everywhere.</li>
+      <li><strong>Admission by application:</strong> based on character, coachability, commitment, and potential &mdash; per your approved copy.</li>
+    </ul>
+  </div>
+  <figure style="margin-top:22px;">
+    <div class="screen"><div class="screen__bar"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span class="screen__url">gvbasketball.com/training-programs/</span></div>
+    <img src="screenshots/v2-apply-now-wizard.png" alt="The consultation venue chooser opened by the Apply Now button">
+    </div>
+    <figcaption>Apply Now in action &mdash; it opens the consultation request you already receive.</figcaption>
+  </figure>
+  <div class="note"><strong>How Apply Now works today:</strong> Apply Now starts the same consultation request you already receive &mdash; applications are reviewed through the consultation for now. When the dedicated application form is built (next round), the button can point there instead without any other changes.</div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="sec-head">
+    <div class="chips"><span class="chip chip--live">Live</span></div>
+    <h2><span class="num">02</span>Pricing Removed From Copy</h2>
+    <p class="lead">Per your request, the website no longer discusses pricing anywhere in its text.</p>
+  </div>
+  <figure>
+    <div class="screen"><div class="screen__bar"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span class="screen__url">gvbasketball.com/faq/</span></div>
+    <img src="screenshots/v2-faq-programs.png" alt="FAQ Programs section without the cost question, with the program-difference answer expanded">
+    </div>
+    <figcaption>The FAQ &ldquo;Programs&rdquo; section &mdash; the &ldquo;How much does training cost?&rdquo; question is gone.</figcaption>
+  </figure>
+  <div class="card card--accent">
+    <ul class="clean">
+      <li><strong>FAQ:</strong> the &ldquo;How much does training cost?&rdquo; question was removed, the section heading is now simply &ldquo;Programs,&rdquo; and the page intro no longer mentions costs.</li>
+      <li><strong>Booking text:</strong> the consultation blurb now ends at &ldquo;Coach Gino&rsquo;s team will follow up to confirm.&rdquo;</li>
+      <li><strong>Nothing else changed:</strong> the booking wizard already never displayed prices, so no functional changes were needed.</li>
+    </ul>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="sec-head">
+    <div class="chips"><span class="chip chip--live">Live</span></div>
+    <h2><span class="num">03</span>GV Elite Academy &mdash; Coming 2027</h2>
+    <p class="lead">A new tab in the menu opens a one-screen preview that plants the flag for the Academy &mdash; without revealing details before you&rsquo;re ready.</p>
+  </div>
+  <figure>
+    <div class="screen"><div class="screen__bar"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span class="screen__url">gvbasketball.com</span></div>
+    <img src="screenshots/v2-academy-nav.png" alt="Header navigation showing the GV Elite Academy tab between FAQ and Contact">
+    </div>
+    <figcaption>The new GV Elite Academy tab sits in the main menu, between FAQ and Contact (and in the footer&rsquo;s Explore list).</figcaption>
+  </figure>
+  <figure style="margin-top:22px;">
+    <div class="screen"><div class="screen__bar"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span class="screen__url">gvbasketball.com/elite-academy/</span></div>
+    <img src="screenshots/v2-academy-page.png" alt="The GV Elite Academy Coming 2027 teaser page: dark screen with gold accents, mission statement, and closing quote">
+    </div>
+    <figcaption>The one-screen teaser &mdash; Coming 2027, your mission statement, and &ldquo;full details and applications opening soon.&rdquo;</figcaption>
+  </figure>
+  <div class="card card--accent">
+    <ul class="clean">
+      <li><strong>One dark, cinematic screen:</strong> COMING 2027 &middot; GV Elite Academy &middot; &ldquo;Develop Better People. Not Just Better Basketball Players.&rdquo; &middot; the residential-academy statement &middot; a closing quote &mdash; in the Academy&rsquo;s gold accent.</li>
+      <li><strong>Deliberately no buttons or forms:</strong> it builds anticipation without collecting anything before you&rsquo;re ready.</li>
+      <li><strong>The full page is ready to build:</strong> the complete cinematic Academy page &mdash; video, experience icons, founding partners, and the priority list &mdash; is designed and documented, ready to build when you green-light it.</li>
+    </ul>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="sec-head">
+    <div class="chips"><span class="chip chip--next">Next Round</span></div>
+    <h2><span class="num">04</span>Scheduled For The Next Round</h2>
+    <p class="lead">From the creative-direction brief &mdash; each of these is designed and documented, awaiting your go.</p>
+  </div>
+  <div class="card card--accent">
+    <ul class="clean">
+      <li><strong>Elite application form &amp; /apply/ page:</strong> a dedicated application (player details, character questions) that Apply Now will point to.</li>
+      <li><strong>The full GV Elite Academy page:</strong> the complete cinematic version with video, the experience sections, and the priority-list sign-up.</li>
+      <li><strong>Founding Partners display:</strong> the partners showcase for the Academy.</li>
+      <li><strong>Results page:</strong> a proof page for player outcomes and success stories.</li>
+      <li><strong>New navigation:</strong> the restructured menu from the brief &mdash; waiting on your photos and video.</li>
+      <li><strong>Photography &amp; design-language pass:</strong> the site-wide visual upgrade &mdash; also waiting on your photos and video.</li>
+    </ul>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="sec-head">
+    <div class="eyebrow">Quality Check</div>
+    <h2>Tested &amp; Live</h2>
+    <p class="lead">After deploying, we checked the live website to confirm everything works.</p>
+  </div>
+  <div class="two">
+    <div class="card card--accent">
+      <h3>What We Verified</h3>
+      <ul class="clean">
+        <li>GV Elite Performance appears with the four pillars on the home page, Training Programs, and FAQ &mdash; and &ldquo;aqua training&rdquo; is gone everywhere.</li>
+        <li>The Apply Now button opens the consultation request; every other Book a Consultation button (including the header&rsquo;s) is unchanged and working.</li>
+        <li>The FAQ cost question is removed and no page discusses pricing.</li>
+        <li>/elite-academy/ renders as one clean dark screen with gold accents and no forms.</li>
+        <li>The GV Elite Academy tab shows in the menu and footer on every page.</li>
+      </ul>
+    </div>
+    <div class="card card--navy">
+      <h3>Nothing Needed From You For This Round</h3>
+      <p>Everything above is live at <a href="https://gvbasketball.com">gvbasketball.com</a>. For the next round, the two items waiting on you are the same as before: <strong>your photos and video</strong> for the photography pass and new navigation. Everything else in section 04 just needs your go-ahead.</p>
+    </div>
+  </div>
+</div></section>
+
+<footer>
+  <div class="wrap">
+    <span>&copy; 2026 <b>GV BASKETBALL</b>. All rights reserved.</span>
+    <span>July Updates, Part 2 &mdash; 2026</span>
+  </div>
+</footer>
+
+</body>
+</html>
