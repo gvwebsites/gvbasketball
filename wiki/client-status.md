@@ -17,6 +17,7 @@ A plain-language summary of completed updates, delivered features, and pending i
 8. **Consultation Form Upgrade:** The popup modal now features a location picker and day-selection chips. The days dynamically update based on location (e.g. selecting Dasma hides all checkboxes except Mon, Wed, Thu). Modal emails include chosen venue/days.
 9. **Modal Auto-Open Interception:** Legacy links pointing to `/book-a-consultation/` now 302 redirect to `/training-programs/?gv_open_modal=1` to open the modal immediately. Legacy button clicks are intercepted.
 10. **Newsletter Strip Hidden:** Deactivated the footer newsletter banner until campaigns are ready, leaving the footer clean.
+11. **Hero Background Photos Restored:** Brought back the cinematic photo backgrounds behind every page's hero header (they had been flattened to plain navy on Jul 9). All 12 heroes now carry a photo under a navy/orange overlay so headings stay crisp. Per your note, the home, about, and programs heroes use **generic, no-people b-roll** (ball through the net, an empty court, ball-and-cones) rather than shots with people. *NB: this reverses the earlier "plain navy heroes" request — flag for Coach Gino's confirmation.*
 
 ---
 

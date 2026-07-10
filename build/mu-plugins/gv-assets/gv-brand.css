@@ -98,6 +98,8 @@ body .site-content .ast-container,body #primary{margin-left:0;margin-right:0;}
 
 /* ---------- Hero ---------- */
 .gv-hero{position:relative;background:var(--gv-navy-deep);color:#fff;overflow:hidden;}
+.gv-hero__bg{position:absolute;inset:0;background-size:cover;background-position:center;opacity:.38;filter:grayscale(100%) contrast(1.15) brightness(0.9);mix-blend-mode:luminosity;transition:opacity 0.3s ease;}
+.gv-hero__overlay{position:absolute;inset:0;background:linear-gradient(105deg,var(--gv-navy-deep) 30%,rgba(2,31,81,.55) 70%,rgba(244,123,32,.25));}
 /* Canonical interior-page hero padding (single source of truth; pages no longer need inline overrides). */
 .gv-hero__inner{position:relative;z-index:2;padding:88px 0 72px;max-width:760px;}
 .gv-hero h1{color:#fff;}
@@ -105,9 +107,11 @@ body .site-content .ast-container,body #primary{margin-left:0;margin-right:0;}
 .gv-hero__rule{width:64px;height:5px;background:var(--gv-orange);border-radius:3px;margin:0 0 26px;}
 @media(max-width:782px){.gv-hero__inner{padding:84px 0 72px;}}
 
-/* Home hero — clean navy, centered content */
+/* Home hero — full-bleed cinematic photo, even dark overlay, centered content */
 .gv-hero--home{min-height:64vh;display:flex;align-items:center;}
 .gv-hero--home .gv-wrap{width:100%;}
+.gv-hero--home .gv-hero__bg{opacity:.62;filter:contrast(1.08) brightness(.95);mix-blend-mode:normal;}
+.gv-hero--home .gv-hero__overlay{background:linear-gradient(180deg,rgba(2,31,81,.62) 0%,rgba(2,31,81,.5) 45%,rgba(2,31,81,.72) 100%);}
 .gv-hero__inner--center{max-width:880px;margin:0 auto;text-align:center;padding:64px 0;}
 .gv-hero__inner--center .gv-hero__rule,.gv-hero__inner--center .gv-lead{margin-left:auto;margin-right:auto;}
 .gv-hero__inner--center .gv-btn-row{justify-content:center;}

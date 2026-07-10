@@ -77,7 +77,7 @@ LatePoint's default OTP handler spits out plain-text emails. To match the premiu
 - **Hook:** Filters `wp_mail` arguments at runtime.
 - **Trigger:** Intercepts any mail whose subject contains the token "OTP".
 - **Action:** Extracts the 6-digit numeric token, wraps it in a styled HTML document containing:
-  - The white GV logo
+  - The GV crest logo (`2026/07/gv-logo-crest.png`, PNG for email-client compatibility)
   - Structured Navy and Orange brand highlights
   - Stylized monospace spacing for the code digits
   - Clear 10-minute expiry warning text

@@ -104,7 +104,7 @@ function gv_rf_gcal_url($args) {
 
 /* ---------------- Branded email shell (mirrors gv-otp-email.php) ---------------- */
 function gv_rf_email_shell($heading, $intro, $inner) {
-    $logo   = 'https://gvbasketball.com/wp-content/uploads/2025/07/GV_Logo_Main.png';
+    $logo   = 'https://gvbasketball.com/wp-content/uploads/2026/07/gv-logo-crest.png';
     $navy   = '#123B78'; $orange = '#F47B20'; $char = '#1C1C1E'; $steel = '#6B6F76';
     $ig     = 'https://instagram.com/gvbasketballl';
     return <<<HTML
@@ -115,8 +115,7 @@ function gv_rf_email_shell($heading, $intro, $inner) {
   <table role="presentation" width="520" cellpadding="0" cellspacing="0" style="max-width:520px;width:100%;background:#ffffff;border:1px solid #E6E7E9;border-radius:14px;overflow:hidden;">
     <tr><td style="border-top:4px solid {$orange};"></td></tr>
     <tr><td align="center" style="padding:30px 32px 6px;">
-      <img src="{$logo}" width="64" height="64" alt="GV Basketball" style="display:block;width:64px;height:auto;">
-      <div style="font-family:Arial,Helvetica,sans-serif;font-size:13px;font-weight:700;letter-spacing:3px;color:{$char};margin-top:12px;">GV BASKETBALL</div>
+      <img src="{$logo}" width="80" height="86" alt="GV Basketball" style="display:block;width:80px;height:auto;">
     </td></tr>
     <tr><td align="center" style="padding:12px 36px 0;">
       <h1 style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:22px;font-weight:800;color:{$navy};">{$heading}</h1>
@@ -208,10 +207,11 @@ function gv_rf_handle() {
     // "Add to Google Calendar" button — all-day event on the soonest preferred day (coach adjusts).
     $gcal_date = gv_rf_next_weekday_date($days_in);
     if ($gcal_date) {
-        $gcal_details = "Player: {$player} (age {$age})\nParent/Guardian: {$parent}\nEmail: {$email}\n"
-            . 'Phone/IG: ' . ($alt ?: '—') . "\nTraining type: {$type}\n"
-            . "Preferred location: {$loc_label}\nPreferred day(s): {$days_str}"
-            . ($times ? "\nNotes: {$times}" : '');
+        // Google Calendar renders the description as HTML — use <br> (raw \n collapses to nothing).
+        $gcal_details = "Player: {$player} (age {$age})<br>Parent/Guardian: {$parent}<br>Email: {$email}<br>"
+            . 'Phone/IG: ' . ($alt ?: '—') . "<br>Training type: {$type}<br>"
+            . "Preferred location: {$loc_label}<br>Preferred day(s): {$days_str}"
+            . ($times ? "<br>Notes: {$times}" : '');
         $gcal_url = gv_rf_gcal_url(array(
             'title'    => 'GV Consultation — ' . $player,
             'date'     => $gcal_date,

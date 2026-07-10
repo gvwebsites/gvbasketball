@@ -183,3 +183,40 @@ This is the chronological log of all tasks, updates, and releases completed on t
   - Wiki synced: `booking-latepoint.md` (view-only + reschedule-gated + coach flow), `pages.md`, `design-system.md`, `client-status.md`, `forms-and-emails.md`.
   - Deploy: per-target backups to `~/backups/member-portal-2026-07-10-0514/`; scp templates/css/mu-plugin; `gv_set_theme_part_blocks` + `wp eval-file build-functional.php`; `wp elementor flush-css && wp litespeed-purge all`. Verified live: nav icon → `/booking/`, portal copy updated, redirect intact, contact unregressed, `gv_rf_gcal_url()` returns correct Manila-dated URL server-side.
 - **Not code:** Coach adds each confirmed consultation in the LatePoint admin under the client's email; the self-registered member (same email) then sees it.
+
+## [2026-07-10] task | Restore hero background images site-wide
+- **Goal:** Bring back the photographic hero backgrounds removed on 2026-07-09 (commit `6d641e9`), which the July client report showed flattened to solid navy.
+- **Changes:**
+  - `build/mu-plugins/gv-assets/gv-brand.css`: re-added `.gv-hero__bg` (opacity .38, grayscale/luminosity blend) and `.gv-hero__overlay` (navy→orange gradient) rules, plus `.gv-hero--home` overrides (opacity .62, normal blend, even navy overlay). **Image layers only** — kept the later-tightened `.gv-hero__inner` padding (`88px 0 72px`) and `.gv-hero--home` `min-height:64vh` untouched (did NOT `git revert`, which would have clobbered those).
+  - Added `.gv-hero__bg` + `.gv-hero__overlay` divs to all 12 heroes: 8 marketing pages (`build/pages/*.html`) and 4 utility/form heredocs (`build-functional.php`: Book 2982, Portal 2983, Contact 2989; `build-extras.php`: Waiver 3009).
+  - **Client photo preference (mid-task):** swapped home/about/programs heroes from the `-real` people photos to **generic no-people b-roll** already in the media library — home → `gv-net.webp`, about → `gv-about-hero.webp`, programs → `gv-programs-hero.webp`. No image regeneration needed. `gv-sneaker.webp` rejected (shows a player's legs).
+  - Wiki synced: `design-system.md` (new §2A Hero Background Treatment + per-page image map), `client-status.md` (item 11), `log.md`.
+- **Deploy:** Golden Workflow — scp `gv-brand.css`; `gv_set_page_html(2887,…)` for home + `wp eval-file apply-pages.php` for the 7 interior pages; `wp eval-file build-functional.php` + `build-extras.php`; `wp elementor flush-css && wp litespeed-purge all`.
+- **Gotcha caught:** `build-extras.php` rebuilds the GV Footer (2991) from `~/footer.html`; first run omitted that upload, blanking `_elementor_data`. Re-ran with `build/templates/footer.html` uploaded → footer `_elementor_data` back to 3906 bytes, renders live. Remember to scp `footer.html` alongside `build-extras.php`.
+- **Verified live:** all 9 image URLs return 200; `gv-hero__bg` markup + correct image present on all 12 pages; `.gv-hero__bg{` rule live in served CSS; footer intact. (`/book-a-consultation/` 301-redirects to `/training-programs/` — pre-existing, ignored per client.)
+
+## [2026-07-10] fix | Restore real program-card photos on /training-programs/ (deploy regression)
+- **Goal:** Undo an unintended side-effect of the hero restore: deploying the full `training-programs.html` via `apply-pages.php` (`gv_set_page_html`, whole-page replace) reverted the three program detail-section photos from real → AI.
+- **Root cause (source drift):** commit `2c0fb74` had committed AI images (`gv-private/group/elite.webp`) into the build file, but that change was never deployed — **live kept the real photos** (`gv-private-1on1`, `gv-youth-group`, `gv-elite-competitive`, 2026/07). Confirmed against the July client-report screenshot. My whole-page deploy finally pushed the stale build content over the live reals.
+- **Fix:** restored the three `<img>` in `build/pages/training-programs.html` to the real photos + original alt text (from the `2c0fb74` `-` side); redeployed page 2981 individually; flushed caches. Verified live: 3 real photos present, 3 AI gone, hero unchanged (`gv-programs-hero.webp`). Build file now matches live and is correct.
+- **Audit:** other 7 deployed pages checked — only their hero `__bg` divs changed; no content-image drift (git shows `2c0fb74` was the sole real→AI page edit; home/about/gallery reals preserved and match screenshots).
+- **Lesson:** `apply-pages.php` / `gv_set_page_html` replace the ENTIRE page. Before deploying a whole page for a small edit, confirm the local build file matches live (esp. content photos), or edit the live `_elementor_data` surgically. Source-of-truth drift between `build/pages/` and live is a live risk.
+
+## [2026-07-10] task | Swap program-card photos to AI-derived, brand-mark-free versions
+- **Goal:** On /training-programs/, replace the three program detail-section photos with AI-generated versions derived from the real shots (cleaner backgrounds, no apparel brand marks), per client preference.
+- **Source:** local AI generations in `output/imagegen/training-programs-20260709/` — used `gv-private-clean-retouched.png` (NIKE logo retouched out; the non-retouched `gv-private-clean.png` still showed it), `gv-group-clean.png`, `gv-elite-clean.png`. These were **not** previously uploaded to the site (verified: live real-filename webps were byte-identical to the local real copies; media library had only the real + generic-AI images).
+- **Changes:**
+  - Normalized the 3 PNGs → WebP via `build/scripts/normalize-photo.sh` (cool-neutral premium, q82) → `build/assets/photos/gv-{private-1on1,youth-group,elite-competitive}-ai.webp` (158–245 KB).
+  - Uploaded to `wp-content/uploads/2026/07/` under **new `-ai` filenames** (scp direct; not registered as WP attachments, so no thumbnail sizes — fine for the hand-built `<img src>`). New names chosen deliberately so the **Gallery**, which reuses the real `gv-private-1on1/youth-group/elite-competitive.webp`, is left untouched.
+  - `build/pages/training-programs.html`: pointed the 3 program-card `<img>` at the `-ai` URLs (alt text unchanged — same composition). Redeployed page 2981; flushed caches.
+  - Wiki: `design-system.md` §2A programs row annotated; this log entry.
+- **Verified live:** 3 `-ai` images present on /training-programs/ (real refs gone), hero unchanged, Gallery still on the real files.
+
+## [2026-07-10] task | Branded emails: new crest logo + Google Calendar line-break fix
+- **Goal:** Swap the retired `GV_Logo_Main.png` for the new GV crest in both branded emails, fix the "Add to Google Calendar" description running together, and add the member-login/branded-email section to the July client report.
+- **Changes:**
+  - Rasterized `logo/gvbasketball-logo.svg` → `gv-logo-crest.png` (298×320, transparent), uploaded to `wp-content/uploads/2026/07/` (attachment 3096). Email clients don't render SVG, so a PNG is required.
+  - `gv-otp-email.php` + `gv-request-form.php` (`gv_rf_email_shell`): logo URL → the crest; removed the now-redundant "GV BASKETBALL" text line under the logo (the crest already reads the name); img sized to 80×86.
+  - `gv-request-form.php`: `$gcal_details` now joins with `<br>` instead of `\n` — Google Calendar renders the description as HTML, so raw newlines collapsed. Deployed both mu-plugins; re-sent a real test email (verified by client).
+  - `docs/CLIENT-REPORT-JULY.html`: item #6 Member Login → **Done** (was Evolved) with view-only portal copy; new Part-2 section "05 — Member Login & Branded Emails" featuring `docs/screenshots/member-email.png` (Chrome-headless render of the real email); refreshed the "Tested & Live" summary.
+  - Wiki: `forms-and-emails.md` (gcal `<br>` + crest logo), `booking-latepoint.md` (OTP email crest logo).

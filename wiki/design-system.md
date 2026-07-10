@@ -45,6 +45,35 @@ The design system uses namespaced classes prefixed with `gv-` to avoid conflicts
 
 ---
 
+## 2A. Hero Background Treatment
+
+Every `.gv-hero` sits over `--gv-navy-deep` and carries two absolutely-positioned layers (added as the first two children of `<section class="gv-hero">`):
+
+- **`.gv-hero__bg`** — the photo. `background-size:cover; opacity:.38; filter:grayscale(100%) contrast(1.15) brightness(.9); mix-blend-mode:luminosity`. The grayscale + luminosity blend fuses any photo into the navy panel so heroes read as one system regardless of the source image.
+- **`.gv-hero__overlay`** — a navy→orange diagonal gradient (`linear-gradient(105deg, navy-deep 30%, rgba(2,31,81,.55) 70%, rgba(244,123,32,.25))`) that guarantees white heading/lead contrast.
+- **Home override** (`.gv-hero--home`): brighter, full-color photo — `.gv-hero__bg{opacity:.62; filter:contrast(1.08) brightness(.95); mix-blend-mode:normal}` with an even top-to-bottom navy overlay for centered content legibility.
+
+`.gv-hero__inner` carries `position:relative; z-index:2` so copy sits above both layers.
+
+**Per-page hero image map** (all under `/wp-content/uploads/`). Client preference: interior/marketing heroes favor **generic, no-people b-roll** (empty courts, equipment, tactics board); the `-real` people photos were retired from heroes on 2026-07-10.
+
+| Page (post) | Image |
+|---|---|
+| Home (2887) | `2026/06/gv-net.webp` (ball through net) |
+| About (26) | `2026/06/gv-about-hero.webp` (empty court) |
+| Training Programs (2981) | `2026/06/gv-programs-hero.webp` (ball + cones) — hero. Program detail-section photos use AI-derived, brand-mark-free versions of the real shots: `2026/07/gv-{private-1on1,youth-group,elite-competitive}-ai.webp` (source PNGs in `output/imagegen/training-programs-20260709/`). The plain real `-*.webp` (no `-ai`) remain in use on the Gallery. |
+| Athlete Development (2984) | `2026/06/gv-development-hero.webp` |
+| Success Stories (2985) / Testimonials (2986) | `2026/06/gv-success-hero.webp` |
+| Gallery (2987) | `2026/06/gv-court.webp` |
+| FAQ (2988) | `2026/06/gv-faq-hero.webp` |
+| Book (2982) / Booking portal (2983) | `2026/07/gv-about-hero-real.webp` |
+| Contact (2989) | `2026/06/gv-contact-hero.webp` |
+| Waiver (3009) | `2026/06/gv-about-hero.webp` |
+
+> History: heroes were flattened to solid navy on 2026-07-09 (commit `6d641e9`), then the background images were restored on 2026-07-10 (image layers only; later spacing tweaks preserved).
+
+---
+
 ## 3. Photo Normalization Workflow
 
 To prevent raw, warm phone snaps or inconsistent photography from diluting the site's premium feel, all photos are processed through a cool-neutral normalization process.

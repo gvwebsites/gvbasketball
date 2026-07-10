@@ -54,7 +54,7 @@ echo "wpforms_id=$form_id\n";
 // ===== 2) Book a Consultation (2982) =====
 $book_a = <<<'HTML'
 <div class="gv-page">
-<section class="gv-hero">
+<section class="gv-hero"><div class="gv-hero__bg" style="background-image:url('https://gvbasketball.com/wp-content/uploads/2026/07/gv-about-hero-real.webp');"></div><div class="gv-hero__overlay"></div>
 <div class="gv-wrap"><div class="gv-hero__inner" style="padding:88px 0 72px;max-width:760px;">
 <span class="gv-eyebrow">Book a Consultation</span>
 <h1 class="gv-h1">Start Your Player's Journey</h1>
@@ -114,7 +114,7 @@ echo gv_set_page_blocks(2982, array(
 // ===== 3) Member Booking portal (2983) =====
 $port_a = <<<'HTML'
 <div class="gv-page">
-<section class="gv-hero">
+<section class="gv-hero"><div class="gv-hero__bg" style="background-image:url('https://gvbasketball.com/wp-content/uploads/2026/07/gv-about-hero-real.webp');"></div><div class="gv-hero__overlay"></div>
 <div class="gv-wrap"><div class="gv-hero__inner" style="padding:88px 0 72px;max-width:760px;">
 <span class="gv-eyebrow">Member Portal</span>
 <h1 class="gv-h1">Member Booking</h1>
@@ -144,7 +144,7 @@ echo gv_set_page_blocks(2983, array(
 // ===== 4) Contact (2989) =====
 $contact_a = <<<'HTML'
 <div class="gv-page">
-<section class="gv-hero">
+<section class="gv-hero"><div class="gv-hero__bg" style="background-image:url('https://gvbasketball.com/wp-content/uploads/2026/06/gv-contact-hero.webp');"></div><div class="gv-hero__overlay"></div>
 <div class="gv-wrap"><div class="gv-hero__inner" style="padding:88px 0 72px;max-width:760px;">
 <span class="gv-eyebrow">Get In Touch</span>
 <h1 class="gv-h1">Contact GV Basketball</h1>

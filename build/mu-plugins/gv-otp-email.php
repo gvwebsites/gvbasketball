@@ -11,7 +11,7 @@ if (!defined('ABSPATH')) exit;
  * Table-based + inline CSS for broad email-client compatibility.
  */
 function gv_otp_email_html($code) {
-    $logo   = 'https://gvbasketball.com/wp-content/uploads/2025/07/GV_Logo_Main.png';
+    $logo   = 'https://gvbasketball.com/wp-content/uploads/2026/07/gv-logo-crest.png';
     $navy   = '#123B78';
     $deep   = '#021F51';
     $orange = '#F47B20';
@@ -29,8 +29,7 @@ function gv_otp_email_html($code) {
   <table role="presentation" width="480" cellpadding="0" cellspacing="0" style="max-width:480px;width:100%;background:#ffffff;border:1px solid #E6E7E9;border-radius:14px;overflow:hidden;">
     <tr><td style="border-top:4px solid {$orange};"></td></tr>
     <tr><td align="center" style="padding:32px 32px 8px;">
-      <img src="{$logo}" width="68" height="68" alt="GV Basketball" style="display:block;width:68px;height:auto;">
-      <div style="font-family:Arial,Helvetica,sans-serif;font-size:13px;font-weight:700;letter-spacing:3px;color:{$char};margin-top:12px;">GV BASKETBALL</div>
+      <img src="{$logo}" width="80" height="86" alt="GV Basketball" style="display:block;width:80px;height:auto;">
     </td></tr>
     <tr><td align="center" style="padding:14px 36px 0;">
       <h1 style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:22px;font-weight:800;color:{$navy};">Your login code</h1>
