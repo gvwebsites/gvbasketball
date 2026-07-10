@@ -51,6 +51,13 @@ body .site-content .ast-container,body #primary{margin-left:0;margin-right:0;}
 .gv-section--navy{background:var(--gv-navy);color:#dce5f2;}
 .gv-section--deep{background:var(--gv-navy-deep);color:#cdd8ec;}
 .gv-section--light{background:var(--gv-light);}
+/* Map-pattern variant — subtle topographic/road grid on light bg */
+.gv-section--map{position:relative;background:var(--gv-light);overflow:hidden;}
+.gv-section--map::before{content:"";position:absolute;inset:0;opacity:.045;background-image:
+  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cdefs%3E%3Cstyle%3Epath,circle,line%7Bfill:none;stroke:%23123B78;stroke-linecap:round%7D%3C/style%3E%3C/defs%3E%3C!-- grid roads --%3E%3Cpath d='M0 80h400' stroke-width='2.5'/%3E%3Cpath d='M0 200h400' stroke-width='3'/%3E%3Cpath d='M0 320h400' stroke-width='2'/%3E%3Cpath d='M80 0v400' stroke-width='2.5'/%3E%3Cpath d='M200 0v400' stroke-width='3'/%3E%3Cpath d='M320 0v400' stroke-width='2'/%3E%3C!-- diagonals --%3E%3Cpath d='M0 0 200 200' stroke-width='1.5' stroke-dasharray='12 8'/%3E%3Cpath d='M200 0 400 200' stroke-width='1' stroke-dasharray='8 10'/%3E%3Cpath d='M0 200 200 400' stroke-width='1' stroke-dasharray='8 10'/%3E%3Cpath d='M200 200 400 400' stroke-width='1.5' stroke-dasharray='12 8'/%3E%3C!-- curved roads --%3E%3Cpath d='M40 40Q120 100 200 60T360 100' stroke-width='2'/%3E%3Cpath d='M40 280Q140 240 220 300T380 260' stroke-width='2'/%3E%3Cpath d='M60 140Q100 200 160 180T300 220' stroke-width='1.5'/%3E%3C!-- intersection dots --%3E%3Ccircle cx='80' cy='80' r='4' fill='%23123B78' stroke='none'/%3E%3Ccircle cx='200' cy='200' r='5' fill='%23123B78' stroke='none'/%3E%3Ccircle cx='320' cy='80' r='4' fill='%23123B78' stroke='none'/%3E%3Ccircle cx='80' cy='320' r='4' fill='%23123B78' stroke='none'/%3E%3Ccircle cx='320' cy='320' r='4' fill='%23123B78' stroke='none'/%3E%3Ccircle cx='200' cy='80' r='3' fill='%23123B78' stroke='none'/%3E%3Ccircle cx='80' cy='200' r='3' fill='%23123B78' stroke='none'/%3E%3Ccircle cx='320' cy='200' r='3' fill='%23123B78' stroke='none'/%3E%3Ccircle cx='200' cy='320' r='3' fill='%23123B78' stroke='none'/%3E%3C!-- location pins --%3E%3Cpath d='M130 140c0-8 12-22 12-22s12 14 12 22a12 12 0 1 1-24 0z' stroke-width='1.5' fill='%23F47B20' fill-opacity='.15'/%3E%3Ccircle cx='142' cy='140' r='4' fill='%23F47B20' fill-opacity='.2' stroke='none'/%3E%3Cpath d='M270 280c0-8 12-22 12-22s12 14 12 22a12 12 0 1 1-24 0z' stroke-width='1.5' fill='%23F47B20' fill-opacity='.15'/%3E%3Ccircle cx='282' cy='280' r='4' fill='%23F47B20' fill-opacity='.2' stroke='none'/%3E%3Cpath d='M340 160c0-6 9-16 9-16s9 10 9 16a9 9 0 1 1-18 0z' stroke-width='1.2' fill='%23F47B20' fill-opacity='.12'/%3E%3C/svg%3E");
+  background-size:400px 400px;pointer-events:none;z-index:0;}
+.gv-section--map::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 30%,var(--gv-light) 80%);pointer-events:none;z-index:0;}
+.gv-section--map>.gv-wrap{position:relative;z-index:1;}
 .gv-section--charcoal{background:var(--gv-charcoal);color:#d7d9dd;}
 .gv-section--navy .gv-section-title,.gv-section--deep .gv-section-title,.gv-section--charcoal .gv-section-title{color:#fff;}
 @media(max-width:782px){.gv-section{padding:60px 0;}}
@@ -99,29 +106,26 @@ body .site-content .ast-container,body #primary{margin-left:0;margin-right:0;}
 @media(max-width:782px){.gv-hero__inner{padding:84px 0 72px;}}
 
 /* Home hero — clean navy, centered content */
-.gv-hero--home{min-height:82vh;display:flex;align-items:center;}
+.gv-hero--home{min-height:64vh;display:flex;align-items:center;}
 .gv-hero--home .gv-wrap{width:100%;}
-.gv-hero__inner--center{max-width:880px;margin:0 auto;text-align:center;padding:96px 0;}
+.gv-hero__inner--center{max-width:880px;margin:0 auto;text-align:center;padding:64px 0;}
 .gv-hero__inner--center .gv-hero__rule,.gv-hero__inner--center .gv-lead{margin-left:auto;margin-right:auto;}
 .gv-hero__inner--center .gv-btn-row{justify-content:center;}
-@media(max-width:782px){.gv-hero--home{min-height:78vh;}.gv-hero__inner--center{padding:72px 0;}}
+@media(max-width:782px){.gv-hero--home{min-height:58vh;}.gv-hero__inner--center{padding:48px 0;}}
 
-/* Home hero — portrait video framed right (desktop); full-bleed cover (mobile) */
-.gv-hero--video .gv-wrap{width:100%;}
-.gv-hero--video .gv-hero__inner{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center;max-width:none;padding:96px 0;}
-.gv-hero__copy{max-width:600px;text-align:left;}
-.gv-hero__copy .gv-hero__rule,.gv-hero__copy .gv-lead{margin-left:0;margin-right:0;}
-.gv-hero__copy .gv-btn-row{justify-content:flex-start;}
-.gv-hero__video-wrap{justify-self:end;width:100%;max-width:400px;aspect-ratio:9/16;border-radius:var(--gv-radius-lg);overflow:hidden;box-shadow:var(--gv-shadow);background:var(--gv-navy-deep);}
-.gv-hero__video{width:100%;height:100%;object-fit:cover;display:block;}
-.gv-hero__scrim{display:none;}
-@media(max-width:782px){
-  .gv-hero--video .gv-hero__inner{position:static;grid-template-columns:1fr;padding:84px 0;}
-  .gv-hero__copy{max-width:none;text-align:center;position:relative;z-index:2;}
-  .gv-hero__copy .gv-hero__rule,.gv-hero__copy .gv-lead{margin-left:auto;margin-right:auto;}
-  .gv-hero__copy .gv-btn-row{justify-content:center;}
-  .gv-hero__video-wrap{position:absolute;inset:0;max-width:none;width:100%;height:100%;aspect-ratio:auto;border-radius:0;box-shadow:none;z-index:0;justify-self:auto;}
-  .gv-hero__scrim{display:block;position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(11,18,32,.55),rgba(11,18,32,.82));}
+/* Site-wide hero reveal — the hero pins in place while the page scrolls, and every
+   following section rises up and covers it. The hero content (eyebrow, headline,
+   rule, lead, buttons) stays COMPLETELY FIXED in the viewport, then disappears
+   behind the next section's opaque background — a calm "curtain" reveal.
+   Pure CSS position:sticky (supported everywhere, incl. Firefox — no scroll-timeline
+   needed). The following siblings are lifted above the pinned hero so their solid
+   backgrounds mask it; without the z-index the static sections would paint *under*
+   the positioned hero and it would show through. The hero keeps overflow:hidden so
+   its own content never spills past its box. Gated to motion-safe — reduced-motion
+   users get a normal static scroll where the hero simply scrolls away. */
+@media (prefers-reduced-motion: no-preference){
+  .gv-hero{position:sticky;top:0;z-index:0;}
+  .gv-hero ~ *{position:relative;z-index:1;}
 }
 
 /* ---------- Grid ---------- */
