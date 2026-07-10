@@ -29,7 +29,7 @@ All pages are live and public unless noted. Page HTML sources are located in `bu
 
 These global templates govern layouts site-wide and are injected via the Elementor Theme Builder:
 
-- **GV Header (ID: 3002):** Sticky, dark navy navigation bar. Contains the horizontal logo, desktop menu links, and an orange "Book a Consultation" CTA. Implements a lightweight CSS-only hamburger menu for mobile devices and includes a direct link to the GV Instagram page. Source: `build/templates/header.html`.
+- **GV Header (ID: 3002):** Sticky, dark navy navigation bar. Contains the horizontal logo, desktop menu links, a **Member Login account icon** (`.gv-nav__account`, person glyph → `/booking/`) sitting just before the Instagram icon, the Instagram link, and an orange "Book a Consultation" CTA. Implements a lightweight CSS-only hamburger menu for mobile devices. Source: `build/templates/header.html`.
 - **GV Footer (ID: 2991):** Sleek 4-column footer containing the white wordmark logo, address details for the venues, Explore navigation links, and legal/developer credits. Source: `build/templates/footer.html`.
   > [!NOTE]
   > The footer previously featured a newsletter sign-up band (`[wpforms id="3005"]`). This is currently hidden site-wide since the newsletter channel is not active, but the styling classes remain in `gv-brand.css` for easy re-activation.

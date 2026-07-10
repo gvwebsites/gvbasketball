@@ -46,6 +46,28 @@ Auth is entirely **email-based passwordless OTP**. There are no passwords. This 
 | `notifications_email_processor` | `wp_mail` | **CRITICAL GOTCHA:** Without this specific option set, LatePoint skips calling the standard WordPress mailer, disabling OTP deliveries and causing login queries to hang/fail silently. |
 | `page_url_customer_dashboard` / `_login` | `/booking/` | Keeps users on the custom branded portal page instead of forwarding to `/customer-cabinet/` |
 
+### Portal Scope — View-Only (free plugin) ⚠️
+This install runs **free LatePoint 5.6.6 only** (no PRO add-on). That caps what the portal can do:
+
+- **Members can VIEW** their consultation(s) and booking history — this is what the `/booking/` dashboard provides today.
+- **Members CANNOT reschedule or cancel.** Customer reschedule is hard-gated behind
+  `apply_filters('latepoint_is_feature_reschedule_available', false)` — a **paid** feature that is
+  never enabled in the installed code, so it **cannot be turned on by a setting**
+  (`allow_customer_booking_reschedule` et al. are inert). The `_booking_tile.php` Reschedule/Cancel
+  buttons therefore never render. Portal copy on `/booking/` reflects this: *"view your consultation
+  schedule… Need to change a day? Just message us."*
+- **Self-registration is open:** any email → OTP code → account. New accounts see an empty dashboard
+  until a booking exists under their email.
+- **Bookings are order-linked** (`bookings.order_item_id → order_items → orders`), so a portal-visible,
+  manageable booking must be created through LatePoint's normal flow — not a bare model insert.
+
+### How a consultation reaches the portal
+The public "Book a Consultation" modal (`gv-request-form.php`) only **emails** the coach; it does not
+create a LatePoint booking. **Coach workflow:** when confirming the day, add the consultation in the
+**LatePoint admin under the client's email**. The self-registered member (same email) is matched by
+email and sees it in `/booking/`. If the paid reschedule add-on is ever purchased, self-reschedule
+becomes available with no further code changes.
+
 ---
 
 ## 3. Branded OTP Email Integration

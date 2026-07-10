@@ -6,7 +6,8 @@ A plain-language summary of completed updates, delivered features, and pending i
 
 ## Recent Highlights (July 2026 Revision Round)
 
-1. **Header Instagram Navigation:** Swapped the "Member Login" icon in the header for a pink Instagram icon linking directly to `@gvbasketballl`, matching the Instagram-only contact preference.
+1. **Header Navigation — Instagram + Member Login:** Added a pink Instagram icon linking to `@gvbasketballl`, and (re-added) a discreet **Member Login** account icon beside it that opens the member portal at `/booking/`.
+0. **Member Login Portal Activated (view-only):** Turned the member portal back on. Members sign in with a passwordless email code and can **view** their consultation schedule and history. To change a day, they message the team (self-reschedule is a paid LatePoint add-on and is intentionally not enabled). Consultation records are added by the coach in the LatePoint admin when confirming the day; the coach's request email now carries an **"Add to Google Calendar"** button that prefills the event with the client as a guest.
 2. **Homepage Hero Video:** Added a loopable training video in a clean frame on desktop and as a mobile screen background with a readable dark overlay.
 3. **Real Photography Sync:** Replaced stock placeholders with real coaching shots of Coach Gino and athletes. Widescreen crop is on the Home page, Coach Gino's portrait is on the About page, and real action shots are on the Programs page.
 4. **Program Schedules Re-write:** Updated content to reflect the three true venues: **Dasma, Makati** (Mon/Wed/Thu), **Urdaneta Village** (Fri/Sun), and **Corinthian Gardens** (Sun). Simplified pricing text to "shared during the consultation."

@@ -41,6 +41,7 @@ The design system uses namespaced classes prefixed with `gv-` to avoid conflicts
 - `.gv-grid`: Flex/grid utilities (`--2`, `--3`, `--4` columns).
 - `.gv-card`: Card element wrapper with hover transformations.
 - `.gv-acc`: Custom HTML5 details accordion element used for dynamic FAQ lists.
+- `.gv-nav__account`: Header icon-button (44×44, navy stroke person glyph, orange hover) linking to the `/booking/` member portal; mirrors `.gv-nav__instagram` sizing. Label text is visually hidden (`.gv-nav__account-label`).
 
 ---
 

@@ -63,8 +63,10 @@ function gv_rf_weekday_num($abbr) {
 function gv_rf_next_weekday_date($days_in, $today = null) {
     if (!is_array($days_in) || !$days_in) return '';
     if (!$today instanceof DateTime) {
-        $tz = function_exists('wp_timezone') ? wp_timezone() : new DateTimeZone('Asia/Manila');
-        $today = new DateTime('now', $tz);
+        // Pin to the business timezone: WordPress on this host is left at UTC, but all
+        // venues/scheduling are Manila — computing "today" in UTC would land the next
+        // preferred weekday a day off during Manila 00:00–08:00.
+        $today = new DateTime('now', new DateTimeZone('Asia/Manila'));
     }
     $today = clone $today;
     $today->setTime(0, 0, 0);

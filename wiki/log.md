@@ -170,3 +170,16 @@ This is the chronological log of all tasks, updates, and releases completed on t
   - Deployed `wiki/` containing `index.md`, `log.md`, `access-and-hosting.md`, `architecture.md`, `design-system.md`, `pages.md`, `booking-latepoint.md`, `forms-and-emails.md`, `deployment-workflows.md`, and `client-status.md`.
   - Modified `AGENTS.md` to point to the wiki, define schemas, and list recommended cleaner directory layouts.
   - Deleted root-level `PROJECT_LOG.md` and `PROGRESS_LOG.md` files.
+
+## [2026-07-10] task | Member Login — Activate consultation portal (view-only)
+- **Goal:** Deliver the deferred "member login" as a view-only consultation portal, re-surface the login entry, and give the coach a one-click calendar action — without the paid LatePoint reschedule feature.
+- **Discovery (Stage 0, verified on live server):** LatePoint 5.6.6 **free only**. Login/OTP/portal already live at `/booking/`; **viewing works**, but **customer reschedule is hard-gated behind a paid add-on** (`latepoint_is_feature_reschedule_available` never enabled) and bookings are order-linked. Client chose: view-only now + coach creates bookings at confirmation.
+- **Changes:**
+  - `build/templates/header.html`: added `.gv-nav__account` Member Login icon (→ `/booking/`) before the Instagram link. Deployed to GV Header theme part (3002).
+  - `build/mu-plugins/gv-assets/gv-brand.css`: `.gv-nav__account` styling (mirrors `.gv-nav__instagram`).
+  - `build/scripts/build-functional.php`: portal page **2983** lead copy → view-only ("view your consultation schedule… Need to change a day? Just message us"). Re-ran; 2982/2983/2989 rebuilt (2982 redirects, 2989 unchanged).
+  - `build/mu-plugins/gv-request-form.php`: new `gv_rf_next_weekday_date()` (pinned to **Asia/Manila** — host WP is on UTC) + `gv_rf_gcal_url()`; admin/coach email now includes an **"Add to Google Calendar"** button (all-day event on soonest preferred weekday, client prefilled as guest via `add=`, full details + venue location).
+  - `build/mu-plugins/tests/test-gv-request-form.php`: +16 assertions (weekday derivation, gcal URL). 35/35 pass; PHP lint clean.
+  - Wiki synced: `booking-latepoint.md` (view-only + reschedule-gated + coach flow), `pages.md`, `design-system.md`, `client-status.md`, `forms-and-emails.md`.
+  - Deploy: per-target backups to `~/backups/member-portal-2026-07-10-0514/`; scp templates/css/mu-plugin; `gv_set_theme_part_blocks` + `wp eval-file build-functional.php`; `wp elementor flush-css && wp litespeed-purge all`. Verified live: nav icon → `/booking/`, portal copy updated, redirect intact, contact unregressed, `gv_rf_gcal_url()` returns correct Manila-dated URL server-side.
+- **Not code:** Coach adds each confirmed consultation in the LatePoint admin under the client's email; the self-registered member (same email) then sees it.
