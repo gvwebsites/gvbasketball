@@ -8,10 +8,18 @@ if (!defined('ABSPATH')) exit;
 
 if (!defined('GV_RF_RECIPIENT')) define('GV_RF_RECIPIENT', 'gvbasketballcoaching@gmail.com');
 
-/* Redirect /book-a-consultation/ (2982) → /training-programs/ (302) */
+function gv_rf_training_programs_url($open_modal = false) {
+    $url = home_url('/training-programs/');
+    if ($open_modal) {
+        $url .= (strpos($url, '?') === false ? '?' : '&') . 'gv_open_modal=1';
+    }
+    return $url;
+}
+
+/* Redirect /book-a-consultation/ (2982) → /training-programs/?gv_open_modal=1 (302) */
 function gv_rf_redirect_book_page() {
     if (is_page(2982)) {
-        wp_redirect(home_url('/training-programs/'), 302);
+        wp_redirect(gv_rf_training_programs_url(true), 302);
         exit;
     }
 }
@@ -92,7 +100,7 @@ function gv_rf_verify_turnstile($token, $ip) {
 /* ---------------- Submission handler ---------------- */
 function gv_rf_handle() {
     $ref = wp_get_referer();
-    if (!$ref) $ref = home_url('/training-programs/');
+    if (!$ref) $ref = gv_rf_training_programs_url();
     $back = function ($status) use ($ref) {
         $url = add_query_arg('gv_request', $status, remove_query_arg('gv_request', $ref)) . '#gv-request-form';
         wp_safe_redirect($url);
@@ -334,8 +342,21 @@ function gv_rf_global_modal() {
     if(lastTrigger)lastTrigger.focus();
   }
 
+  function isLegacyConsultLink(el){
+    if(!el||el.tagName!=='A')return false;
+    try{
+      var url=new URL(el.getAttribute('href')||'',window.location.href);
+      var pathname=url.pathname.replace(/\/+$/,'/')||'/';
+      if(pathname==='/book-a-consultation/')return true;
+      return pathname==='/training-programs/'&&el.textContent.trim().toLowerCase()==='book a consultation';
+    }catch(err){
+      return false;
+    }
+  }
+
   document.addEventListener('click',function(e){
-    var t=e.target.closest('[data-gv-open-modal]');
+    var t=e.target.closest('[data-gv-open-modal], a');
+    if(t&&!t.hasAttribute('data-gv-open-modal')&&!isLegacyConsultLink(t))t=null;
     if(t){e.preventDefault();openModal(t);}
   });
   if(closeBtn)closeBtn.addEventListener('click',closeModal);
@@ -349,11 +370,12 @@ function gv_rf_global_modal() {
   /* Auto-open modal when redirected back with ?gv_request= param */
   function checkAutoOpen(){
     var params=new URLSearchParams(window.location.search);
-    if(params.has('gv_request')){
+    if(params.has('gv_request')||params.has('gv_open_modal')){
       openModal();
       if(window.history&&window.history.replaceState){
         var u=new URL(window.location.href);
         u.searchParams.delete('gv_request');
+        u.searchParams.delete('gv_open_modal');
         window.history.replaceState({},'',u.toString());
       }
     }

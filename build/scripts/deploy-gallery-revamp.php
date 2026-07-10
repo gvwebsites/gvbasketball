@@ -27,12 +27,7 @@ if (file_exists($hpath)) {
 $fpath = "$HOME/footer.html";
 if (file_exists($fpath)) {
     echo "Deploying Footer...\n";
-    $news_id = 3005;
-    $nf = get_posts(array('post_type'=>'wpforms','numberposts'=>-1,'post_status'=>'any','fields'=>'ids'));
-    foreach ($nf as $fid) { if (stripos(get_the_title($fid),'newsletter')!==false){ $news_id=$fid; break; } }
-    echo "  Using newsletter WPForms ID = $news_id\n";
     echo gv_set_theme_part_blocks('GV Footer', 'footer', array(
-        array('type'=>'shortcode','content'=>'[wpforms id="'.$news_id.'" title="true" description="true"]','css'=>'gv-newsletter-band'),
         array('type'=>'html','content'=>file_get_contents($fpath)),
     )) . "\n";
     $fid = get_posts(array('post_type'=>'elementor_library','title'=>'GV Footer','numberposts'=>1,'post_status'=>'any','fields'=>'ids'));

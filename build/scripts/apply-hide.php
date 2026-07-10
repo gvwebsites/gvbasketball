@@ -4,10 +4,7 @@ echo gv_set_page_html(2985, file_get_contents(getenv('HOME').'/success-stories.h
 wp_update_post(array('ID'=>2986, 'post_status'=>'draft'));
 echo "testimonials page 2986 -> draft\n";
 
-$news = get_posts(array('post_type'=>'wpforms','title'=>'GV Newsletter','numberposts'=>1,'post_status'=>'any','fields'=>'ids'));
-$news = $news ? $news[0] : 0;
 echo gv_set_theme_part_blocks('GV Footer','footer', array(
-  array('type'=>'shortcode','content'=>'[wpforms id="'.$news.'" title="true" description="true"]','css'=>'gv-newsletter-band'),
   array('type'=>'html','content'=>file_get_contents(getenv('HOME').'/footer.html')),
 )) . "\n";
 $fid = get_posts(array('post_type'=>'elementor_library','title'=>'GV Footer','numberposts'=>1,'post_status'=>'any','fields'=>'ids'));

@@ -598,6 +598,22 @@ Fixed the empty "Book a Consultation" modal on `/training-programs/` and added s
 - **New CSS** — `.gv-rform-days`, `.gv-rform-day`, `.gv-rform-day--hidden`, `.gv-rform-dayhint` for the pill-shaped day chip UI.
 - **Deploy** — Uploaded `gv-request-form.php` to mu-plugins, ran `deploy-training-programs.php` (page 2981 = 2 widgets), flushed Elementor CSS + LiteSpeed. Verified: 7 day checkboxes, 4 location options, filter JS, optional time field, and third-person modal subtitle all live.
 
+### 2026-07-09 — Legacy consultation links now open the modal
+Changed the last consultation CTA fallback path so old `Book a Consultation` links no longer just dump visitors onto `/training-programs/`; they now arrive with the consultation modal opening automatically.
+
+- **Shared consultation URL helper** — Added `gv_rf_training_programs_url($open_modal = false)` in `build/mu-plugins/gv-request-form.php` so redirect targets and fallback URLs share one canonical Training Programs URL.
+- **Redirect behavior** — Updated page `2982` (`/book-a-consultation/`) to 302 to `/training-programs/?gv_open_modal=1`, which the modal script now recognizes and consumes.
+- **Legacy CTA interception** — Hardened the global modal click handler to also catch old anchor links pointing at `/book-a-consultation/`, plus legacy `Book a Consultation` anchors still aimed at `/training-programs/`, and open the modal in place.
+- **Regression coverage** — Expanded `build/mu-plugins/tests/test-gv-request-form.php` to verify the modal-open redirect URL, the `gv_open_modal` auto-open flag, and the legacy-link interception script.
+- **Deploy & verification** — Uploaded the updated mu-plugin, flushed Elementor CSS and LiteSpeed caches, confirmed `curl -I https://gvbasketball.com/book-a-consultation/` returns `location: https://gvbasketball.com/training-programs/?gv_open_modal=1`, and confirmed the live `/training-programs/` HTML includes the new `gv_open_modal` and `/book-a-consultation/` modal-trigger logic.
+
+### 2026-07-09 — Footer newsletter band hidden site-wide
+Removed the footer newsletter signup band from the live footer build so the site no longer advertises a newsletter before that channel is ready.
+
+- **Footer deploy path cleanup** — Updated every footer rebuild script that still injected `[wpforms ...]` above `GV Footer`: `build/scripts/build-extras.php`, `build/scripts/apply-hide.php`, `build/scripts/deploy-revamp.php`, and `build/scripts/deploy-gallery-revamp.php`.
+- **Scope preserved** — Kept the underlying `GV Newsletter` WPForms definition intact for future use; only the rendered footer section was removed.
+- **Deploy & verification** — Rebuilt the live footer from `build/templates/footer.html`, flushed Elementor CSS and LiteSpeed caches, and verified the public HTML no longer contains `gv-newsletter-band` or the newsletter headline copy.
+
 ### 2026-07-09 — Training Programs images regenerated from real gallery sources
 Regenerated the three inline images shown on `/training-programs/` using real GV Basketball source photos and a restrained, neutral lighting direction.
 

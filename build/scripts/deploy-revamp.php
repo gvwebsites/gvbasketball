@@ -39,12 +39,6 @@ foreach ($pages as $id => $file) {
 }
 
 echo "=== FOOTER ===\n";
-// find newsletter wpforms id (fallback 3005)
-$news_id = 3005;
-$nf = get_posts(array('post_type'=>'wpforms','numberposts'=>-1,'post_status'=>'any','fields'=>'ids'));
-foreach ($nf as $fid) { if (stripos(get_the_title($fid),'newsletter')!==false){ $news_id=$fid; break; } }
-echo "  newsletter form id = $news_id\n";
-
 $fpath = "$HOME/footer.html";
 if (file_exists($fpath)) {
     // backup current footer template
@@ -53,7 +47,6 @@ if (file_exists($fpath)) {
     $footer_html = file_get_contents($fpath);
     echo "  ";
     echo gv_set_theme_part_blocks('GV Footer', 'footer', array(
-        array('type'=>'shortcode','content'=>'[wpforms id="'.$news_id.'" title="true" description="true"]','css'=>'gv-newsletter-band'),
         array('type'=>'html','content'=>$footer_html),
     ));
     echo "\n";

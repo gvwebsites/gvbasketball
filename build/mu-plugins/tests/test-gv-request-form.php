@@ -8,6 +8,7 @@ function add_filter() {}
 function esc_attr($s){ return htmlspecialchars((string)$s, ENT_QUOTES); }
 function esc_html($s){ return htmlspecialchars((string)$s, ENT_QUOTES); }
 function esc_url($s){ return (string)$s; }
+function home_url($p=''){ return 'https://example.test'.$p; }
 function wp_create_nonce($a=''){ return 'testnonce'; }
 function admin_url($p=''){ return 'https://example.test/wp-admin/'.$p; }
 function sanitize_key($s){ return strtolower(preg_replace('/[^a-z0-9_]/','', (string)$s)); }
@@ -62,6 +63,19 @@ check('day checkbox carries data-day', strpos($html, 'data-day="Mon"') !== false
 check('exposes location-days JSON map', strpos($html, '"dasma":["Mon","Wed","Thu"]') !== false);
 check('time field relabeled to optional note',
     stripos($html, 'time of day') !== false);
+
+// --- legacy consultation redirects should auto-open the modal ---
+check('training programs modal URL adds open flag',
+    gv_rf_training_programs_url(true) === 'https://example.test/training-programs/?gv_open_modal=1');
+$modal = (function () {
+    ob_start();
+    gv_rf_global_modal();
+    return ob_get_clean();
+})();
+check('modal script auto-opens for gv_open_modal flag',
+    strpos($modal, "params.has('gv_open_modal')") !== false);
+check('modal script intercepts legacy consultation links',
+    strpos($modal, "pathname==='/book-a-consultation/'") !== false);
 
 echo $failures ? "\n$failures FAILED\n" : "\nALL PASS\n";
 exit($failures ? 1 : 0);

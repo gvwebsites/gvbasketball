@@ -81,10 +81,9 @@ echo gv_set_page_blocks($waiver_page, array(
   array('type'=>'html','content'=>$waiver_cta),
 )) . "\n";
 
-// ===== Rebuild footer with newsletter band on top =====
+// ===== Rebuild footer =====
 $footer_html = file_get_contents(getenv('HOME') . '/footer.html');
 echo gv_set_theme_part_blocks('GV Footer', 'footer', array(
-  array('type'=>'shortcode','content'=>'[wpforms id="'.$news_id.'" title="true" description="true"]','css'=>'gv-newsletter-band'),
   array('type'=>'html','content'=>$footer_html),
 )) . "\n";
 

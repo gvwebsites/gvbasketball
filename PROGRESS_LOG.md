@@ -35,6 +35,7 @@ This is a plain-language summary of the work completed on the GV Basketball webs
    - **Hero Backgrounds**: Connected hero background images to the deep navy brand color using a **"Luminosity Blend"** mode. This turns background images into a cohesive monochrome navy texture, elevating the visual appeal and ensuring high text readability.
 9. **Gallery Page Revamp with Real Photos**: We updated the Gallery page (`/gallery/`) to feature a balanced 3x3 grid of 9 real, high-performance training and coaching photos from your sessions, completely replacing the previous AI-generated placeholders. The Gallery page has also been integrated into both the main header navigation menu and the footer Explore links.
 10. **Consultation Form Upgrade — Location & Day Selection**: The "Book a Consultation" modal on the Training Programs page now includes a **location dropdown** (Dasma Makati, Urdaneta Village, Corinthian Gardens, or Open to any) and **day selection chips** that automatically update based on the chosen location. For example, selecting "Dasma, Makati" shows only Mon, Wed & Thu. The preferred time field is now optional with a notes label. Both the admin notification email and the confirmation email sent to the parent now include the selected location and day(s). The modal subtitle was also updated to a neutral, third-person tone.
+11. **All Consultation CTAs Now Open the Modal**: We updated the old consultation-link fallback so any remaining **"Book a Consultation"** links that previously routed people to the Training Programs page now open the consultation modal directly. The legacy `/book-a-consultation/` URL now forwards to Training Programs with the modal auto-opened, and older consultation buttons aimed at that path are intercepted into the same modal flow. We deployed the plugin update, flushed caches, and verified the new redirect target and modal script live.
 
 ---
 
@@ -59,6 +60,10 @@ These updates fulfill the design revisions you approved. The following items rem
 *Questions or change requests? Reply with notes against any section above and we'll fold them in.*
 
 ---
+
+## Update — July 9, 2026
+
+We removed the newsletter signup strip from the site footer for now, since the newsletter isn’t being used yet. The footer still keeps the streamlined brand/logo, links, and contact details, and the hidden newsletter setup can be restored later without rebuilding it from scratch.
 
 ## Update — July 9, 2026
 

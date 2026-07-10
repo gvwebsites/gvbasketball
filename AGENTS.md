@@ -1,213 +1,99 @@
-# CLAUDE.md — GV Basketball site
+# GV Basketball — Agent Runbook
 
-Operational guide for updating **https://gvbasketball.com** (WordPress on Hostinger). **Edit source in
-`build/`, then deploy over SSH.**
+**Site:** https://gvbasketball.com — WordPress on Hostinger. **Source of truth: `build/`; deploy over SSH.**
 
-**Docs map:**
-- [`PROJECT_LOG.md`](PROJECT_LOG.md) — technical build log + changelog (source of truth for how it's built).
-- [`PROGRESS_LOG.md`](PROGRESS_LOG.md) — plain-language progress summary for the client.
-- [`docs/`](docs/) — working handoffs for upcoming work (e.g. `HANDOFF-member-profile.md`).
-
----
-
-## 1. Connect (SSH + WP-CLI)
-
-```bash
-ssh gvweb                      # Hostinger account u907133977
-# WordPress root (run all wp-cli from here):
-cd /home/u907133977/domains/gvbasketball.com/public_html
-```
-
-- WP-CLI is installed (`wp ...`). PHP 8.2. There is **no** browser/admin password on hand — drive
-  everything with WP-CLI over SSH.
-- SSH prints a harmless "post-quantum" warning to stderr; ignore it (filter with
-  `2>&1 | grep -v "post-quantum\|store now\|upgraded. See\|vulnerable"`).
-- **Always back up before risky DB/file ops.** ⚠️ `wp db export` currently **fails on this host**
-  (exit 255 — mysqldump unavailable). For settings/table-scoped changes, snapshot the table instead:
-  `wp db query "SELECT name,value FROM wp_latepoint_settings ORDER BY name;" --skip-column-names > backup.tsv`.
-  (Original baseline full backup: `~/backups/gvbasketball-20260627-015018/`.)
+| Doc | Purpose |
+|-----|---------|
+| [`PROJECT_LOG.md`](PROJECT_LOG.md) | Technical changelog (append after every change) |
+| [`PROGRESS_LOG.md`](PROGRESS_LOG.md) | Client-facing progress summary (append after every change) |
+| [`docs/`](docs/) | Working handoffs |
 
 ---
 
-## 2. The golden workflow (how updates work)
+## 1. Connect & deploy
 
-The front end is **hand-written HTML + a shared CSS design system**, mounted into Elementor by
-must-use plugins (`wp-content/mu-plugins/gv-brand.php` = CSS, `gv-build.php` = helper functions,
-`gv-otp-email.php` = branded member-login OTP email). You almost never touch the Elementor editor.
-To change the site:
-
-> **edit a file in `build/` → `scp` it to the server → apply with a `gv_*` helper → flush caches.**
-
-After any change:
 ```bash
-wp elementor flush-css && wp litespeed-purge all
-```
-The CSS file is cache-busted by file mtime, so a fresh `scp` + LiteSpeed purge is enough. Cloudflare
-proxies the site but does not cache HTML by default; if a static asset looks stale, purge Cloudflare
-or bump the file.
-
-### Deploy the design system (CSS)
-```bash
-DEST=/home/u907133977/domains/gvbasketball.com/public_html/wp-content/mu-plugins
-scp build/mu-plugins/gv-assets/gv-brand.css gvweb:$DEST/gv-assets/gv-brand.css
-ssh gvweb 'cd /home/u907133977/domains/gvbasketball.com/public_html && wp litespeed-purge all'
+ssh gvweb   # user u907133977, WP root: /home/u907133977/domains/gvbasketball.com/public_html
 ```
 
-### Deploy a marketing page (HTML widget)
+- WP-CLI available. PHP 8.2. No browser/admin password — drive everything via SSH + WP-CLI.
+- SSH emits a harmless "post-quantum" warning; filter with `2>&1 | grep -v "post-quantum\|store now\|upgraded. See\|vulnerable"`.
+- `wp db export` **fails** on this host. Snapshot tables directly instead: `wp db query "SELECT …" > backup.tsv`.
+- Original full backup: `~/backups/gvbasketball-20260627-015018/`.
+
+### Golden workflow
+
+> Edit in `build/` → `scp` to server → apply with `gv_*` helper → flush caches.
+
 ```bash
-scp build/pages/about.html gvweb:~/about.html
-ssh gvweb 'cd /home/u907133977/domains/gvbasketball.com/public_html && \
-  wp eval "echo gv_set_page_html(26, file_get_contents(getenv(\"HOME\").\"/about.html\"));" && \
-  wp elementor flush-css && wp litespeed-purge all && rm ~/about.html'
+wp elementor flush-css && wp litespeed-purge all   # after every deploy
 ```
 
-### Deploy header / footer or functional pages
-Edit `build/templates/*.html` or `build/scripts/*.php`, `scp` to `~`, then `wp eval-file ~/<script>.php`.
-Header/footer rebuilds must also keep the conditions option (the scripts handle it):
-```bash
-# Theme Builder conditions live in option elementor_pro_theme_builder_conditions
-# = ['header'=>[<id>=>['include/general']], 'footer'=>[<id>=>['include/general']]]
-```
+**Deploy CSS:** `scp build/mu-plugins/gv-assets/gv-brand.css gvweb:$DOCROOT/wp-content/mu-plugins/gv-assets/gv-brand.css`
+**Deploy page:** `scp build/pages/<page>.html gvweb:~/ && ssh gvweb '… wp eval "echo gv_set_page_html(<ID>, file_get_contents(…));"'`
+**Deploy header/footer/scripts:** `scp` script to `~`, then `wp eval-file ~/<script>.php`.
+
+### Build helpers (`gv-build.php`)
+
+`gv_set_page_html($id,$html)` · `gv_set_page_blocks($id,$blocks)` · `gv_set_theme_part($title,$type,$html)` · `gv_set_theme_part_blocks(…)` · `gv_ensure_page($slug,$title)`.
+
+Deploy scripts: `build/scripts/` — `apply-pages.php`, `build-functional.php`, `build-extras.php`, `build-menu.php`, `deploy-training-programs.php`, `setup-latepoint.php`, `set-kit.php`, `apply-hide.php`.
 
 ---
 
-## 3. Build helpers (in `mu-plugins/gv-build.php`)
+## 2. Site structure
 
-| Helper | Use |
-|---|---|
-| `gv_set_page_html($id, $html)` | Page = one full-width HTML widget |
-| `gv_set_page_blocks($id, $blocks)` | Page = ordered `['type'=>'html'|'shortcode','content'=>..,'css'=>..]` widgets |
-| `gv_set_theme_part($title,$type,$html)` | Theme Builder header/footer from HTML (`$type`=`header`|`footer`) |
-| `gv_set_theme_part_blocks($title,$type,$blocks)` | …from html/shortcode blocks |
-| `gv_ensure_page($slug,$title)` | Idempotent page create |
-
-Reusable deploy scripts already exist in `build/scripts/`: `set-kit.php` (Elementor global
-colors/fonts), `apply-pages.php` (all marketing pages), `setup-latepoint.php`, `build-functional.php`
-(book/portal/contact), `build-extras.php` (waiver + newsletter + footer), `build-menu.php`,
-`apply-hide.php`.
-
----
-
-## 4. Site structure
-
-### Pages (post IDs)
-`/` Home **2887** · `/about/` **26** · `/training-programs/` **2981** · `/athlete-development/`
-**2984** · `/success-stories/` **2985** · `/testimonials/` **2986 (draft/hidden)** · `/gallery/`
-**2987** · `/faq/` **2988** · `/book-a-consultation/` **2982** · `/booking/` (portal) **2983** ·
-`/contact/` **2989** · `/waiver/` **3009**.
+### Pages (IDs)
+`/` **2887** · `/about/` **26** · `/training-programs/` **2981** · `/athlete-development/` **2984** · `/success-stories/` **2985** · `/testimonials/` **2986 (draft)** · `/gallery/` **2987** · `/faq/` **2988** · `/book-a-consultation/` **2982** (302 → /training-programs/) · `/booking/` **2983** · `/contact/` **2989** · `/waiver/` **3009**.
 
 ### Theme Builder
-- **GV Header** (3002): `build/templates/header.html` — `gv-nav` (logo 2977; nav = Home·About·Programs·
-  FAQ·Contact; icon-only Member Login → `/booking/`; orange CTA; sticky; CSS-only mobile menu). Replaces
-  Astra's header. (Development/Success/Gallery pages are live but intentionally not in the nav.)
+- **GV Header** (3002): `build/templates/header.html` — sticky, CSS-only mobile menu, IG icon, orange CTA opens consultation modal.
 - **GV Footer** (2991): `build/templates/footer.html` — newsletter band + 4 columns.
-- Nav menu "Primary Menu" → Astra `primary` location (rebuild with `build/scripts/build-menu.php`).
+- Nav menu: `build/scripts/build-menu.php` → Astra `primary` location.
 
 ### Design tokens (`gv-brand.css`)
-Navy `#123B78` · Deep Navy `#021F51` · Orange `#F47B20` · Charcoal `#1C1C1E` · Steel `#6B6F76` ·
-Light `#E6E7E9`. Fonts: **Bebas Neue** (display), **Montserrat** (UI), **Inter** (body). Components:
-`gv-hero`, `gv-section[--light|--navy|--deep|--tight]`, `gv-wrap`, `gv-section-title`, `gv-eyebrow`,
-`gv-lead`, `gv-btn[--primary|--navy|--ghost|--outline]`, `gv-grid--2/3/4`, `gv-card`, `gv-program`,
-`gv-steps`/`gv-step`, `gv-person`, `gv-quote`, `gv-acc` (FAQ), `gv-gallery`, `gv-nav`, `gv-footer`.
+Navy `#123B78` · Deep Navy `#021F51` · Orange `#F47B20` · Charcoal `#1C1C1E` · Steel `#6B6F76` · Light `#E6E7E9`.
+Fonts: **Bebas Neue** (display), **Montserrat** (UI), **Inter** (body).
+
+### Consultation form (mu-plugin `gv-request-form.php`)
+Global modal injected via `wp_footer` — every "Book a Consultation" CTA uses `data-gv-open-modal`.
+Fields: parent name, player name/age, email, phone/IG, training type, **location** (Dasma/Urdaneta/Corinthian/Any), **day checkboxes** (filtered per location), optional time/notes.
+Anti-abuse: nonce, honeypot, Cloudflare Turnstile. Emails (admin notification + auto-reply) via `wp_mail` / FluentSMTP.
+Page 2981 is owned by `deploy-training-programs.php` only.
 
 ### Booking (LatePoint, payments OFF)
-Agent Coach Gino (1) · locations Dasma, Makati (1) / Urdaneta Village (2) / Corinthian Gardens (3) · services Consultation/Private/Small
-Group/Elite · work periods: Dasma (Mon/Wed/Thu), Urdaneta (Fri/Sun), Corinthian (Sun) 900–1080 (mins; weekday 1=Mon…7=Sun). Shortcodes:
-`[latepoint_book_form]`, `[latepoint_customer_dashboard]`. Edit via `build/scripts/setup-latepoint.php`.
+Locations: Dasma Mon/Wed/Thu · Urdaneta Fri/Sun · Corinthian Sun. Shortcodes: `[latepoint_book_form]`, `[latepoint_customer_dashboard]`.
 
-### Member login & signup (passwordless email OTP)
-"Member Login" (nav) → `/booking/` (2983) → `[latepoint_customer_dashboard]` shows login/signup when
-logged out. **Passwordless OTP over email** (every signup = verified email). Set via
-`build/scripts/enable-member-auth.php`: `selected_customer_authentication_method=otp`,
-`default_customer_authentication_method=otp`, `selected_customer_authentication_field_type=email`,
-`page_url_customer_dashboard`/`page_url_customer_login=/booking/`, and
-`notifications_email_processor=wp_mail` (**without this LatePoint email — incl. OTP — is silently
-disabled**). The OTP email is branded by mu-plugin `gv-otp-email.php` (hooks `wp_mail`, swaps in HTML).
-Test a send: `wp eval 'var_dump(OsOTPHelper::generateAndSendOTP("test@favor.church","email","email"));'`.
-
-### Forms (WPForms Lite → recipient gvbasketballcoaching@gmail.com)
-Contact **3003**, Newsletter **3005**, Waiver **3007**. (Lite has no Phone field — use text.)
-Notification **recipient** + the displayed mailto + the LatePoint agent email all deliver to
-`gvbasketballcoaching@gmail.com` (set 2026-06-29); the **From/sender** stays `info@gvbasketball.com`
-(WPForms `sender_address` + the FluentSMTP connection were left unchanged).
+### Member login (passwordless OTP)
+`/booking/` (2983) → LatePoint customer dashboard. OTP over email. Key setting: `notifications_email_processor=wp_mail` (without it, OTP emails are silently disabled).
 
 ### Email
-FluentSMTP + Gmail OAuth, sender `info@gvbasketball.com`. OAuth keys are wp-config constants
-`FLUENTMAIL_GMAIL_CLIENT_ID/SECRET`. Test: `wp eval 'var_dump(wp_mail("info@gvbasketball.com","test","ok"));'`.
-LatePoint notifications need their own switch (`notifications_email_processor=wp_mail`) on top of FluentSMTP.
-Inbound mail (form submissions) is **delivered** to `gvbasketballcoaching@gmail.com`; only the sending
-identity is `info@`.
+FluentSMTP + Gmail OAuth, sender `info@gvbasketball.com`. Recipient (forms + LatePoint): `gvbasketballcoaching@gmail.com`.
+
+### Forms (WPForms Lite)
+Contact **3003** · Newsletter **3005** · Waiver **3007**. Recipient: `gvbasketballcoaching@gmail.com`.
 
 ---
 
-## 5. Gotchas (read before editing)
+## 3. Gotchas
 
-- **Secrets:** never print secret values. `wp config set` **echoes the value** — use `--quiet` and
-  verify with `wp eval "echo strlen(CONST);"`. `.env` (gitignored) holds the Google OAuth keys, the
-  **Cloudflare API token** (`CLOUDFLARE_API_TOKEN` / `_ACCOUNT_ID`), and the **Turnstile** site/secret keys.
-- **Cloudflare zone** (`gvbasketball.com`, Free plan, zone `4efc307b…`): tuned for WordPress —
-  `ssl=strict` (origin has a valid Let's Encrypt cert; keep it renewing or strict will hard-fail the
-  site), `always_use_https=on`, `min_tls_version=1.2`, `always_online`/`early_hints`/`0rtt` on,
-  `cache_level=aggressive`, `brotli`/`http3` on. **Keep `rocket_loader` OFF** (it breaks LatePoint /
-  Turnstile / OTP JS) and **never add a "Cache Everything" rule** (the booking portal, request form, and
-  OTP login must stay dynamic — HTML is uncached by default). The `.env` token is **account-owned**, so
-  the **Page Rules API is unavailable** to it (error 1011); use the dashboard or a user-owned token for
-  page/cache rules. Edit zone settings via `PATCH /zones/<zone>/settings/<id>` with the `.env` token.
-- **SVG uploads** require the **Safe SVG** plugin AND running as admin: `wp media import file.svg --user=1`.
-- **White background:** Astra's starter shipped a dark body; `gv-brand.css` forces white. Keep default
-  `.gv-section` white with navy/charcoal text, or use `--navy`/`--deep` sections with light text.
-- **Theme Builder:** setting a header/footer template's post meta is not enough — also update the
-  `elementor_pro_theme_builder_conditions` option (deploy scripts do this).
-- **Don't reintroduce demo content.** Media library should contain only GV brand assets.
-- **Testimonials are intentionally hidden** (placeholders). To restore: publish page 2986, re-add the
-  testimonial sections in `build/pages/home.html` + `success-stories.html`, re-add nav/footer links.
+- **Secrets:** never print values. `wp config set` echoes — use `--quiet`. `.env` holds OAuth keys, Cloudflare API token, Turnstile keys.
+- **Cloudflare:** `ssl=strict`, `rocket_loader` OFF (breaks LatePoint/Turnstile/OTP JS). Never add "Cache Everything" rule (booking/OTP must stay dynamic). `.env` token is account-owned → Page Rules API unavailable (error 1011).
+- **SVG uploads:** need Safe SVG plugin + `--user=1`.
+- **Theme Builder:** always update `elementor_pro_theme_builder_conditions` option alongside post meta (deploy scripts do this).
+- **Testimonials:** intentionally hidden (placeholders). To restore: publish 2986, re-add sections + nav links.
 
 ---
 
-## 6. Conventions
+## 4. Conventions
 
-- Brand voice: disciplined, confident, developmental — fundamentals, work ethic, basketball IQ.
-  Don't invent specific stats, named athletes, schools, or testimonials.
-- On-site contact is **Instagram only** (client preference): IG `@gvbasketballl`, DM link
-  `https://ig.me/m/gvbasketballl` (used for every "Message on Instagram" CTA), plus the displayed email
-  `gvbasketballcoaching@gmail.com` (sending identity is still `info@gvbasketball.com`).
-  **WhatsApp and Facebook were removed from the site** — do not re-add them. (Off-site refs still exist:
-  WhatsApp `+63 917 882 4466`, FB `/GvBasketball`, Google reviews `https://g.page/r/CS7s3B4R726oEAE/review`.)
-  Locations: Dasma Makati, Urdaneta Village, Corinthian Gardens (Metro Manila).
-- Pricing is **never** shown publicly — "shared during the consultation." No online payments.
-- Booking & Payment Flow: An informational "Flow of Purchase" graphic lives near the booking areas (e.g. `/book-a-consultation/`). The site collects **no** payment or bank details — payments are handled off-site directly with GV Basketball.
-- After any changes, always update both `PROJECT_LOG.md` (technical changelog) and `PROGRESS_LOG.md` (plain-language client progress summary) and commit them (keep `.env` out of git).
+- **Brand voice:** disciplined, confident, developmental. Don't invent stats, named athletes, schools, or testimonials.
+- **Contact:** Instagram only (`@gvbasketballl`, DM: `https://ig.me/m/gvbasketballl`) + email `gvbasketballcoaching@gmail.com`. **No WhatsApp/Facebook.**
+- **Pricing:** never shown publicly — "shared during the consultation." No online payments.
+- **After every change:** update both `PROJECT_LOG.md` and `PROGRESS_LOG.md`, commit (keep `.env` out of git).
 
 ---
 
-## 7. Knowledge graph (graphify)
+## 5. Knowledge graph (graphify)
 
-A pre-built knowledge graph lives in `graphify-out/` (gitignored). It maps the relationships
-between business code, design tokens, deploy scripts, docs, and external dependencies.
-
-### Rebuild after major changes
-```bash
-# Full rebuild (local repo + upstream WordPress via SSH)
-/graphify .
-
-# Incremental update (only re-extract changed files)
-/graphify . --update
-```
-
-The graph focuses on **business code** (`build/`, `logo/`, `docs/`, mu-plugins) and treats
-WordPress plugins/themes as single external-dependency nodes (`ext_latepoint`, `ext_elementor`, etc.).
-
-### Query the graph
-```bash
-/graphify query "how does the booking system work"        # BFS — broad context
-/graphify query "how does OTP login reach email" --dfs    # DFS — trace a path
-/graphify path "gv-brand.css" "LatePoint"                 # shortest path between two concepts
-/graphify explain "gv_rf_handle"                          # plain-language explanation of a node
-```
-
-### Outputs
-| File | Purpose |
-|---|---|
-| `graphify-out/graph.html` | Interactive graph (open in browser) |
-| `graphify-out/graph.json` | Raw graph data (GraphRAG-ready) |
-| `graphify-out/GRAPH_REPORT.md` | Audit report: god nodes, surprising connections, communities |
+Rebuild: `/graphify .` (or `--update` for incremental). Query: `/graphify query "…"`. Output in `graphify-out/` (gitignored).
