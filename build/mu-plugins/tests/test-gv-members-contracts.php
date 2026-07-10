@@ -707,11 +707,61 @@ gv_assert_same(4, substr_count($trigger_html, 'hide_summary="yes"'), 'all consul
 $members_asset_dir = __DIR__ . '/../gv-members/assets';
 $members_js = file_get_contents($members_asset_dir . '/gv-members.js');
 $members_css = file_get_contents($members_asset_dir . '/gv-members.css');
-gv_assert_contains("BOOK A CONSULTATION", $members_js, 'wizard uses the consultation CTA label');
-gv_assert_contains("gv-consult-day-action", $members_js, 'wizard adds the namespaced consultation action class');
-gv_assert_contains(".gv-consult-day-action", $members_css, 'consultation action has dedicated CSS');
-gv_assert_contains("justify-content: center", $members_css, 'consultation action is centered');
-gv_assert_contains("border-radius: 10px", $members_css, 'consultation action has rounded edges');
+$members_js_code = preg_replace('/\/\*.*?\*\//s', '', $members_js);
+$slot_callback_match = [];
+$slot_callback_found = preg_match(
+    '/^\s*\$\(\s*[\'\"]\.timeslots\s+\.dp-timebox[\'\"]\s*\)\.each\(\s*function\s*\(\s*\)\s*\{(.*?)^\s*\}\s*\);\s*$/ms',
+    $members_js_code,
+    $slot_callback_match
+) === 1;
+$slot_callback = $slot_callback_found ? $slot_callback_match[1] : '';
+$selected_slot_callback_match = [];
+$selected_slot_callback_found = preg_match(
+    '/^\s*\$\(\s*[\'\"]\.summary-item-time\s*,\s*\.os-selected-slot\s*,\s*\.dp-selected-time[\'\"]\s*\)\.each\(\s*function\s*\(\s*\)\s*\{(.*?)^\s*\}\s*\);\s*$/ms',
+    $members_js_code,
+    $selected_slot_callback_match
+) === 1;
+$selected_slot_callback = $selected_slot_callback_found ? $selected_slot_callback_match[1] : '';
+gv_assert_true(
+    preg_match('/^\s*var\s+GV_CONSULTATION_ACTION_LABEL\s*=\s*[\'\"]BOOK A CONSULTATION[\'\"];\s*$/m', $members_js_code) === 1,
+    'wizard defines the consultation CTA label constant'
+);
+gv_assert_true(
+    preg_match('/^\s*\$time\.addClass\([\'\"]gv-consult-day-action[\'\"]\);\s*$/m', $slot_callback) === 1,
+    'wizard adds the namespaced consultation action class in the available-day callback'
+);
+gv_assert_true(
+    preg_match(
+        '/if\s*\(\s*\$time\.text\(\)\.trim\(\)\s*!==\s*GV_CONSULTATION_ACTION_LABEL\s*\)\s*\{\s*\$time\.text\(GV_CONSULTATION_ACTION_LABEL\);\s*\}/s',
+        $slot_callback
+    ) === 1,
+    'wizard guards and applies the consultation CTA label to available days'
+);
+gv_assert_true(
+    preg_match(
+        '/if\s*\(\s*\$this\.text\(\)\.trim\(\)\s*!==\s*(?:\'\'|\"\")\s*&&\s*\$this\.text\(\)\.trim\(\)\s*!==\s*GV_CONSULTATION_ACTION_LABEL\s*\)\s*\{\s*\$this\.text\(GV_CONSULTATION_ACTION_LABEL\);\s*\}/s',
+        $selected_slot_callback
+    ) === 1,
+    'wizard guards and applies the consultation CTA label to selected-slot echoes'
+);
+
+$members_css_code = preg_replace('/\/\*.*?\*\//s', '', $members_css);
+$consult_action_rule_match = [];
+$consult_action_rule_found = preg_match(
+    '/(?:^|})\s*\.timeslots\s+\.dp-label\s+\.gv-consult-day-action\s*\{([^}]*)\}/s',
+    $members_css_code,
+    $consult_action_rule_match
+) === 1;
+$consult_action_rule = $consult_action_rule_found ? $consult_action_rule_match[1] : '';
+gv_assert_true($consult_action_rule_found, 'consultation action has dedicated scoped CSS');
+gv_assert_true(
+    preg_match('/(?:^|;)\s*justify-content\s*:\s*center\s*;/i', $consult_action_rule) === 1,
+    'consultation action is centered'
+);
+gv_assert_true(
+    preg_match('/(?:^|;)\s*border-radius\s*:\s*10px\s*;/i', $consult_action_rule) === 1,
+    'consultation action has rounded edges'
+);
 
 if (file_exists($members_page_script)) {
     $content = file_get_contents($members_page_script);
