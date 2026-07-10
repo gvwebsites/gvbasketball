@@ -1,7 +1,7 @@
 # Self-Service Consultation Booking via LatePoint — Design
 
 **Date:** 2026-07-10
-**Status:** Approved direction; ready for implementation handoff (fresh agent)
+**Status:** Superseded by `2026-07-10-members-self-service-consultation-merged-design.md`
 **Site:** https://gvbasketball.com — WordPress + LatePoint 5.6.6 (FREE) on Hostinger
 
 ---

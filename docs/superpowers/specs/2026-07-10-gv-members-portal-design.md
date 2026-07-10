@@ -2,7 +2,7 @@
 
 **Date:** 2026-07-10
 
-**Status:** Approved in conversation; pending written-spec review
+**Status:** Superseded by `2026-07-10-members-self-service-consultation-merged-design.md`
 
 **Target:** `https://gvbasketball.com/members/`
 
