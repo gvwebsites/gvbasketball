@@ -93,6 +93,7 @@ function gv_members_handle_finalize_request() {
             } else {
                 global $wpdb;
                 $wpdb->query('START TRANSACTION');
+                $process_jobs_hook_removed = false;
                 try {
                     $row = $wpdb->get_row($wpdb->prepare(
                         "SELECT id, status FROM {$wpdb->prefix}latepoint_bookings WHERE id = %d FOR UPDATE",
@@ -113,7 +114,8 @@ function gv_members_handle_finalize_request() {
                     }
                     
                     remove_action('latepoint_booking_updated', ['OsProcessJobsHelper', 'handle_booking_updated'], 12);
-                    
+                    $process_jobs_hook_removed = true;
+
                     $dt_start = new DateTime($booking->start_date, new DateTimeZone('Asia/Manila'));
                     $dt_start->setTime(floor($selected_time / 60), $selected_time % 60, 0);
                     $dt_end = clone $dt_start;
@@ -153,7 +155,9 @@ function gv_members_handle_finalize_request() {
                     return;
                 } catch (Exception $e) {
                     $wpdb->query('ROLLBACK');
-                    add_action('latepoint_booking_updated', ['OsProcessJobsHelper', 'handle_booking_updated'], 12, 2);
+                    if ($process_jobs_hook_removed) {
+                        add_action('latepoint_booking_updated', ['OsProcessJobsHelper', 'handle_booking_updated'], 12, 2);
+                    }
                     $post_error = $e->getMessage();
                 }
             }
