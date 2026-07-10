@@ -700,6 +700,19 @@ gv_assert_contains('data-gv-venue="any"', $trigger_html, 'venue chooser offers a
 gv_assert_contains("don&#039;t have a venue yet", $trigger_html, 'undecided option is labeled clearly');
 gv_assert_contains('gv-venue-loading-note', $trigger_html, 'chooser has a loading note for the modal transition');
 
+$members_plugin = file_get_contents(__DIR__ . '/../gv-members.php');
+gv_assert_same(3, substr_count($members_plugin, 'hide_summary="yes"'), 'all consultation trigger variants define hidden Summary');
+gv_assert_same(4, substr_count($trigger_html, 'hide_summary="yes"'), 'all consultation triggers hide the Summary panel');
+
+$members_asset_dir = __DIR__ . '/../gv-members/assets';
+$members_js = file_get_contents($members_asset_dir . '/gv-members.js');
+$members_css = file_get_contents($members_asset_dir . '/gv-members.css');
+gv_assert_contains("BOOK A CONSULTATION", $members_js, 'wizard uses the consultation CTA label');
+gv_assert_contains("gv-consult-day-action", $members_js, 'wizard adds the namespaced consultation action class');
+gv_assert_contains(".gv-consult-day-action", $members_css, 'consultation action has dedicated CSS');
+gv_assert_contains("justify-content: center", $members_css, 'consultation action is centered');
+gv_assert_contains("border-radius: 10px", $members_css, 'consultation action has rounded edges');
+
 if (file_exists($members_page_script)) {
     $content = file_get_contents($members_page_script);
     gv_assert_not_contains('TRUNCATE', $content, 'members page script does not contain TRUNCATE');
