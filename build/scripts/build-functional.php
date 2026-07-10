@@ -100,14 +100,11 @@ $booking_flow = '<section class="gv-section gv-section--light"><div class="gv-wr
 <p class="gv-flow__note">Payments are handled directly with GV Basketball — no payment or bank details are collected on this website.</p>
 </div></section>';
 
-// NOTE: Page 2982 (/book-a-consultation/) is 302-redirected to /training-programs/
-// by gv-request-form.php. The LIVE consultation form + modal lives on page 2981
-// and is owned SOLELY by build/scripts/deploy-training-programs.php.
-// Do NOT deploy the training-programs form/modal from here (this HTML has no modal).
+// NOTE: Page 2982 (/book-a-consultation/) is the fallback page rendering the native wizard.
 echo gv_set_page_blocks(2982, array(
   array('type'=>'html','content'=>$book_a),
   array('type'=>'html','content'=>$booking_flow),
-  array('type'=>'shortcode','content'=>'[gv_request_form]','css'=>'gv-bookform-wrap'),
+  array('type'=>'shortcode','content'=>'[latepoint_book_form selected_service="1" hide_side_panel="yes"]','css'=>'gv-bookform-wrap'),
   array('type'=>'html','content'=>$book_c),
 )) . "\n";
 
@@ -117,10 +114,10 @@ $port_a = <<<'HTML'
 <section class="gv-hero"><div class="gv-hero__bg" style="background-image:url('https://gvbasketball.com/wp-content/uploads/2026/07/gv-about-hero-real.webp');"></div><div class="gv-hero__overlay"></div>
 <div class="gv-wrap"><div class="gv-hero__inner" style="padding:88px 0 72px;max-width:760px;">
 <span class="gv-eyebrow">Member Portal</span>
-<h1 class="gv-h1">Member Booking</h1>
+<h1 class="gv-h1">Members Portal</h1>
 <div class="gv-hero__rule" style="margin-top:24px;"></div>
 <p class="gv-lead">Log in to view your consultation schedule and session history. Need to change a day? Just message us and the team will take care of it. New here? Start with a consultation.</p>
-<div class="gv-btn-row"><a class="gv-btn gv-btn--primary" href="#" data-gv-open-modal>Book a Consultation</a></div>
+<div class="gv-btn-row"><a class="gv-btn gv-btn--primary" href="/book-a-consultation/" data-gv-consultation>Book a Consultation</a></div>
 </div></div></section>
 </div>
 HTML;
@@ -137,7 +134,7 @@ $port_c = <<<'HTML'
 HTML;
 echo gv_set_page_blocks(2983, array(
   array('type'=>'html','content'=>$port_a),
-  array('type'=>'shortcode','content'=>'[latepoint_customer_dashboard]','css'=>'gv-dash-wrap'),
+  array('type'=>'shortcode','content'=>'[gv_members_portal]','css'=>'gv-dash-wrap'),
   array('type'=>'html','content'=>$port_c),
 )) . "\n";
 
