@@ -727,15 +727,11 @@ gv_assert_true(
     'wizard defines the consultation CTA label constant'
 );
 gv_assert_true(
-    preg_match('/^\s*\$time\.addClass\([\'\"]gv-consult-day-action[\'\"]\);\s*$/m', $slot_callback) === 1,
-    'wizard adds the namespaced consultation action class in the available-day callback'
-);
-gv_assert_true(
     preg_match(
-        '/if\s*\(\s*\$time\.text\(\)\.trim\(\)\s*!==\s*GV_CONSULTATION_ACTION_LABEL\s*\)\s*\{\s*\$time\.text\(GV_CONSULTATION_ACTION_LABEL\);\s*\}/s',
+        '/if\s*\(\s*\$time\.length\s*\)\s*\{\s*\$time\.addClass\([\'\"]gv-consult-day-action[\'\"]\);\s*if\s*\(\s*\$time\.text\(\)\.trim\(\)\s*!==\s*GV_CONSULTATION_ACTION_LABEL\s*\)\s*\{\s*\$time\.text\(GV_CONSULTATION_ACTION_LABEL\);\s*\}\s*\}/s',
         $slot_callback
     ) === 1,
-    'wizard guards and applies the consultation CTA label to available days'
+    'wizard guards and applies the consultation CTA behavior to available days'
 );
 gv_assert_true(
     preg_match(

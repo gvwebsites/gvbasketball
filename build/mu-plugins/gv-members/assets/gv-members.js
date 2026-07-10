@@ -85,9 +85,11 @@ jQuery(document).ready(function($) {
         $('.timeslots .dp-timebox').each(function() {
             var $box = $(this);
             var $time = $box.find('.dp-label-time');
-            $time.addClass('gv-consult-day-action');
-            if ($time.text().trim() !== GV_CONSULTATION_ACTION_LABEL) {
-                $time.text(GV_CONSULTATION_ACTION_LABEL);
+            if ($time.length) {
+                $time.addClass('gv-consult-day-action');
+                if ($time.text().trim() !== GV_CONSULTATION_ACTION_LABEL) {
+                    $time.text(GV_CONSULTATION_ACTION_LABEL);
+                }
             }
             // The compact tick label ("8 am") also leaks the nominal time.
             $box.find('.dp-tick').css('visibility', 'hidden');
