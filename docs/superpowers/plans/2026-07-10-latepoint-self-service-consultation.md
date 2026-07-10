@@ -1,6 +1,6 @@
 # Self-Service Consultation Booking via LatePoint — Implementation Plan
 
-**Status:** Superseded by the forthcoming implementation plan for `docs/superpowers/specs/2026-07-10-members-self-service-consultation-merged-design.md`
+**Status:** Superseded by `docs/superpowers/plans/2026-07-10-members-self-service-consultation-merged.md`
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 >

@@ -244,3 +244,10 @@ This is the chronological log of all tasks, updates, and releases completed on t
   - Standardized on one pending-to-approved LatePoint booking record, a themed day-request wizard, optional member promotion, any-email OTP access, and a read-only member request timeline.
   - Defined Coach Gino's secure exact-time finalization flow and six-step email instructions, with personal parent confirmation instead of an automated final email.
   - Marked both earlier design specs and their implementation plan as superseded.
+
+## [2026-07-10] task | Plan Merged Members and Consultation Implementation
+- **Goal:** Translate the approved merged design into a test-driven, deployment-safe implementation plan.
+- **Changes:**
+  - Added `docs/superpowers/plans/2026-07-10-members-self-service-consultation-merged.md` with focused modules, exact LatePoint hooks, security boundaries, phased deployment, rollback, and production acceptance.
+  - Explicitly prohibited the destructive fresh-install LatePoint setup script and preserved the 45-minute duration with a 180-minute public request interval.
+  - Folded live portal/wizard/finalizer captures plus OTP, parent-receipt, and Coach Gino email screenshots into the July client-report task.
