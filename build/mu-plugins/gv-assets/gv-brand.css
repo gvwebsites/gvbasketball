@@ -266,6 +266,10 @@ li.gv-navcta>a:hover{background:var(--gv-orange-dark)!important;}
 .gv-nav__instagram svg{width:22px;height:22px;fill:currentColor;display:block;}
 .gv-nav__instagram:hover{color:#b31e50;background:var(--gv-light);transform:scale(1.05);}
 .gv-nav__instagram-label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;}
+.gv-nav__account{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:8px;color:var(--gv-navy);transition:color .2s,background .2s,transform .2s;}
+.gv-nav__account svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;display:block;}
+.gv-nav__account:hover{color:var(--gv-orange);background:var(--gv-light);transform:scale(1.05);}
+.gv-nav__account-label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;}
 .gv-nav__toggle{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;}
 .gv-nav__toggle:focus-visible+.gv-nav__burger{outline:3px solid var(--gv-orange);outline-offset:3px;border-radius:6px;}
 .gv-nav__burger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:10px;min-width:44px;min-height:44px;align-items:center;justify-content:center;background:transparent;border:0;}

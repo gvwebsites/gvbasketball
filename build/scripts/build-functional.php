@@ -119,7 +119,7 @@ $port_a = <<<'HTML'
 <span class="gv-eyebrow">Member Portal</span>
 <h1 class="gv-h1">Member Booking</h1>
 <div class="gv-hero__rule" style="margin-top:24px;"></div>
-<p class="gv-lead">Log in to book sessions, reschedule within policy, and view your upcoming training. New here? Start with a consultation.</p>
+<p class="gv-lead">Log in to view your consultation schedule and session history. Need to change a day? Just message us and the team will take care of it. New here? Start with a consultation.</p>
 <div class="gv-btn-row"><a class="gv-btn gv-btn--primary" href="#" data-gv-open-modal>Book a Consultation</a></div>
 </div></div></section>
 </div>
