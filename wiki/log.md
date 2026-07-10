@@ -287,3 +287,39 @@ This is the chronological log of all tasks, updates, and releases completed on t
   - Added client-side double-submission prevention by disabling the forward/verify controls during active AJAX requests.
   - Updated contract tests in `test-gv-members-contracts.php` to assert field rendering, validation error shapes, Turnstile verification, and cart payload persistence.
 
+## [2026-07-10] task | Branded emails and receipts (Task 5)
+- **Goal:** Design and send branded HTML receipt and coach workflow emails when a consultation booking is created.
+- **Changes:**
+  - Created `build/mu-plugins/gv-members/emails.php` containing HTML layout shells with the new GV crest logo, timing copy with timezone conversions, and clear parent/coach calls to action.
+  - Set up `latepoint_booking_created` action handler to trigger sending the emails only if a validated wizard payload exists, protecting against double-fires.
+  - Added email unit tests to assert correct recipient addresses, booking code references, and timing copy formatting.
+
+## [2026-07-10] task | Secure timing finalization (Task 6)
+- **Goal:** Allow Coach Gino to securely select and finalize exact 45-minute slots via signed links, updating LatePoint bookings to approved.
+- **Changes:**
+  - Created `build/mu-plugins/gv-members/finalize.php` implementing secure hash-nonced GET/POST endpoints at `/members/?gv_finalize_consultation=token`.
+  - Added token validation, expiry (30 days), slot availability validation, and atomic approval updating the booking status and start/end UTC times.
+  - Implemented read-only status and feedback screens for confirmed links.
+  - Added contract tests checking token validation, slot availability gates, and status update logic.
+
+## [2026-07-10] task | Any-email member OTP signup and login (Task 7)
+- **Goal:** Implement secure OTP sign-up/login for any email address without creating standard WordPress user accounts, protecting routes and setting session states.
+- **Changes:**
+  - Created `build/mu-plugins/gv-members/auth.php` exposing `gv_otp_request` and `gv_otp_verify` AJAX controllers and a POST-only logout handler.
+  - Implemented email/IP transient-based rate-limits (5 sends/email/hour, 10 sends/IP/hour) using truncated HMAC hashes.
+  - Integrated `OsOTPHelper` to send and verify codes, creating active customer records on demand and guarding against concurrent creation race conditions.
+  - Added interactive numeric inputs in `assets/gv-members.js` with focus navigation, clipboard pasting, and auto-submit.
+  - Updated contracts test suite to verify AJAX endpoints, nonce protection, rate limiting, and customer creation logic.
+
+## [2026-07-10] task | Requests, sessions, players, and profile (Task 8)
+- **Goal:** Render the `[gv_members_portal]` training journal dashboard for signed-in members, showing their timeline, confirmed sessions, unique players, and profile edits.
+- **Changes:**
+  - Created `build/mu-plugins/gv-members/portal.php` rendering the tabbed dashboard using `OsAuthHelper::get_logged_in_customer()`.
+  - Displayed requests timeline sorted newest-first, suppressing nominal times for pending requests while showing exact times for approved ones.
+  - Rendered upcoming/past confirmed sessions in Asia/Manila local time and enqueued template-redirect ICS calendar files.
+  - Implemented athlete select reuse dropdown in the wizard, and locked native wizard input fields.
+  - Rendered editable profile forms with nonced POST updates and a secure POST logout button.
+  - Styled the training journal UI canvas with navy frames, orange timeline nodes/states, and responsive CSS in `assets/gv-members.css`.
+  - Added comprehensive contract tests verifying customer fixtures, timeline time-suppression, newest-first request sorting, player extraction, and change mailto links.
+
+

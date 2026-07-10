@@ -96,10 +96,15 @@ function gv_members_enqueue_assets() {
         true
     );
 
+    $logged_in = false;
+    if (class_exists('OsAuthHelper') && OsAuthHelper::get_logged_in_customer()) {
+        $logged_in = true;
+    }
     wp_localize_script('gv-members-js', 'gvMembers', [
         'ajaxUrl' => admin_url('admin-ajax.php'),
         'otpNonce' => wp_create_nonce('gv_otp_nonce'),
         'turnstileSitekey' => defined('GV_TURNSTILE_SITEKEY') ? GV_TURNSTILE_SITEKEY : '',
+        'isLoggedIn' => $logged_in,
     ]);
 }
 

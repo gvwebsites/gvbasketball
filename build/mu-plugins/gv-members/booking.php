@@ -33,8 +33,45 @@ function gv_members_booking_fields($booking) {
     }
 
     $sitekey = defined('GV_TURNSTILE_SITEKEY') ? GV_TURNSTILE_SITEKEY : '';
+
+    // Check if customer is logged in to offer player reuse
+    $prior_players = [];
+    if (class_exists('OsAuthHelper') && class_exists('OsBookingModel')) {
+        $customer = OsAuthHelper::get_logged_in_customer();
+        if ($customer) {
+            $customer_bookings = (new OsBookingModel())->where(['customer_id' => $customer->id])->get_results_as_models();
+            if (!is_array($customer_bookings)) {
+                $customer_bookings = $customer_bookings ? [$customer_bookings] : [];
+            }
+            foreach ($customer_bookings as $b) {
+                $p_name = $b->get_meta_by_key('gv_player_name');
+                $p_age = $b->get_meta_by_key('gv_player_age');
+                if (!empty($p_name) && !empty($p_age)) {
+                    $key = strtolower(trim($p_name)) . '|' . $p_age;
+                    $prior_players[$key] = [
+                        'name' => trim($p_name),
+                        'age'  => (int) $p_age,
+                    ];
+                }
+            }
+            $prior_players = array_values($prior_players);
+        }
+    }
     ?>
     <div class="gv-consult-fields">
+        <?php if (!empty($prior_players)): ?>
+            <div class="gv-field-wrap">
+                <label for="gv-select-player">Select Athlete</label>
+                <select id="gv-select-player" class="gv-player-select" style="min-height: 44px; padding: 10px 12px; border: 1px solid #CBD5E1; border-radius: 6px; font-family: inherit;">
+                    <option value="">-- New Athlete --</option>
+                    <?php foreach ($prior_players as $idx => $p): ?>
+                        <option value="<?php echo $idx; ?>" data-name="<?php echo esc_attr($p['name']); ?>" data-age="<?php echo esc_attr($p['age']); ?>">
+                            <?php echo esc_html($p['name'] . ' (Age ' . $p['age'] . ')'); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        <?php endif; ?>
         <div class="gv-field-wrap">
             <label for="gv-player-name">Player Name <span class="required">*</span></label>
             <input type="text" id="gv-player-name" name="gv_consult[player_name]" required maxlength="100">

@@ -92,6 +92,10 @@ jQuery(document).ready(function($) {
                 'Coach Gino will coordinate the exact 45-minute time after reviewing your request.' +
                 '</div>'
             );
+        // Prefill/lock native contact fields if logged in
+        if (window.gvMembers && gvMembers.isLoggedIn) {
+            var select = 'input[name="customer[first_name]"], input[name="customer[last_name]"], input[name="customer[email]"], input.lp-customer-email, input.lp-customer-first-name, input.lp-customer-last-name';
+            $(select).prop('readonly', true).addClass('gv-locked-field');
         }
     }
 

@@ -328,9 +328,14 @@ if (!class_exists('OsBookingModel')) {
             return true;
         }
 
+        public static $query_customer_id = 0;
+
         public function where($args) {
             if (isset($args['booking_code'])) {
                 self::$query_code = $args['booking_code'];
+            }
+            if (isset($args['customer_id'])) {
+                self::$query_customer_id = $args['customer_id'];
             }
             return $this;
         }
@@ -340,12 +345,27 @@ if (!class_exists('OsBookingModel')) {
         }
 
         public function get_results_as_models() {
-            // Real LatePoint: with set_limit(1) this returns a single model, or [] when empty.
             global $mock_bookings;
-            if (isset($mock_bookings[self::$query_code])) {
-                return $mock_bookings[self::$query_code];
+            if (!empty(self::$query_code)) {
+                $code = self::$query_code;
+                self::$query_code = ''; // reset
+                if (isset($mock_bookings[$code])) {
+                    return $mock_bookings[$code];
+                }
+                return [];
             }
-            return [];
+            if (!empty(self::$query_customer_id)) {
+                $cust_id = self::$query_customer_id;
+                self::$query_customer_id = 0; // reset
+                $res = [];
+                foreach ($mock_bookings as $b) {
+                    if ($b->customer_id == $cust_id) {
+                        $res[] = $b;
+                    }
+                }
+                return $res;
+            }
+            return array_values($mock_bookings);
         }
     }
 }
@@ -354,6 +374,7 @@ if (!class_exists('OsServiceModel')) {
     class OsServiceModel {
         public $id;
         public $name;
+        public static $query_name = '';
         
         public function __construct($id = null) {
             $this->id = $id;
@@ -367,13 +388,20 @@ if (!class_exists('OsServiceModel')) {
             return false;
         }
         public function where($args) {
+            if (isset($args['name'])) {
+                self::$query_name = $args['name'];
+            }
             return $this;
         }
         public function set_limit($limit) {
             return $this;
         }
         public function get_results_as_models() {
-            // Real LatePoint: with set_limit(1) this returns a single model, or [] when empty.
+            if (self::$query_name === 'Player Consultation') {
+                $this->id = 7;
+                $this->name = 'Player Consultation';
+            }
+            self::$query_name = ''; // reset
             return $this;
         }
     }
@@ -1152,6 +1180,123 @@ $verify_res_repeat = run_ajax_action('gv_otp_verify', [
 ]);
 check('auth: repeat login success', $verify_res_repeat['success'] === true);
 check('auth: no duplicate customer on repeat', count(OsCustomerModel::$customers_db) === $customer_count_before);
+
+// ==================== TASK 8 CONTRACT TESTS ====================
+
+// Set up two customer fixtures
+$cust_a = new OsCustomerModel(101);
+$cust_a->email = 'cust-a@example.com';
+$cust_a->first_name = 'Alice';
+$cust_a->last_name = 'Smith';
+$cust_a->is_new = false;
+OsCustomerModel::$customers_db['cust-a@example.com'] = $cust_a;
+
+$cust_b = new OsCustomerModel(102);
+$cust_b->email = 'cust-b@example.com';
+$cust_b->first_name = 'Bob';
+$cust_b->last_name = 'Jones';
+$cust_b->is_new = false;
+OsCustomerModel::$customers_db['cust-b@example.com'] = $cust_b;
+
+// Set up bookings in mock bookings database
+global $mock_bookings;
+$mock_bookings = [];
+
+// Booking 1: Customer A, pending
+$b1 = new OsBookingModel(1);
+$b1->id = 1;
+$b1->booking_code = 'REFA1';
+$b1->customer_id = 101;
+$b1->service_id = 7; // Player Consultation
+$b1->status = 'pending';
+$b1->start_date = '2026-07-15';
+$b1->start_time = 900;
+$b1->meta = [
+    'gv_player_name' => 'Athlete One',
+    'gv_player_age' => '10',
+    'gv_training_interest' => 'private',
+    'gv_note' => 'Needs work on dribbling',
+];
+$mock_bookings['REFA1'] = $b1;
+
+// Booking 2: Customer A, approved
+$b2 = new OsBookingModel(2);
+$b2->id = 2;
+$b2->booking_code = 'REFA2';
+$b2->customer_id = 101;
+$b2->service_id = 7; // Player Consultation
+$b2->status = 'approved';
+$b2->start_date = '2026-07-20';
+$b2->start_time = 960; // 16:00 -> 4:00 PM
+$b2->meta = [
+    'gv_player_name' => 'Athlete One',
+    'gv_player_age' => '10',
+    'gv_training_interest' => 'private',
+];
+$mock_bookings['REFA2'] = $b2;
+
+// Booking 3: Customer B, approved (ownership isolation check)
+$b3 = new OsBookingModel(3);
+$b3->id = 3;
+$b3->booking_code = 'REFB3';
+$b3->customer_id = 102;
+$b3->service_id = 7;
+$b3->status = 'approved';
+$b3->start_date = '2026-07-25';
+$b3->start_time = 900;
+$b3->meta = [
+    'gv_player_name' => 'Athlete Two',
+    'gv_player_age' => '12',
+    'gv_training_interest' => 'elite',
+];
+$mock_bookings['REFB3'] = $b3;
+
+// Authorize Customer A
+OsAuthHelper::authorize_customer(101);
+
+// Render portal for Customer A
+$portal_html = gv_members_portal_render();
+
+// Assertions
+check('portal: renders requests container', strpos($portal_html, 'gv-portal-container') !== false);
+
+// 1. Ownership isolation
+gv_assert_contains('REFA1', $portal_html, 'portal shows customer A pending request');
+gv_assert_contains('REFA2', $portal_html, 'portal shows customer A approved request');
+gv_assert_not_contains('REFB3', $portal_html, 'portal hides customer B request (ownership isolation)');
+
+// 2. Pending time suppression vs Approved exact time
+// Pending REFA1 date: July 15, 2026, time 3:00 PM must be suppressed
+gv_assert_contains('July 15, 2026', $portal_html, 'portal contains requested day for pending');
+gv_assert_not_contains('July 15, 2026 at 3:00 PM', $portal_html, 'portal suppresses nominal time for pending requests');
+
+// Approved REFA2 exact time: July 20, 2026 at 4:00 PM
+gv_assert_contains('July 20, 2026 at 4:00 PM', $portal_html, 'portal contains exact time for approved requests');
+
+// 3. Newest-first ordering in timeline
+$refa1_pos = strpos($portal_html, 'REFA1');
+$refa2_pos = strpos($portal_html, 'REFA2');
+check('portal: requests listed newest-first (REFA2 with ID 2 before REFA1 with ID 1)', $refa2_pos < $refa1_pos);
+
+// 4. Confirmed sessions excludes pending/cancelled
+// Let's inspect the confirmed sessions output by checking if the template logic has them split.
+// In the confirmed sessions tab block:
+// Upcoming Confirmed Sessions will contain REFA2 but NOT REFA1.
+$sessions_tab_start = strpos($portal_html, 'id="gv-tab-sessions"');
+$sessions_tab_end = strpos($portal_html, 'id="gv-tab-profile"');
+$sessions_html = substr($portal_html, $sessions_tab_start, $sessions_tab_end - $sessions_tab_start);
+
+gv_assert_contains('REFA2', $sessions_html, 'confirmed sessions contains approved booking REFA2');
+gv_assert_not_contains('REFA1', $sessions_html, 'confirmed sessions excludes pending booking REFA1');
+
+// 5. Unique player reuse
+gv_assert_contains('gv-prior-players-json', $portal_html, 'portal outputs player JSON');
+gv_assert_contains('Athlete One', $portal_html, 'portal player list contains Athlete One name');
+
+// 6. Booking reference in change email
+$change_mailto = gv_members_change_mailto('REFA2');
+gv_assert_contains('mailto:gvbasketballcoaching@gmail.com', $change_mailto, 'change email points to coach');
+gv_assert_contains('REFA2', $change_mailto, 'change email contains booking reference');
 
 echo $failures ? "\n$failures FAILED\n" : "\nALL PASS\n";
 exit($failures ? 1 : 0);
