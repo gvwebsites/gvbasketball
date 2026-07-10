@@ -51,3 +51,85 @@
         scroll-behavior: auto !important;
     }
 }
+
+/* Custom wizard field layout styling */
+.gv-consult-fields {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid var(--gv-brand-light-gray);
+}
+
+.gv-field-wrap {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.gv-field-wrap label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: var(--gv-brand-navy);
+}
+
+.gv-field-wrap label .required {
+    color: var(--gv-brand-orange);
+}
+
+.gv-field-wrap input[type="text"],
+.gv-field-wrap input[type="number"],
+.gv-field-wrap select,
+.gv-field-wrap textarea {
+    padding: 10px 12px;
+    border: 1px solid #CBD5E1;
+    border-radius: 6px;
+    background-color: var(--gv-brand-white);
+    color: var(--gv-brand-navy);
+    font-family: inherit;
+    transition: border-color 0.2s ease;
+}
+
+.gv-field-wrap input:focus,
+.gv-field-wrap select:focus,
+.gv-field-wrap textarea:focus {
+    border-color: var(--gv-brand-orange);
+    outline: none;
+}
+
+.gv-checkbox-wrap {
+    flex-direction: row;
+    align-items: center;
+}
+
+.gv-checkbox-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-weight: normal !important;
+}
+
+.gv-checkbox-label input[type="checkbox"] {
+    margin-right: 10px;
+    width: 18px;
+    height: 18px;
+    accent-color: var(--gv-brand-orange);
+}
+
+/* Info note for day-only selection */
+.gv-info-note {
+    background-color: var(--gv-brand-light-gray);
+    border-left: 4px solid var(--gv-brand-orange);
+    color: var(--gv-brand-dark-gray);
+    padding: 12px 16px;
+    margin: 15px 0;
+    border-radius: 0 6px 6px 0;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* Disabled buttons class to prevent duplicates */
+.gv-disabled {
+    pointer-events: none !important;
+    opacity: 0.6 !important;
+    cursor: not-allowed !important;
+}
+

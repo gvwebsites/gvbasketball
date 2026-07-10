@@ -4,6 +4,10 @@
 define('ABSPATH', __DIR__);
 define('DAY_IN_SECONDS', 86400);
 
+// Define Turnstile constants for testing
+defined('GV_TURNSTILE_SITEKEY') || define('GV_TURNSTILE_SITEKEY', 'sitekey_test');
+defined('GV_TURNSTILE_SECRET') || define('GV_TURNSTILE_SECRET', 'secret_test');
+
 // Mock WordPress functions
 $registered_shortcodes = [];
 function add_shortcode($tag, $func) {
@@ -43,6 +47,36 @@ function admin_url($p=''){ return 'https://example.test/wp-admin/'.$p; }
 function sanitize_key($s){ return strtolower(preg_replace('/[^a-z0-9_]/','', (string)$s)); }
 function wp_json_encode($d){ return json_encode($d); }
 function wp_salt($scheme = 'auth') { return 'salt'; }
+function sanitize_text_field($s) { return trim((string)$s); }
+
+// Exception to intercept wp_send_json and prevent exit;
+class WpSendJsonException extends Exception {
+    public $response;
+    public function __construct($response) {
+        $this->response = $response;
+    }
+}
+
+function wp_send_json($response, $status_code = null, $options = 0) {
+    throw new WpSendJsonException($response);
+}
+
+// Mock HTTP requests for Turnstile verification
+$turnstile_success = true;
+function wp_remote_post($url, $args = []) {
+    global $turnstile_success;
+    return [
+        'body' => json_encode(['success' => $turnstile_success])
+    ];
+}
+
+function is_wp_error($thing) {
+    return false;
+}
+
+function wp_remote_retrieve_body($response) {
+    return $response['body'];
+}
 
 // Additional WordPress mocks for testing functionality
 $is_page_val = false;
@@ -118,7 +152,53 @@ function do_shortcode($content) {
 
 // Stubs for plugins_loaded require logic
 if (!class_exists('OsBookingModel')) {
-    class OsBookingModel {}
+    class OsBookingModel {
+        public $service_id;
+    }
+}
+
+if (!class_exists('OsServiceModel')) {
+    class OsServiceModel {
+        public $id;
+        public $name;
+        
+        public function __construct($id = null) {
+            $this->id = $id;
+            if ($id == 7) {
+                $this->name = 'Player Consultation';
+            } else {
+                $this->name = 'Other Training';
+            }
+        }
+        public function is_new_record() {
+            return false;
+        }
+        public function where($args) {
+            return $this;
+        }
+        public function set_limit($limit) {
+            return $this;
+        }
+        public function get_results_as_models() {
+            return [$this];
+        }
+    }
+}
+
+if (!class_exists('OsCartModel')) {
+    class OsCartModel {
+        public $meta = [];
+        public function save_meta_by_key($key, $value) {
+            $this->meta[$key] = $value;
+            return true;
+        }
+    }
+}
+
+if (!class_exists('OsStepsHelper')) {
+    class OsStepsHelper {
+        public static $cart_object;
+    }
 }
 
 $failures = 0;
@@ -352,6 +432,129 @@ if (isset($enqueued_scripts['gv-members-js'])) {
     $ver = $enqueued_scripts['gv-members-js']['ver'];
     $expected_ver = filemtime(__DIR__ . '/../gv-members/assets/gv-members.js');
     check('script version matches filemtime', $ver === $expected_ver);
+}
+
+
+// ==================== TASK 4 CONTRACT TESTS ====================
+
+// 1. Hook Registrations Check
+check('registers latepoint_booking_steps_contact_after hook', isset($registered_actions['latepoint_booking_steps_contact_after']));
+
+$has_step_priority_1 = false;
+$has_step_priority_20 = false;
+$all_step_hooks = array_merge(
+    isset($registered_actions['latepoint_process_step']) ? $registered_actions['latepoint_process_step'] : [],
+    isset($registered_filters['latepoint_process_step']) ? $registered_filters['latepoint_process_step'] : []
+);
+foreach ($all_step_hooks as $hook_info) {
+    if ($hook_info['priority'] === 1 && $hook_info['function'] === 'gv_members_process_step_validation') {
+        $has_step_priority_1 = true;
+    }
+    if ($hook_info['priority'] === 20 && $hook_info['function'] === 'gv_members_process_step_persistence') {
+        $has_step_priority_20 = true;
+    }
+}
+check('latepoint_process_step has priority 1 validation handler', $has_step_priority_1);
+check('latepoint_process_step has priority 20 persistence handler', $has_step_priority_20);
+
+// 2. Render Custom Fields Check
+$booking = new OsBookingModel();
+$booking->service_id = 7; // Player Consultation
+
+ob_start();
+gv_members_booking_fields($booking);
+$output = ob_get_clean();
+
+gv_assert_contains('name="gv_consult[player_name]"', $output, 'fields render player_name input');
+gv_assert_contains('name="gv_consult[player_age]"', $output, 'fields render player_age input');
+gv_assert_contains('name="gv_consult[training_interest]"', $output, 'fields render training_interest dropdown');
+gv_assert_contains('name="gv_consult[contact_alt]"', $output, 'fields render contact_alt input');
+gv_assert_contains('name="gv_consult[note]"', $output, 'fields render note textarea');
+gv_assert_contains('name="gv_consult[member_opt_in]"', $output, 'fields render member_opt_in checkbox');
+gv_assert_contains('name="gv_website"', $output, 'fields render honeypot gv_website');
+gv_assert_contains('class="cf-turnstile"', $output, 'fields render Turnstile widget container');
+
+// 3. Validation Handler Check (Priority 1)
+$params = [
+    'gv_consult' => [
+        'player_name' => 'John Doe',
+        'player_age' => '10',
+        'training_interest' => 'private',
+        'contact_alt' => '09123456789',
+        'note' => 'Test consultation request',
+        'member_opt_in' => 'yes'
+    ],
+    'gv_website' => '',
+    'cf-turnstile-response' => 'valid-token'
+];
+
+$turnstile_success = true;
+
+// A. Test valid submission (should pass without exception)
+try {
+    $res = gv_members_process_step_validation('original_response', 'customer', $booking, $params);
+    check('validation passes valid parameters', $res === 'original_response');
+} catch (Exception $e) {
+    check('validation passes valid parameters (threw ' . get_class($e) . ')', false);
+}
+
+// B. Test validation failure: Invalid Age (too low)
+$params_bad_age = $params;
+$params_bad_age['gv_consult']['player_age'] = '2';
+try {
+    gv_members_process_step_validation('original_response', 'customer', $booking, $params_bad_age);
+    check('validation fails age < 3', false);
+} catch (WpSendJsonException $e) {
+    check('validation fails age < 3', $e->response['status'] === 'error' && strpos($e->response['message'], 'age') !== false);
+}
+
+// C. Test validation failure: Invalid Age (too high)
+$params_bad_age_high = $params;
+$params_bad_age_high['gv_consult']['player_age'] = '100';
+try {
+    gv_members_process_step_validation('original_response', 'customer', $booking, $params_bad_age_high);
+    check('validation fails age > 99', false);
+} catch (WpSendJsonException $e) {
+    check('validation fails age > 99', $e->response['status'] === 'error' && strpos($e->response['message'], 'age') !== false);
+}
+
+// D. Test validation failure: Honeypot triggered
+$params_honeypot = $params;
+$params_honeypot['gv_website'] = 'im-a-bot';
+try {
+    gv_members_process_step_validation('original_response', 'customer', $booking, $params_honeypot);
+    check('validation fails if honeypot has value', false);
+} catch (WpSendJsonException $e) {
+    check('validation fails if honeypot has value', $e->response['status'] === 'error' && $e->response['message'] === 'Please refresh and try again.');
+}
+
+// E. Test validation failure: Turnstile verification failure
+$params_bad_turnstile = $params;
+$turnstile_success = false;
+try {
+    gv_members_process_step_validation('original_response', 'customer', $booking, $params_bad_turnstile);
+    check('validation fails if Turnstile verification fails', false);
+} catch (WpSendJsonException $e) {
+    check('validation fails if Turnstile verification fails', $e->response['status'] === 'error' && $e->response['message'] === 'Please complete the security check.');
+}
+$turnstile_success = true;
+
+// 4. Persistence Handler Check (Priority 20)
+OsStepsHelper::$cart_object = new OsCartModel();
+$res = gv_members_process_step_persistence('original_response', 'customer', $booking, $params);
+check('persistence returns response', $res === 'original_response');
+
+$saved_payload_json = OsStepsHelper::$cart_object->meta['gv_consult_payload'] ?? null;
+check('persistence saves payload to cart metadata', $saved_payload_json !== null);
+
+if ($saved_payload_json) {
+    $saved_payload = json_decode($saved_payload_json, true);
+    check('saved player name matches', $saved_payload['player_name'] === 'John Doe');
+    check('saved player age matches', $saved_payload['player_age'] === 10);
+    check('saved training interest matches', $saved_payload['training_interest'] === 'private');
+    check('saved contact details match', $saved_payload['contact_alt'] === '09123456789');
+    check('saved member opt-in matches', $saved_payload['member_opt_in'] === 'yes');
+    check('saved day_request defaults to yes', $saved_payload['day_request'] === 'yes');
 }
 
 echo $failures ? "\n$failures FAILED\n" : "\nALL PASS\n";
