@@ -126,6 +126,28 @@ body .site-content .ast-container,body #primary{margin-left:0;margin-right:0;}
 @media (prefers-reduced-motion: no-preference){
   .gv-hero{position:sticky;top:0;z-index:0;}
   .gv-hero ~ *{position:relative;z-index:1;}
+
+  /* Progressive "dissolve" of the pinned hero content as the next section rises up
+     to cover it: the content (eyebrow, headline, rule, lead, buttons) blurs, fades,
+     and drifts gently upward instead of being flatly masked. Pure CSS scroll-driven
+     animation tied to document scroll position — NO JavaScript. Driven off scroll()
+     rather than view() because the hero is sticky-pinned (a view() timeline would
+     stall while the subject sits still in the viewport). The range is measured in
+     viewport units so the dissolve completes just as the next section engulfs the
+     centered home hero content (~64vh tall). Gated behind @supports so browsers
+     without scroll-driven animations (e.g. Firefox) keep the clean curtain reveal
+     above, fully intact — graceful degradation, never a broken hero. */
+  @supports (animation-timeline: scroll()){
+    @keyframes gv-hero-dissolve{
+      to{filter:blur(10px);opacity:0;transform:translateY(-24px);}
+    }
+    .gv-hero__inner{
+      animation:gv-hero-dissolve linear both;
+      animation-timeline:scroll(root block);
+      animation-range:0 50vh;
+      will-change:filter,opacity,transform;
+    }
+  }
 }
 
 /* ---------- Grid ---------- */
@@ -232,8 +254,16 @@ body .site-content .ast-container,body #primary{margin-left:0;margin-right:0;}
 /* ---------- Gallery ---------- */
 .gv-gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
 @media(max-width:680px){.gv-gallery{grid-template-columns:repeat(2,1fr);}}
-.gv-gallery img{border-radius:12px;aspect-ratio:1/1;object-fit:cover;width:100%;transition:transform .3s;}
-.gv-gallery a:hover img{transform:scale(1.04);}
+/* Photos come from many sessions with mixed color casts (cool indoor / warm outdoor).
+   Unify them to the "cool-neutral premium" grade used on Training Programs: lightly
+   desaturated, gentle contrast lift, and a faint cool cast via a soft-light overlay
+   (mirrors the ImageMagick normalize-photo.sh recipe: ~90% sat, +~8% contrast, blue-lean
+   white balance). Natural, not a hard duotone. Scoped to .gv-gallery only. */
+.gv-gallery a{position:relative;display:block;}
+.gv-gallery img{border-radius:12px;aspect-ratio:1/1;object-fit:cover;width:100%;filter:saturate(.9) contrast(1.06) brightness(1.02);transition:transform .3s,filter .3s;}
+.gv-gallery a::after{content:"";position:absolute;inset:0;border-radius:12px;background:#4a70a8;mix-blend-mode:soft-light;opacity:.2;pointer-events:none;transition:opacity .3s;}
+.gv-gallery a:hover img{transform:scale(1.04);filter:saturate(1) contrast(1.05) brightness(1.02);}
+.gv-gallery a:hover::after{opacity:.1;}
 
 /* ---------- Contact ---------- */
 .gv-contact-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;}
