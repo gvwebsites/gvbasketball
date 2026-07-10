@@ -133,7 +133,7 @@ function gv_members_hidden_booking_trigger() {
     // feature, so venue choice happens before the wizard opens: one hidden
     // trigger per active venue, fronted by the GV venue chooser dialog below.
     // selected_location sets booking.location_id and scopes availability to
-    // that venue's work periods (one "Request this day" slot per day).
+    // that venue's work periods (one "BOOK A CONSULTATION" slot per day).
     $locations = [];
     if (class_exists('OsLocationModel')) {
         $results = (new OsLocationModel())->should_be_active()->get_results_as_models();
@@ -146,16 +146,16 @@ function gv_members_hidden_booking_trigger() {
     if ($locations) {
         foreach ($locations as $location) {
             $triggers .= '<div data-gv-venue-trigger="' . (int) $location->id . '">' .
-                do_shortcode('[latepoint_book_button caption="Book a Consultation" selected_service="' . (int) $service->id . '" selected_location="' . (int) $location->id . '" hide_side_panel="yes"]') .
+                do_shortcode('[latepoint_book_button caption="Book a Consultation" selected_service="' . (int) $service->id . '" selected_location="' . (int) $location->id . '" hide_side_panel="yes" hide_summary="yes"]') .
                 '</div>';
         }
         // Undecided visitors: LatePoint's "any" location preset aggregates
         // availability across venues; Coach Gino settles the venue later.
         $triggers .= '<div data-gv-venue-trigger="any">' .
-            do_shortcode('[latepoint_book_button caption="Book a Consultation" selected_service="' . (int) $service->id . '" selected_location="any" hide_side_panel="yes"]') .
+            do_shortcode('[latepoint_book_button caption="Book a Consultation" selected_service="' . (int) $service->id . '" selected_location="any" hide_side_panel="yes" hide_summary="yes"]') .
             '</div>';
     } else {
-        $triggers = do_shortcode('[latepoint_book_button caption="Book a Consultation" selected_service="' . (int) $service->id . '" hide_side_panel="yes"]');
+        $triggers = do_shortcode('[latepoint_book_button caption="Book a Consultation" selected_service="' . (int) $service->id . '" hide_side_panel="yes" hide_summary="yes"]');
     }
 
     echo '<div id="gv-consult-trigger" hidden>' . $triggers . '</div>';
