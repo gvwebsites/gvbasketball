@@ -228,3 +228,19 @@ This is the chronological log of all tasks, updates, and releases completed on t
   - Chose a hybrid architecture: GV-owned request persistence and timeline UI with LatePoint-owned customer sessions and confirmed bookings.
   - Defined the Request Timeline visual direction, two-state Submitted/Confirmed workflow, email-based coach confirmation, URL migration, cache exclusions, security requirements, and acceptance tests.
   - Reduced anonymous request capture to parent/email, player/age, program, location, days, and one optional note; signed-in requests hide verified account identity.
+
+## [2026-07-10] task | Add missing screenshots to July Client Report
+- **Goal:** In Part 1 (items 1-8) of `CLIENT-REPORT-JULY.html`, capture live screenshots for items that were missing visual assets and refine them per user instructions.
+- **Changes:**
+  - Used Playwright in the `tmp/` environment to capture screenshots from the live `gvbasketball.com` site.
+  - Captured `faq.png` (live FAQ page layout), `pricing.png` (expanded pricing accordion on FAQ page), and `footer.png` (targeting the `.gv-footer` class selector to capture the actual navy blue footer).
+  - Modified `docs/CLIENT-REPORT-JULY.html` to inject `<figure>` markup with captions and file paths for items 2 (FAQ), 5 (Pricing), and 7 (Footer).
+  - Removed/excluded figure elements and screenshots for Testimonials (item 4), Member Login (item 6), and Flow of Purchase (item 8) as requested.
+
+## [2026-07-10] task | Merge Members Portal and Consultation Booking Designs
+- **Goal:** Reconcile the approved member-portal and LatePoint self-service consultation directions into one implementation-ready product design.
+- **Changes:**
+  - Added `docs/superpowers/specs/2026-07-10-members-self-service-consultation-merged-design.md` as the single design source of truth.
+  - Standardized on one pending-to-approved LatePoint booking record, a themed day-request wizard, optional member promotion, any-email OTP access, and a read-only member request timeline.
+  - Defined Coach Gino's secure exact-time finalization flow and six-step email instructions, with personal parent confirmation instead of an automated final email.
+  - Marked both earlier design specs and their implementation plan as superseded.
