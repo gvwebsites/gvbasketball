@@ -428,3 +428,7 @@ This is the chronological log of all tasks, updates, and releases completed on t
   - `build/scripts/deploy-minimal-edits.php`: map gained `26 => 'about.html'`.
   - `docs/CLIENT-REPORT-JULY-V2.html`: new Live section 04 "Coaching Credentials & Certifications" + `docs/screenshots/v2-credentials.png`; "Scheduled" renumbered to 05. Re-uploaded to `public_html/july-updates-v2.html`.
   - Plan of record: Task 7 appended to `docs/superpowers/plans/2026-07-10-minimal-edits-round.md`.
+
+## [2026-07-11] task | JULY-v2 report: section 05 reworded as "For Next Developer" handoff
+- **Goal:** Rename the report's "Scheduled For The Next Round" section to a developer handoff, per client direction.
+- **Changes:** `docs/CLIENT-REPORT-JULY-V2.html` — section 05 is now "For Next Developer" (chip "Handoff"); lead and bullets reworded as a pick-up-without-starting-over list (Apply Now switch-over noted as a one-line change; photo/video items marked blocked on Coach Gino's assets); cover paragraph and closing card updated to match. Re-uploaded to `public_html/july-updates-v2.html`.
