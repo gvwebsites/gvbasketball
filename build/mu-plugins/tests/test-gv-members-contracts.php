@@ -295,11 +295,12 @@ if (!class_exists('OsBookingModel')) {
         }
 
         public function get_results_as_models() {
+            // Real LatePoint: with set_limit(1) this returns a single model, or [] when empty.
             global $mock_bookings;
             if (isset($mock_bookings[self::$query_code])) {
-                return [$mock_bookings[self::$query_code]];
+                return $mock_bookings[self::$query_code];
             }
-            return [$this];
+            return [];
         }
     }
 }
@@ -327,7 +328,8 @@ if (!class_exists('OsServiceModel')) {
             return $this;
         }
         public function get_results_as_models() {
-            return [$this];
+            // Real LatePoint: with set_limit(1) this returns a single model, or [] when empty.
+            return $this;
         }
     }
 }

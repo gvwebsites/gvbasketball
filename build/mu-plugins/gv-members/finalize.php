@@ -36,10 +36,10 @@ function gv_members_handle_finalize_request() {
         return;
     }
     
-    $bookings = (new OsBookingModel())->where(['booking_code' => $booking_code])->set_limit(1)->get_results_as_models();
-    $booking = (!empty($bookings) && is_array($bookings)) ? $bookings[0] : null;
-    
-    if (!$booking || (method_exists($booking, 'is_new_record') ? $booking->is_new_record() : false)) {
+    // With set_limit(1), LatePoint returns a single model object, or [] when nothing matches.
+    $booking = (new OsBookingModel())->where(['booking_code' => $booking_code])->set_limit(1)->get_results_as_models();
+
+    if (!$booking || is_array($booking) || (method_exists($booking, 'is_new_record') && $booking->is_new_record())) {
         gv_members_finalize_render_error();
         return;
     }

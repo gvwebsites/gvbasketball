@@ -221,27 +221,23 @@ function gv_members_booking_created_handler($booking) {
 
     $payload = [];
     if (!empty($payload_json)) {
-        $payload = json_decode($payload_json, true);
+        $payload = json_decode($payload_json, true) ?: [];
+    }
+    if (!$payload && isset($_POST['gv_consult'])) {
+        $payload = (array) $_POST['gv_consult'];
     }
 
-    // Fallback if payload isn't found in cart (e.g. CLI tests)
+    // Revalidate. Without a valid wizard payload (e.g. a booking created in wp-admin)
+    // stand down entirely: no meta, no notification suppression, no emails.
     $checked = gv_members_validate_payload($payload);
+    if ($checked['errors'] || empty($checked['data'])) {
+        return;
+    }
     $data = $checked['data'];
-    if (empty($data)) {
-        $post_data = isset($_POST['gv_consult']) ? $_POST['gv_consult'] : [];
-        $checked = gv_members_validate_payload($post_data);
-        $data = $checked['data'];
-        if (empty($data)) {
-            $data = [
-                'player_name' => '',
-                'player_age' => 0,
-                'training_interest' => 'private',
-                'contact_alt' => '',
-                'note' => '',
-                'member_opt_in' => 'no',
-                'day_request' => 'yes',
-            ];
-        }
+
+    // Guard against a double-fire of latepoint_booking_created for the same booking.
+    if ($booking->get_meta_by_key('gv_coach_request_sent_at') || $booking->get_meta_by_key('gv_finalize_token_hash')) {
+        return;
     }
 
     // Persist all approved gv_* keys
