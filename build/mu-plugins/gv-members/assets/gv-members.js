@@ -77,14 +77,17 @@ jQuery(document).ready(function($) {
     // LatePoint 5.6.6 renders each slot as `.timeslots .dp-timebox[data-minutes]`
     // containing `.dp-label > .dp-label-time` (e.g. "08:00 am") and a `.dp-tick`
     // ("8 am"). We keep data-minutes untouched (the wizard still submits the real
-    // start_time) and only rewrite the visible text to "Request this day".
+    // start_time) and only rewrite the visible text to "BOOK A CONSULTATION".
+    var GV_CONSULTATION_ACTION_LABEL = 'BOOK A CONSULTATION';
+
     function gvMembersUpdateUI() {
         // Slot grid: relabel the visible time on each pickable timebox.
         $('.timeslots .dp-timebox').each(function() {
             var $box = $(this);
             var $time = $box.find('.dp-label-time');
-            if ($time.length && $time.text().trim() !== 'Request this day') {
-                $time.text('Request this day');
+            $time.addClass('gv-consult-day-action');
+            if ($time.text().trim() !== GV_CONSULTATION_ACTION_LABEL) {
+                $time.text(GV_CONSULTATION_ACTION_LABEL);
             }
             // The compact tick label ("8 am") also leaks the nominal time.
             $box.find('.dp-tick').css('visibility', 'hidden');
@@ -93,8 +96,8 @@ jQuery(document).ready(function($) {
         // Any already-selected time echoed in the summary/side panel.
         $('.summary-item-time, .os-selected-slot, .dp-selected-time').each(function() {
             var $this = $(this);
-            if ($this.text().trim() !== '' && $this.text().trim() !== 'Request this day') {
-                $this.text('Request this day');
+            if ($this.text().trim() !== '' && $this.text().trim() !== GV_CONSULTATION_ACTION_LABEL) {
+                $this.text(GV_CONSULTATION_ACTION_LABEL);
             }
         });
 
@@ -415,4 +418,3 @@ jQuery(document).ready(function($) {
         }
     });
 });
-
