@@ -49,6 +49,48 @@ function wp_json_encode($d){ return json_encode($d); }
 function wp_salt($scheme = 'auth') { return 'salt'; }
 function sanitize_text_field($s) { return trim((string)$s); }
 
+$sent_mails = [];
+function wp_mail($to, $subject, $message, $headers = '', $attachments = []) {
+    global $sent_mails;
+    $sent_mails[] = [
+        'to' => $to,
+        'subject' => $subject,
+        'message' => $message,
+        'headers' => $headers,
+    ];
+    return true;
+}
+
+function remove_action($hook, $func, $priority = 10) {
+    global $registered_actions;
+    if (isset($registered_actions[$hook])) {
+        foreach ($registered_actions[$hook] as $key => $action) {
+            if ($action['function'] === $func && $action['priority'] === $priority) {
+                unset($registered_actions[$hook][$key]);
+            }
+        }
+    }
+    return true;
+}
+
+function add_query_arg($args, $url = '') {
+    $parts = parse_url($url);
+    $query = [];
+    if (isset($parts['query'])) {
+        parse_str($parts['query'], $query);
+    }
+    if (is_array($args)) {
+        foreach ($args as $k => $v) {
+            $query[$k] = $v;
+        }
+    }
+    $parts['query'] = http_build_query($query);
+    $scheme = isset($parts['scheme']) ? $parts['scheme'] . '://' : '';
+    $host = isset($parts['host']) ? $parts['host'] : '';
+    $path = isset($parts['path']) ? $parts['path'] : '';
+    return $scheme . $host . $path . '?' . $parts['query'];
+}
+
 // Exception to intercept wp_send_json and prevent exit;
 class WpSendJsonException extends Exception {
     public $response;
@@ -153,7 +195,36 @@ function do_shortcode($content) {
 // Stubs for plugins_loaded require logic
 if (!class_exists('OsBookingModel')) {
     class OsBookingModel {
-        public $service_id;
+        public $id = 777;
+        public $booking_code = 'REF777';
+        public $service_id = 7;
+        public $customer_id = 202;
+        public $location_id = 303;
+        public $start_date = '2026-07-15';
+        public $start_time = 900;
+        public $end_time = 945;
+        public $status = 'approved';
+        public $meta = [];
+
+        public function save_meta_by_key($key, $value) {
+            $this->meta[$key] = $value;
+            return true;
+        }
+
+        public function get_meta_by_key($key, $default = '') {
+            return $this->meta[$key] ?? $default;
+        }
+
+        public function update_attributes($attrs) {
+            foreach ($attrs as $k => $v) {
+                $this->$k = $v;
+            }
+            return true;
+        }
+
+        public function save() {
+            return true;
+        }
     }
 }
 
@@ -184,6 +255,26 @@ if (!class_exists('OsServiceModel')) {
         }
     }
 }
+if (!class_exists('OsCustomerModel')) {
+    class OsCustomerModel {
+        public $id = 202;
+        public $first_name = 'John';
+        public $last_name = 'Doe';
+        public $email = 'parent@example.com';
+        public $phone = '09171234567';
+        public function __construct($id = null) {}
+        public function is_new_record() { return false; }
+    }
+}
+
+if (!class_exists('OsLocationModel')) {
+    class OsLocationModel {
+        public $id = 303;
+        public $name = 'Dasma, Makati';
+        public function __construct($id = null) {}
+        public function is_new_record() { return false; }
+    }
+}
 
 if (!class_exists('OsCartModel')) {
     class OsCartModel {
@@ -191,6 +282,9 @@ if (!class_exists('OsCartModel')) {
         public function save_meta_by_key($key, $value) {
             $this->meta[$key] = $value;
             return true;
+        }
+        public function get_meta_by_key($key, $default = '') {
+            return $this->meta[$key] ?? $default;
         }
     }
 }
@@ -554,6 +648,53 @@ if ($saved_payload_json) {
     check('saved contact details match', $saved_payload['contact_alt'] === '09123456789');
     check('saved member opt-in matches', $saved_payload['member_opt_in'] === 'yes');
     check('saved day_request defaults to yes', $saved_payload['day_request'] === 'yes');
+}
+
+// 5. Booking Created Handler Check
+$new_booking = new OsBookingModel();
+$new_booking->id = 777;
+$new_booking->booking_code = 'REF777';
+$new_booking->service_id = 7; // Player Consultation
+$new_booking->status = 'approved'; // starts approved to check if it forces pending
+$new_booking->meta = [];
+
+$_POST['gv_consult'] = [
+    'player_name' => 'Alex Test',
+    'player_age' => '15',
+    'training_interest' => 'elite',
+    'contact_alt' => 'phone123',
+    'note' => 'some note',
+    'member_opt_in' => 'yes',
+];
+
+OsStepsHelper::$cart_object = null;
+$sent_mails = [];
+gv_members_booking_created_handler($new_booking);
+
+check('handler forces pending status', $new_booking->status === 'pending');
+check('handler saves player name to meta', $new_booking->meta['gv_player_name'] === 'Alex Test');
+check('handler saves player age to meta', $new_booking->meta['gv_player_age'] === 15);
+check('handler saves training interest to meta', $new_booking->meta['gv_training_interest'] === 'elite');
+check('handler saves contact alt to meta', $new_booking->meta['gv_contact_alt'] === 'phone123');
+check('handler saves note to meta', $new_booking->meta['gv_note'] === 'some note');
+check('handler saves member opt-in to meta', $new_booking->meta['gv_member_opt_in'] === 'yes');
+check('handler saves day request to meta', $new_booking->meta['gv_day_request'] === 'yes');
+check('handler generates finalize token hash', !empty($new_booking->meta['gv_finalize_token_hash']));
+check('handler generates finalize token expiry', !empty($new_booking->meta['gv_finalize_token_expires_at']));
+check('handler sends parent receipt and coach notification emails', count($sent_mails) === 2);
+
+if (count($sent_mails) === 2) {
+    check('first mail is parent receipt', $sent_mails[0]['to'] === 'parent@example.com');
+    check('first mail subject matches parent receipt', $sent_mails[0]['subject'] === 'GV Basketball — consultation request received');
+    check('first mail contains Ref', strpos($sent_mails[0]['message'], 'REF777') !== false);
+    check('first mail hides nominal time', strpos($sent_mails[0]['message'], '3:00 PM') === false);
+    check('first mail contains CTA link', strpos($sent_mails[0]['message'], '/members/') !== false);
+
+    check('second mail is coach notification', $sent_mails[1]['to'] === 'gvbasketballcoaching@gmail.com');
+    check('second mail subject contains Player name', strpos($sent_mails[1]['subject'], 'Alex Test') !== false);
+    check('second mail subject contains Venue name', strpos($sent_mails[1]['subject'], 'Dasma, Makati') !== false);
+    check('second mail contains finalize URL', strpos($sent_mails[1]['message'], 'gv_finalize_consultation=1') !== false);
+    check('second mail contains manual confirmation warning', strpos($sent_mails[1]['message'], 'does not send an automatic final confirmation') !== false);
 }
 
 echo $failures ? "\n$failures FAILED\n" : "\nALL PASS\n";

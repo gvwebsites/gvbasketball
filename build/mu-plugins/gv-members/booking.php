@@ -13,6 +13,7 @@ defined('LATEPOINT_STATUS_ERROR') || define('LATEPOINT_STATUS_ERROR', 'error');
 add_action('latepoint_booking_steps_contact_after', 'gv_members_booking_fields', 10, 1);
 add_action('latepoint_process_step', 'gv_members_process_step_validation', 1, 3);
 add_action('latepoint_process_step', 'gv_members_process_step_persistence', 20, 3);
+add_action('latepoint_booking_created', 'gv_members_booking_created_handler', 5, 1);
 
 /**
  * Render custom fields on the LatePoint contact step for Player Consultation.
@@ -193,4 +194,126 @@ function gv_members_verify_turnstile($token, $ip) {
 
     $data = json_decode(wp_remote_retrieve_body($resp), true);
     return !empty($data['success']);
+}
+
+/**
+ * Handle booking creation to persist custom metadata, suppress native notifications, and send branded emails.
+ */
+function gv_members_booking_created_handler($booking) {
+    if (!is_object($booking) || empty($booking->service_id)) {
+        return;
+    }
+
+    if (!class_exists('OsServiceModel')) {
+        return;
+    }
+
+    $service = new OsServiceModel($booking->service_id);
+    if (!$service || $service->is_new_record() || $service->name !== 'Player Consultation') {
+        return;
+    }
+
+    // Read payload from Cart Meta
+    $payload_json = '';
+    if (class_exists('OsStepsHelper') && isset(OsStepsHelper::$cart_object) && is_object(OsStepsHelper::$cart_object)) {
+        $payload_json = OsStepsHelper::$cart_object->get_meta_by_key('gv_consult_payload');
+    }
+
+    $payload = [];
+    if (!empty($payload_json)) {
+        $payload = json_decode($payload_json, true);
+    }
+
+    // Fallback if payload isn't found in cart (e.g. CLI tests)
+    $checked = gv_members_validate_payload($payload);
+    $data = $checked['data'];
+    if (empty($data)) {
+        $post_data = isset($_POST['gv_consult']) ? $_POST['gv_consult'] : [];
+        $checked = gv_members_validate_payload($post_data);
+        $data = $checked['data'];
+        if (empty($data)) {
+            $data = [
+                'player_name' => '',
+                'player_age' => 0,
+                'training_interest' => 'private',
+                'contact_alt' => '',
+                'note' => '',
+                'member_opt_in' => 'no',
+                'day_request' => 'yes',
+            ];
+        }
+    }
+
+    // Persist all approved gv_* keys
+    $booking->save_meta_by_key('gv_player_name', $data['player_name']);
+    $booking->save_meta_by_key('gv_player_age', $data['player_age']);
+    $booking->save_meta_by_key('gv_training_interest', $data['training_interest']);
+    $booking->save_meta_by_key('gv_contact_alt', $data['contact_alt']);
+    $booking->save_meta_by_key('gv_note', $data['note']);
+    $booking->save_meta_by_key('gv_member_opt_in', $data['member_opt_in']);
+    $booking->save_meta_by_key('gv_day_request', 'yes');
+
+    // Force pending status
+    defined('LATEPOINT_BOOKING_STATUS_PENDING') || define('LATEPOINT_BOOKING_STATUS_PENDING', 'pending');
+    if ($booking->status !== LATEPOINT_BOOKING_STATUS_PENDING) {
+        $booking->status = LATEPOINT_BOOKING_STATUS_PENDING;
+        if (method_exists($booking, 'update_attributes')) {
+            $booking->update_attributes(['status' => LATEPOINT_BOOKING_STATUS_PENDING]);
+        } else {
+            $booking->save();
+        }
+    }
+
+    // Create secure finalization token
+    $raw_token = bin2hex(random_bytes(32));
+    $token_hash = gv_members_token_hash($raw_token);
+    defined('GV_MEMBERS_FINALIZE_TTL') || define('GV_MEMBERS_FINALIZE_TTL', 30 * 86400);
+    $expiry = time() + GV_MEMBERS_FINALIZE_TTL;
+
+    $booking->save_meta_by_key('gv_finalize_token_hash', $token_hash);
+    $booking->save_meta_by_key('gv_finalize_token_expires_at', $expiry);
+    $booking->save_meta_by_key('gv_finalize_token_used_at', '');
+    $booking->save_meta_by_key('gv_finalized_at', '');
+
+    // URL to finalize
+    $finalize_url = add_query_arg([
+        'gv_finalize_consultation' => 1,
+        'booking_code' => $booking->booking_code,
+        'token' => $raw_token
+    ], home_url('/members/finalize/'));
+
+    // Suppress native notifications before priority 12
+    remove_action('latepoint_booking_created', ['OsProcessJobsHelper', 'handle_booking_created'], 12);
+
+    // Extract email data view-model
+    $booking_email_data = gv_members_booking_email_data($booking);
+
+    // Date/time in Asia/Manila for logging/sending timestamp
+    $manila_tz = new DateTimeZone('Asia/Manila');
+    $now = new DateTime('now', $manila_tz);
+    $now_str = $now->format('Y-m-d H:i:s');
+
+    // Send parent receipt
+    $parent_html = gv_members_parent_receipt_html($booking_email_data, $data);
+    $parent_sent = wp_mail($booking_email_data['parent_email'], 'GV Basketball — consultation request received', $parent_html, ['Content-Type: text/html; charset=UTF-8']);
+    if ($parent_sent) {
+        $booking->save_meta_by_key('gv_parent_receipt_sent_at', $now_str);
+    } else {
+        error_log("Mail delivery failed for booking ID: " . $booking->id);
+    }
+
+    // Send Coach Gino request email
+    $coach_recipient = defined('GV_RF_RECIPIENT') ? GV_RF_RECIPIENT : 'gvbasketballcoaching@gmail.com';
+    $coach_subject = 'New consultation request — ' . $booking_email_data['player_name'] . ' — ' . $booking_email_data['venue_name'] . ' — ' . $booking_email_data['day'];
+    $coach_html = gv_members_coach_request_html($booking_email_data, $data, $finalize_url);
+    $coach_headers = [
+        'Content-Type: text/html; charset=UTF-8',
+        'Reply-To: ' . $booking_email_data['parent_name'] . ' <' . $booking_email_data['parent_email'] . '>'
+    ];
+    $coach_sent = wp_mail($coach_recipient, $coach_subject, $coach_html, $coach_headers);
+    if ($coach_sent) {
+        $booking->save_meta_by_key('gv_coach_request_sent_at', $now_str);
+    } else {
+        error_log("Mail delivery failed for booking ID: " . $booking->id);
+    }
 }
