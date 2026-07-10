@@ -18,8 +18,8 @@ All pages are live and public unless noted. Page HTML sources are located in `bu
 | **Testimonials (Draft)** | `/testimonials/` | `2986` | **Draft (hidden from navigation)**. Kept as a placeholder until real, approved client stories are ready. | `build/pages/testimonials.html` |
 | **Gallery** | `/gallery/` | `2987` | Balanced 3x3 grid of 9 real photos (imported to WP library). Cool-neutral overlay styling. | `build/pages/gallery.html` |
 | **FAQ** | `/faq/` | `2988` | HTML details accordions covering program formats, locations, age ranges, and capacity limits. | `build/pages/faq.html` |
-| **Book a Consultation** | `/book-a-consultation/` | `2982` | **302 Redirect Target**. Automatically forwards visitors to `/training-programs/?gv_open_modal=1` to open the modal. | Generated via script |
-| **Booking Portal** | `/booking/` | `2983` | Passwordless login & member dashboard for LatePoint. | `build/scripts/build-functional.php` |
+| **Book a Consultation (Retired)** | `/book-a-consultation/` | `2982` | **Retired (draft)**. Booking is modal-only now; the path 301s to `/training-programs/` via `gv-members.php`. | — |
+| **GV Members** | `/members/` | `2983` | Passwordless OTP login & Training Journal (`[gv_members_portal]`). Old `/booking/` and `/customer-cabinet/` paths 301 here. | `build/scripts/configure-members-page.php` |
 | **Contact** | `/contact/` | `2989` | Standard contact form (WPForms ID 3003) & location cards. | `build/scripts/build-functional.php` |
 | **Player Waiver** | `/waiver/` | `3009` | Player Waiver & Consent Form (WPForms ID 3007). | `build/scripts/build-extras.php` |
 

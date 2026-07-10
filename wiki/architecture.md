@@ -33,6 +33,11 @@ All custom backend hooks and helpers are deployed in `wp-content/mu-plugins/`. T
 - **Location:** `wp-content/mu-plugins/gv-otp-email.php`
 - **Purpose:** Intercepts the default plain-text LatePoint login OTP emails via the `wp_mail` filter. If the email subject contains "OTP", it replaces the body with a branded HTML email (featuring the GV logo, navy/orange theme colors, and structured layout).
 
+### 4. GV Members & Consultation (`gv-members.php` + `gv-members/`)
+- **Location:** `wp-content/mu-plugins/gv-members.php` with modules in `wp-content/mu-plugins/gv-members/` (`core.php`, `booking.php`, `emails.php`, `auth.php`, `portal.php`, `finalize.php`, `assets/`).
+- **Purpose:** The members/consultation system — passwordless OTP login for any email (`gv_otp_*` AJAX), the `[gv_members_portal]` Training Journal on `/members/` (page 2983), the modal-only consultation wizard bridge (per-venue hidden LatePoint triggers + venue chooser dialog), branded consultation emails, and the coach's tokenized finalize screen. Full details in [booking-latepoint.md](file:///Users/rico/Git/gvbasketball/wiki/booking-latepoint.md).
+- **Tests:** Framework-free suites in `build/mu-plugins/tests/` — run `for t in build/mu-plugins/tests/test-*.php; do php "$t"; done`.
+
 ---
 
 ## Technical Gotchas & Constraints

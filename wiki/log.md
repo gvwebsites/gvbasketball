@@ -323,3 +323,44 @@ This is the chronological log of all tasks, updates, and releases completed on t
   - Added comprehensive contract tests verifying customer fixtures, timeline time-suppression, newest-first request sorting, player extraction, and change mailto links.
 
 
+
+## [2026-07-10] task | Venue-scoped, modal-only consultation wizard (Tasks 9-11)
+- **Goal:** Make the consultation wizard venue-aware and modal-only, fixing "Location Id can not be blank" and removing pricing from the flow.
+- **Changes:**
+  - `gv-members.php`: one hidden `[latepoint_book_button]` trigger per active venue with `selected_location="N"` (the PRO-only `booking__locations` step can't be used in core), fronted by a GV venue-chooser dialog; `/book-a-consultation/` (2982) drafted and 301→`/training-programs/`.
+  - `configure-members-consultation.php`: zeroed the default work schedule (LatePoint falls back to it when a venue lacks location-specific rows) and cleaned stale `booking__locations` step settings.
+  - `gv-members.js`: setTimeout debounce replaces rAF (which never fires in hidden tabs), explicit Turnstile render, `.sbc-highlighted-item` nominal-time strip; price-hide CSS.
+  - `booking.php`: fixed `latepoint_booking_steps_contact_after` hook signature to `($customer, $booking)`.
+
+## [2026-07-10] task | Production acceptance of the consultation flow (Task 12)
+- **Goal:** Verify the full request→finalize→approve loop end-to-end on production with controlled test data.
+- **Changes:** No code — verification only. Booked via the live wizard at two venues (incl. the "any" preset), finalized one booking via the tokenized coach link (token reuse correctly rejected), confirmed portal Submitted/Confirmed states, receipt/coach emails, and exact `gv_*` booking meta. All test rows (bookings, orders, customer, meta, OTP codes, activities, carts) deleted afterward; two labeled test emails remain in the coach inbox for Rico to remove.
+
+## [2026-07-10] task | Dev cache lockdown + Elementor element cache off
+- **Goal:** Stop stale HTML/CSS/JS during development (Cloudflare × LiteSpeed × Elementor triple-caching).
+- **Changes:**
+  - Cloudflare dev mode on (auto-expires), LiteSpeed public TTL dropped to 30s, `.htaccess` browser-cache rules relaxed for non-image assets (backup: `.htaccess.bak-devcache-20260710174708`).
+  - Elementor Element Cache experiment forced `inactive` permanently; `deploy-members-theme-parts.php` now deletes `_elementor_element_cache` and clears the Elementor files cache on every deploy.
+  - **Revert (LiteSpeed TTL + .htaccess) after the members launch settles; Elementor cache stays off.**
+
+## [2026-07-10] task | Venue-chooser loading state + any-venue option
+- **Goal:** Smooth the venue-chooser→LatePoint-modal transition and support parents without a venue.
+- **Changes:**
+  - `gv-members.php`/`gv-members.js`/`gv-members.css`: chooser stays open with spinner + aria-live note, polls for the LatePoint lightbox form before closing; new "I don't have a venue yet" option backed by `selected_location="any"`.
+  - Contract tests cover the any-venue trigger, chooser option, and loading note.
+
+## [2026-07-10] task | July client report + email renders (Task 13)
+- **Goal:** Client-facing report of the GV Members / consultation system with real screenshots.
+- **Changes:**
+  - `build/scripts/render-member-report-emails.php` renders the 3 branded emails (OTP, parent receipt, coach request) as HTML with fictional sample data (never sends).
+  - 7 screenshots captured headlessly (Playwright): members login/requests, consultation wizard, coach finalize screen, 720px email renders → `docs/screenshots/`.
+  - `docs/CLIENT-REPORT-JULY.html` rewritten with the member-login walkthrough, consultation-request flow, and email evidence grid.
+
+## [2026-07-10] task | Wiki sync for the members/consultation launch (Task 14)
+- **Goal:** Bring the wiki in line with the deployed members system.
+- **Changes:**
+  - `booking-latepoint.md`: portal moved to `/members/` (2983), custom `gv_otp_*` auth, new "Consultation Wizard" section (venue presets, PRO-step constraint, default-schedule zeroing, finalize flow, no-auto-final-email design).
+  - `pages.md`: 2982 retired (301→training-programs), 2983 → GV Members.
+  - `architecture.md`: added the `gv-members` mu-plugin entry + test-suite command.
+  - `client-status.md`: Highlight 0 (GV Members & consultation requests); superseded the old email-modal items.
+  - `deployment-workflows.md`: new script catalog rows, Elementor `_elementor_element_cache` gotcha, setup-latepoint do-not-rerun warning.
