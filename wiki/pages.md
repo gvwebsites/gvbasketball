@@ -11,7 +11,7 @@ All pages are live and public unless noted. Page HTML sources are located in `bu
 | Page Title | URL Path / Slug | Post ID | Key Details & Layout | Source File / Builder |
 |---|---|---|---|---|
 | **Home** | `/` | `2887` | Minimalist layout, auto-fade video hero, Coach side-by-side mentors row, locations grid. | `build/pages/home.html` |
-| **About** | `/about/` | `26` | "About GV Basketball" story, founded by Coach Gino, training method 2-photo fade carousel. | `build/pages/about.html` |
+| **About** | `/about/` | `26` | "About GV Basketball" story, founded by Coach Gino; "Certifications & Credentials" navy section (framed 94 Feet of Game certificate + Phil Handy/Micah Lancaster cards) followed by The Coaching Philosophy; training method 2-photo fade carousel. | `build/pages/about.html` |
 | **Training Programs** | `/training-programs/` | `2981` | Core details for Private, Small Group, and Elite Performance. Replaces snap shots with real action assets. | `build/pages/training-programs.html` |
 | **Athlete Development** | `/athlete-development/` | `2984` | Editorial outline of GV's development system and standards. | `build/pages/athlete-development.html` |
 | **Success Stories** | `/success-stories/` | `2985` | Clean success-stories layout. (Testimonials block removed). | `build/pages/success-stories.html` |

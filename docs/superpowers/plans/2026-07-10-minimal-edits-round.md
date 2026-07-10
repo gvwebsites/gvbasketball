@@ -382,3 +382,19 @@ git commit -m "docs: wiki sync for minimal edits round + JULY-v2 report"
 - **Spec coverage:** spec §3 (Elite copy incl. FAQ mentions) → Task 1; §4b (pricing) → Task 2; §4 (Academy teaser + nav) → Task 3; §5 constraints enforced by Task 1/2/3 verify steps; §7 testing → Task 1 Step 6, Task 4 Step 5; §8 deploy/docs → Tasks 4 & 6. User's report requirement → Task 5.
 - **Judgment calls:** the FAQ hero-lead "costs," removal and "Programs & Costs"→"Programs" heading follow from §4b's sweep clause; the Apply Now report wording tells Coach Gino honestly that applications currently route through consultations.
 - **Deliberately not done:** no `/apply/` page, no new mu-plugin, no test files (no new logic), no menu restructure beyond the single Academy item.
+
+---
+
+### Task 7 (incremental, 2026-07-11): Coaching credentials & certifications
+
+Added after the round shipped, consolidating two follow-up plans (Phil Handy team update + 94 Feet of Game certification section).
+
+**Files:**
+- Modify: `build/pages/home.html`, `build/pages/about.html`, `build/pages/faq.html`, `build/scripts/deploy-minimal-edits.php`, `docs/CLIENT-REPORT-JULY-V2.html`, `wiki/log.md`, `wiki/client-status.md`
+
+- [x] **Page edits:** Phil Handy is now "Assistant Coach · Dallas Mavericks" (was "Mentor · 94FEETOFGAME" / LA Lakers) on the home and About mentor cards with refreshed descriptions; FAQ parenthetical now says Dallas Mavericks (94FEETOFGAME brand retained only in the FAQ). The About navy section is reworked from "Training Under Champions / NBA-Level Systems In Manila" to **"Certifications & Credentials / Trained Under The World's Best"** with a 94 Feet of Game certification block above the two mentor cards.
+- [x] **Certificate image:** DEPLOYED — the client re-supplied the certificate mid-round (archived as `revisions/cert-94-feet-of-game.jpg`); converted to WebP (1053×1280, plain `magick -resize '1200x>' -quality 85` — deliberately not `normalize-photo.sh`, which would alter the dark/gold art) and uploaded to `uploads/2026/07/gv-cert-94-feet-of-game.webp`. The framed `<figure>` (gold border `#C9A24B`, max-width 680px) is live in `about.html` under the certification copy.
+- [x] **Section order (client request):** "The Coaching Philosophy" moved to directly below the "Trained Under The World's Best" section on the About page.
+- [x] **Deploy script:** `deploy-minimal-edits.php` map gained `26 => 'about.html'`; deploys now scp all five page files.
+- [x] **Report:** JULY-v2 gained Live section **04 "Coaching Credentials & Certifications"** (screenshot `screenshots/v2-credentials.png`); "Scheduled For The Next Round" renumbered 04→05; "What We Verified" gained a credentials bullet.
+- [x] **Verification:** php -l + mu-plugin test suite green; grep shows no "LA Lakers" left in `build/pages/`; live check of `/`, `/about/`, `/faq/` after deploy.

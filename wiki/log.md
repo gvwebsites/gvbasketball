@@ -418,3 +418,13 @@ This is the chronological log of all tasks, updates, and releases completed on t
   - `build/pages/home.html`, `build/pages/training-programs.html`: gold `GV Elite Academy` button (`gv-btn--gold` → `/elite-academy/`) added beside every Apply Now on the GV Elite Performance card/detail; `.gv-program__foot` is now a wrapping flex row.
   - `build/pages/elite-academy.html`: "Coming 2027" upgraded to a large gold-bordered pill badge (1.2rem, 800 weight).
   - Deployed pages + theme parts + menu + `gv-brand.css`; caches purged; verified live on desktop (hover dropdown, buttons, badge) and mobile burger.
+
+## [2026-07-11] task | Coaching credentials: Phil Handy → Dallas Mavericks + 94 Feet of Game certification section
+- **Goal:** Update Phil Handy's team (LA Lakers → Dallas Mavericks) with refreshed mentor copy, and rework the About navy section into "Certifications & Credentials" leading with Coach Gino's 94 Feet of Game certification — consolidated add-on to the minimal-edits round.
+- **Changes:**
+  - `build/pages/home.html` / `build/pages/about.html`: mentor role chip now `Assistant Coach · Dallas Mavericks`; new descriptions ("3× NBA champion and one of the NBA's premier player development coaches…"). 94FEETOFGAME brand now appears only in the FAQ.
+  - `build/pages/about.html`: navy section reworked — eyebrow "Certifications & Credentials", title "Trained Under The World's Best", new 94 Feet of Game certification block above the mentor cards, with the official certificate framed beneath the copy (gold border `#C9A24B`, max-width 680px). Original archived at `revisions/cert-94-feet-of-game.jpg`; WebP (plain `magick` convert — not `normalize-photo.sh`, which would alter the certificate's dark/gold art) uploaded to `uploads/2026/07/gv-cert-94-feet-of-game.webp`. Per client request, "The Coaching Philosophy" section now sits directly below this section.
+  - `build/pages/faq.html`: certifications answer parenthetical now "Dallas Mavericks assistant coach".
+  - `build/scripts/deploy-minimal-edits.php`: map gained `26 => 'about.html'`.
+  - `docs/CLIENT-REPORT-JULY-V2.html`: new Live section 04 "Coaching Credentials & Certifications" + `docs/screenshots/v2-credentials.png`; "Scheduled" renumbered to 05. Re-uploaded to `public_html/july-updates-v2.html`.
+  - Plan of record: Task 7 appended to `docs/superpowers/plans/2026-07-10-minimal-edits-round.md`.
