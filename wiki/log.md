@@ -162,6 +162,7 @@ This is the chronological log of all tasks, updates, and releases completed on t
 - **Changes:**
   - Updated `build/pages/faq.html` HTML accordions.
   - Updated client-facing schedule logs.
+  - Deployed to production: `gv_set_page_html(2988, faq.html)` via SSH/WP-CLI (backed up prior `_elementor_data` first), then `wp elementor flush-css` + `wp litespeed-purge all`. Verified stale strings gone and corrected facts render live at `/faq/`.
 
 ## [2026-07-10] task | Create LLM Wiki and Update AGENTS.md
 - **Goal:** Deprecate `PROJECT_LOG.md` and `PROGRESS_LOG.md` and set up the structured `wiki/` directory. Update `AGENTS.md` to act as schema.
