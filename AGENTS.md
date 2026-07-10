@@ -1,99 +1,66 @@
-# GV Basketball — Agent Runbook
+# GV Basketball — Agent Runbook & Wiki Schema
 
-**Site:** https://gvbasketball.com — WordPress on Hostinger. **Source of truth: `build/`; deploy over SSH.**
-
-| Doc | Purpose |
-|-----|---------|
-| [`PROJECT_LOG.md`](PROJECT_LOG.md) | Technical changelog (append after every change) |
-| [`PROGRESS_LOG.md`](PROGRESS_LOG.md) | Client-facing progress summary (append after every change) |
-| [`docs/`](docs/) | Working handoffs |
+**Site:** https://gvbasketball.com — WordPress on Hostinger.
+**Source of Truth:** `build/` (deployed to server over SSH).
 
 ---
 
-## 1. Connect & deploy
+## 1. Project Wiki (`wiki/`)
 
-```bash
-ssh gvweb   # user u907133977, WP root: /home/u907133977/domains/gvbasketball.com/public_html
+Rather than maintaining monolithic log files, this project uses the **LLM Wiki** pattern. The wiki is a persistent, compounding directory of markdown files containing architectural specifications, design systems, configurations, and workflows.
+
+**Start here:** Refer to the [Wiki Index](file:///Users/rico/Git/gvbasketball/wiki/index.md) (`wiki/index.md`) for the complete catalog of topics:
+
+- **[Changelog](file:///Users/rico/Git/gvbasketball/wiki/log.md) (`wiki/log.md`):** Append to this chronological log after every task completion.
+- **[Access & Hosting](file:///Users/rico/Git/gvbasketball/wiki/access-and-hosting.md) (`wiki/access-and-hosting.md`):** SSH configurations and database snap command references.
+- **[Build Architecture](file:///Users/rico/Git/gvbasketball/wiki/architecture.md) (`wiki/architecture.md`):** Must-Use plugins (`gv-brand.php`, `gv-build.php`, `gv-otp-email.php`) and Astra/Elementor bindings.
+- **[Design System](file:///Users/rico/Git/gvbasketball/wiki/design-system.md) (`wiki/design-system.md`):** Brand colors, font tokens, and the ImageMagick `normalize-photo.sh` CLI workflow.
+- **[Pages Directory](file:///Users/rico/Git/gvbasketball/wiki/pages.md) (`wiki/pages.md`):** Active post IDs, templates, and primary navigation layouts.
+- **[LatePoint Booking](file:///Users/rico/Git/gvbasketball/wiki/booking-latepoint.md) (`wiki/booking-latepoint.md`):** Scheduler settings, active venue periods, and passwordless OTP email authentication.
+- **[Forms & Emails](file:///Users/rico/Git/gvbasketball/wiki/forms-and-emails.md) (`wiki/forms-and-emails.md`):** WPForms inventories, FluentSMTP Google OAuth constants, and Turnstile Modal integration.
+- **[Workflows & Deployment](file:///Users/rico/Git/gvbasketball/wiki/deployment-workflows.md) (`wiki/deployment-workflows.md`):** The "Golden Workflow" (edit locally, SCP to host, run `wp eval-file`, clear cache) and script directory catalog.
+- **[Client Status](file:///Users/rico/Git/gvbasketball/wiki/client-status.md) (`wiki/client-status.md`):** Completed client revisions and open items waiting for Coach Gino's feedback.
+
+---
+
+## 2. Directory Layout & Hygiene
+
+To maintain order and prevent agent confusion, future agents should follow this structured directory layout:
+
+- **`build/`:** Source of truth for custom assets, mu-plugins, templates, and deploy scripts.
+- **`wiki/`:** Compiling documentation, logs, and schemas.
+- **`resources/`:** (Recommended) Grouping of non-deployed items:
+  - `resources/docs/` (formerly `docs/`)
+  - `resources/client-revisions/` (formerly `revisions/`)
+  - `resources/raw-assets/` (formerly `assets/`)
+  - `resources/logos/` (formerly `logo/`)
+  - `resources/backups/` (formerly `backups/`)
+- **Config:** `.git`, `.gitignore`, `.env` at the root.
+
+---
+
+## 3. Wiki Maintenance Operations
+
+As the maintainer of this project, you must keep the wiki healthy and updated:
+
+### A. Chronological Logging
+After every change or task completion, append an entry to [log.md](file:///Users/rico/Git/gvbasketball/wiki/log.md) at the bottom.
+Format:
+```markdown
+## [YYYY-MM-DD] task | <Short Title>
+- **Goal:** Brief sentence describing the goal.
+- **Changes:** Bullet points detailing modified files, enqueued assets, or server-side option variables.
 ```
 
-- WP-CLI available. PHP 8.2. No browser/admin password — drive everything via SSH + WP-CLI.
-- SSH emits a harmless "post-quantum" warning; filter with `2>&1 | grep -v "post-quantum\|store now\|upgraded. See\|vulnerable"`.
-- `wp db export` **fails** on this host. Snapshot tables directly instead: `wp db query "SELECT …" > backup.tsv`.
-- Original full backup: `~/backups/gvbasketball-20260627-015018/`.
+### B. Concept Synchronization
+If a task changes a system configuration (e.g. adding a new page, changing a LatePoint work period, introducing a new CSS class):
+1. Update the code in `build/`.
+2. Locate the corresponding file in `wiki/` (e.g. `wiki/pages.md`, `wiki/booking-latepoint.md`, or `wiki/design-system.md`).
+3. Refine the documentation inside that file to match the new reality.
+4. Update `wiki/index.md` if new pages are added to the wiki.
 
-### Golden workflow
-
-> Edit in `build/` → `scp` to server → apply with `gv_*` helper → flush caches.
-
-```bash
-wp elementor flush-css && wp litespeed-purge all   # after every deploy
-```
-
-**Deploy CSS:** `scp build/mu-plugins/gv-assets/gv-brand.css gvweb:$DOCROOT/wp-content/mu-plugins/gv-assets/gv-brand.css`
-**Deploy page:** `scp build/pages/<page>.html gvweb:~/ && ssh gvweb '… wp eval "echo gv_set_page_html(<ID>, file_get_contents(…));"'`
-**Deploy header/footer/scripts:** `scp` script to `~`, then `wp eval-file ~/<script>.php`.
-
-### Build helpers (`gv-build.php`)
-
-`gv_set_page_html($id,$html)` · `gv_set_page_blocks($id,$blocks)` · `gv_set_theme_part($title,$type,$html)` · `gv_set_theme_part_blocks(…)` · `gv_ensure_page($slug,$title)`.
-
-Deploy scripts: `build/scripts/` — `apply-pages.php`, `build-functional.php`, `build-extras.php`, `build-menu.php`, `deploy-training-programs.php`, `setup-latepoint.php`, `set-kit.php`, `apply-hide.php`.
-
----
-
-## 2. Site structure
-
-### Pages (IDs)
-`/` **2887** · `/about/` **26** · `/training-programs/` **2981** · `/athlete-development/` **2984** · `/success-stories/` **2985** · `/testimonials/` **2986 (draft)** · `/gallery/` **2987** · `/faq/` **2988** · `/book-a-consultation/` **2982** (302 → /training-programs/) · `/booking/` **2983** · `/contact/` **2989** · `/waiver/` **3009**.
-
-### Theme Builder
-- **GV Header** (3002): `build/templates/header.html` — sticky, CSS-only mobile menu, IG icon, orange CTA opens consultation modal.
-- **GV Footer** (2991): `build/templates/footer.html` — newsletter band + 4 columns.
-- Nav menu: `build/scripts/build-menu.php` → Astra `primary` location.
-
-### Design tokens (`gv-brand.css`)
-Navy `#123B78` · Deep Navy `#021F51` · Orange `#F47B20` · Charcoal `#1C1C1E` · Steel `#6B6F76` · Light `#E6E7E9`.
-Fonts: **Bebas Neue** (display), **Montserrat** (UI), **Inter** (body).
-
-### Consultation form (mu-plugin `gv-request-form.php`)
-Global modal injected via `wp_footer` — every "Book a Consultation" CTA uses `data-gv-open-modal`.
-Fields: parent name, player name/age, email, phone/IG, training type, **location** (Dasma/Urdaneta/Corinthian/Any), **day checkboxes** (filtered per location), optional time/notes.
-Anti-abuse: nonce, honeypot, Cloudflare Turnstile. Emails (admin notification + auto-reply) via `wp_mail` / FluentSMTP.
-Page 2981 is owned by `deploy-training-programs.php` only.
-
-### Booking (LatePoint, payments OFF)
-Locations: Dasma Mon/Wed/Thu · Urdaneta Fri/Sun · Corinthian Sun. Shortcodes: `[latepoint_book_form]`, `[latepoint_customer_dashboard]`.
-
-### Member login (passwordless OTP)
-`/booking/` (2983) → LatePoint customer dashboard. OTP over email. Key setting: `notifications_email_processor=wp_mail` (without it, OTP emails are silently disabled).
-
-### Email
-FluentSMTP + Gmail OAuth, sender `info@gvbasketball.com`. Recipient (forms + LatePoint): `gvbasketballcoaching@gmail.com`.
-
-### Forms (WPForms Lite)
-Contact **3003** · Newsletter **3005** · Waiver **3007**. Recipient: `gvbasketballcoaching@gmail.com`.
-
----
-
-## 3. Gotchas
-
-- **Secrets:** never print values. `wp config set` echoes — use `--quiet`. `.env` holds OAuth keys, Cloudflare API token, Turnstile keys.
-- **Cloudflare:** `ssl=strict`, `rocket_loader` OFF (breaks LatePoint/Turnstile/OTP JS). Never add "Cache Everything" rule (booking/OTP must stay dynamic). `.env` token is account-owned → Page Rules API unavailable (error 1011).
-- **SVG uploads:** need Safe SVG plugin + `--user=1`.
-- **Theme Builder:** always update `elementor_pro_theme_builder_conditions` option alongside post meta (deploy scripts do this).
-- **Testimonials:** intentionally hidden (placeholders). To restore: publish 2986, re-add sections + nav links.
-
----
-
-## 4. Conventions
-
-- **Brand voice:** disciplined, confident, developmental. Don't invent stats, named athletes, schools, or testimonials.
-- **Contact:** Instagram only (`@gvbasketballl`, DM: `https://ig.me/m/gvbasketballl`) + email `gvbasketballcoaching@gmail.com`. **No WhatsApp/Facebook.**
-- **Pricing:** never shown publicly — "shared during the consultation." No online payments.
-- **After every change:** update both `PROJECT_LOG.md` and `PROGRESS_LOG.md`, commit (keep `.env` out of git).
-
----
-
-## 5. Knowledge graph (graphify)
-
-Rebuild: `/graphify .` (or `--update` for incremental). Query: `/graphify query "…"`. Output in `graphify-out/` (gitignored).
+### C. Periodic Linting
+Occasionally, scan the wiki to find and reconcile:
+- Contradictory claims between wiki pages.
+- Stale instructions or dead file paths.
+- Broken markdown cross-references.
