@@ -384,6 +384,13 @@ This is the chronological log of all tasks, updates, and releases completed on t
 - **Changes:**
   - Added git remote named `fork` pointing to `https://github.com/gvwebsites/gvbasketball.git` per user's specifications.
 
+## [2026-07-10] fix | Restore Book a Consultation CTAs
+- **Goal:** Repair in-page consultation CTAs that still used the retired email-modal attribute.
+- **Changes:**
+  - Migrated the 11 affected body CTAs across Home, About, Athlete Development, Gallery, FAQ, Success Stories, and Testimonials to `data-gv-consultation` with `role="button"`.
+  - Extended the GV Members contract test to prohibit `data-gv-open-modal` in all seven page sources.
+  - Deployed Home, the six mapped marketing pages, and the Contact CTA widget only; cleared Elementor element-cache metadata, Elementor CSS, and LiteSpeed caches.
+  - Verified live markup counts and the hero, program-card, and header venue-chooser flows; documented the required WordPress-root `cd` in deployment commands.
 
 ## [2026-07-10] task | Consultation CTA and Summary cleanup
 - **Goal:** Make the available-day consultation action more obvious and remove the unused LatePoint Summary panel.

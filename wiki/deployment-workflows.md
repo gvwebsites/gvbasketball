@@ -33,13 +33,13 @@ Page content is enqueued inside Elementor text widgets so pages look clean but r
 scp build/pages/home.html gvweb:~/
 
 # 2. Execute gv_set_page_html() helper via WP-CLI on server
-ssh gvweb 'wp eval "echo gv_set_page_html(2887, file_get_contents(\"/home/u907133977/home.html\"));"'
+ssh gvweb 'cd /home/u907133977/domains/gvbasketball.com/public_html && wp eval "echo gv_set_page_html(2887, file_get_contents(\"/home/u907133977/home.html\"));"'
 
 # 3. Clean up the uploaded temp file on server
 ssh gvweb 'rm ~/home.html'
 
 # 4. Flush caches
-ssh gvweb 'wp elementor flush-css && wp litespeed-purge all'
+ssh gvweb 'cd /home/u907133977/domains/gvbasketball.com/public_html && wp elementor flush-css && wp litespeed-purge all'
 ```
 
 ---
@@ -52,7 +52,7 @@ Rather than running commands manually, the repository contains server-executable
 Upload the script to the home folder on the server, execute it via WP-CLI `eval-file`, and delete it:
 ```bash
 scp build/scripts/apply-pages.php gvweb:~/
-ssh gvweb 'wp eval-file ~/apply-pages.php && rm ~/apply-pages.php'
+ssh gvweb 'cd /home/u907133977/domains/gvbasketball.com/public_html && wp eval-file ~/apply-pages.php && rm ~/apply-pages.php'
 ```
 
 ### Script Catalog
@@ -80,7 +80,7 @@ If changes do not render immediately on the browser:
 
 1. **Clear server-side caches:**
    ```bash
-   ssh gvweb 'wp elementor flush-css && wp litespeed-purge all'
+   ssh gvweb 'cd /home/u907133977/domains/gvbasketball.com/public_html && wp elementor flush-css && wp litespeed-purge all'
    ```
 2. **Clear Cloudflare edge cache (if needed):**
    Run the Purge Cache command inside Gino's Cloudflare console or send a POST request to Cloudflare API (requires zone ID and token, stored in the repo-root `.env` — read locally, never commit or print values). Note that token limitations exist, so manual console purge is preferred if API fails with unauthorized error.

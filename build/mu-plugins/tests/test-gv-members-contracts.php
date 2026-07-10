@@ -1422,6 +1422,13 @@ check('legacy plugin: no [gv_request_form] shortcode registration',
     strpos($legacy_plugin_src, 'add_shortcode') === false);
 
 $legacy_page_sources = [
+    'home.html'                    => __DIR__ . '/../../pages/home.html',
+    'about.html'                   => __DIR__ . '/../../pages/about.html',
+    'athlete-development.html'     => __DIR__ . '/../../pages/athlete-development.html',
+    'gallery.html'                 => __DIR__ . '/../../pages/gallery.html',
+    'faq.html'                     => __DIR__ . '/../../pages/faq.html',
+    'success-stories.html'         => __DIR__ . '/../../pages/success-stories.html',
+    'testimonials.html'            => __DIR__ . '/../../pages/testimonials.html',
     'training-programs.html'       => __DIR__ . '/../../pages/training-programs.html',
     'deploy-training-programs.php' => __DIR__ . '/../../scripts/deploy-training-programs.php',
     'build-functional.php'         => __DIR__ . '/../../scripts/build-functional.php',
