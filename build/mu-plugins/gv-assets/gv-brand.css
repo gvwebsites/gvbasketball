@@ -113,43 +113,6 @@ body .site-content .ast-container,body #primary{margin-left:0;margin-right:0;}
 .gv-hero__inner--center .gv-btn-row{justify-content:center;}
 @media(max-width:782px){.gv-hero--home{min-height:58vh;}.gv-hero__inner--center{padding:48px 0;}}
 
-/* Site-wide hero reveal — the hero pins in place while the page scrolls, and every
-   following section rises up and covers it. The hero content (eyebrow, headline,
-   rule, lead, buttons) stays COMPLETELY FIXED in the viewport, then disappears
-   behind the next section's opaque background — a calm "curtain" reveal.
-   Pure CSS position:sticky (supported everywhere, incl. Firefox — no scroll-timeline
-   needed). The following siblings are lifted above the pinned hero so their solid
-   backgrounds mask it; without the z-index the static sections would paint *under*
-   the positioned hero and it would show through. The hero keeps overflow:hidden so
-   its own content never spills past its box. Gated to motion-safe — reduced-motion
-   users get a normal static scroll where the hero simply scrolls away. */
-@media (prefers-reduced-motion: no-preference){
-  .gv-hero{position:sticky;top:0;z-index:0;}
-  .gv-hero ~ *{position:relative;z-index:1;}
-
-  /* Progressive "dissolve" of the pinned hero content as the next section rises up
-     to cover it: the content (eyebrow, headline, rule, lead, buttons) blurs, fades,
-     and drifts gently upward instead of being flatly masked. Pure CSS scroll-driven
-     animation tied to document scroll position — NO JavaScript. Driven off scroll()
-     rather than view() because the hero is sticky-pinned (a view() timeline would
-     stall while the subject sits still in the viewport). The range is measured in
-     viewport units so the dissolve completes just as the next section engulfs the
-     centered home hero content (~64vh tall). Gated behind @supports so browsers
-     without scroll-driven animations (e.g. Firefox) keep the clean curtain reveal
-     above, fully intact — graceful degradation, never a broken hero. */
-  @supports (animation-timeline: scroll()){
-    @keyframes gv-hero-dissolve{
-      to{filter:blur(10px);opacity:0;transform:translateY(-24px);}
-    }
-    .gv-hero__inner{
-      animation:gv-hero-dissolve linear both;
-      animation-timeline:scroll(root block);
-      animation-range:0 50vh;
-      will-change:filter,opacity,transform;
-    }
-  }
-}
-
 /* ---------- Grid ---------- */
 .gv-grid{display:grid;gap:26px;}
 .gv-grid--2{grid-template-columns:repeat(2,1fr);}
