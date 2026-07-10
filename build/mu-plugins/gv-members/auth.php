@@ -60,16 +60,16 @@ function gv_otp_request_handler() {
         wp_send_json_error(['message' => 'Too many requests. Please try again later.']);
     }
 
-    // Call LatePoint generateAndSendOTP
+    // Call LatePoint generateAndSendOTP. It returns WP_Error on failure —
+    // WP_Error is truthy, so the check must be is_wp_error(), never boolean.
     if (class_exists('OsOTPHelper')) {
         $result = OsOTPHelper::generateAndSendOTP($email, 'email', 'email');
-        if ($result) {
+        if (!is_wp_error($result)) {
             set_transient($email_transient, $email_count + 1, HOUR_IN_SECONDS);
             set_transient($ip_transient, $ip_count + 1, HOUR_IN_SECONDS);
-            wp_send_json_success(['message' => 'If the address can receive mail, a six-digit code is on its way.']);
-        } else {
-            wp_send_json_error(['message' => 'Failed to send verification code. Please try again.']);
         }
+        // Same generic response for every outcome — no account enumeration.
+        wp_send_json_success(['message' => 'If the address can receive mail, a six-digit code is on its way.']);
     } else {
         wp_send_json_error(['message' => 'Authentication service is currently unavailable.']);
     }
@@ -97,8 +97,13 @@ function gv_otp_verify_handler() {
         wp_send_json_error(['message' => 'Enter verification code.']);
     }
 
-    // Call LatePoint verifyOTP
-    if (!class_exists('OsOTPHelper') || !OsOTPHelper::verifyOTP($otp_code, $email, 'email', 'email')) {
+    // Call LatePoint verifyOTP. On success it returns ['status' => 'success', ...];
+    // on failure it returns WP_Error, which is truthy — check explicitly.
+    if (!class_exists('OsOTPHelper')) {
+        wp_send_json_error(['message' => 'Authentication service is currently unavailable.']);
+    }
+    $verified = OsOTPHelper::verifyOTP($otp_code, $email, 'email', 'email');
+    if (is_wp_error($verified) || !is_array($verified) || ($verified['status'] ?? '') !== 'success') {
         wp_send_json_error(['message' => 'Invalid or expired verification code.']);
     }
 

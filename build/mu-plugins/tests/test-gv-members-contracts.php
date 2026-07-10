@@ -174,8 +174,14 @@ function wp_remote_post($url, $args = []) {
     ];
 }
 
+if (!class_exists('WP_Error')) {
+    class WP_Error {
+        public $code; public $message;
+        public function __construct($code = '', $message = '') { $this->code = $code; $this->message = $message; }
+    }
+}
 function is_wp_error($thing) {
-    return false;
+    return $thing instanceof WP_Error;
 }
 
 function wp_remote_retrieve_body($response) {
@@ -485,12 +491,17 @@ if (!class_exists('OsCustomerModel')) {
 if (!class_exists('OsOTPHelper')) {
     class OsOTPHelper {
         public static $last_sent = [];
+        // Real LatePoint semantics: WP_Error on failure (truthy!), array with
+        // status 'success' on verified, true-ish on sent.
         public static function generateAndSendOTP($email, $type, $method) {
             self::$last_sent = [$email, $type, $method];
             return true;
         }
         public static function verifyOTP($code, $email, $type = 'email', $method = 'email') {
-            return $code === '123456';
+            if ($code === '123456') {
+                return ['status' => 'success', 'contact_value' => $email];
+            }
+            return new WP_Error('otp_generation_error', 'Invalid Code');
         }
     }
 }
