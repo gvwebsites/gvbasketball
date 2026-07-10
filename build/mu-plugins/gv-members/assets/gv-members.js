@@ -2,80 +2,94 @@
  * GV Members Integration Client-side Script
  */
 jQuery(document).ready(function($) {
-    // Intercept clicks on links pointing to /book-a-consultation/
-    // or elements with data-gv-consultation attribute
+    // Consultation CTA bridge. CTAs carry data-gv-consultation (legacy links to
+    // /book-a-consultation/ are also intercepted). With multiple venues, the GV
+    // venue chooser opens first; picking a venue fires the hidden LatePoint
+    // trigger preset to that location, so the wizard's availability and
+    // booking.location_id are venue-scoped.
+    function gvOpenVenueChooser() {
+        $('#gv-venue-chooser').removeAttr('hidden');
+        $('#gv-venue-chooser .gv-venue-option').first().trigger('focus');
+    }
+
+    function gvCloseVenueChooser() {
+        $('#gv-venue-chooser').attr('hidden', 'hidden');
+    }
+
     $(document).on('click', 'a[href*="/book-a-consultation/"], [data-gv-consultation]', function(e) {
         // Skip right clicks, cmd/ctrl clicks, or if targeting another window
         if (e.which > 1 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) {
             return;
         }
 
-        var $trigger = $('#gv-consult-trigger .os_trigger_booking');
-        if ($trigger.length) {
-            e.preventDefault();
-            $trigger.first().trigger('click');
+        var $triggers = $('#gv-consult-trigger .os_trigger_booking');
+        if (!$triggers.length) {
+            return;
+        }
+        e.preventDefault();
+
+        if ($('#gv-venue-chooser').length) {
+            gvOpenVenueChooser();
+        } else {
+            $triggers.first().trigger('click');
         }
     });
 
-    // Theme day-only selection UI logic
+    $(document).on('click', '#gv-venue-chooser .gv-venue-option', function() {
+        var venueId = $(this).attr('data-gv-venue');
+        gvCloseVenueChooser();
+        $('#gv-consult-trigger [data-gv-venue-trigger="' + venueId + '"] .os_trigger_booking')
+            .first().trigger('click');
+    });
+
+    $(document).on('click', '#gv-venue-chooser [data-gv-venue-close]', function() {
+        gvCloseVenueChooser();
+    });
+
+    $(document).on('keydown', function(e) {
+        if (e.key === 'Escape' && $('#gv-venue-chooser').length && !$('#gv-venue-chooser').attr('hidden')) {
+            gvCloseVenueChooser();
+        }
+    });
+
+    // Theme day-only selection UI logic.
+    // LatePoint 5.6.6 renders each slot as `.timeslots .dp-timebox[data-minutes]`
+    // containing `.dp-label > .dp-label-time` (e.g. "08:00 am") and a `.dp-tick`
+    // ("8 am"). We keep data-minutes untouched (the wizard still submits the real
+    // start_time) and only rewrite the visible text to "Request this day".
     function gvMembersUpdateUI() {
-        // Find LatePoint time slot label elements and replace their visible text
-        var slotSelectors = [
-            '.slot-time',
-            '.time-slot',
-            '.lp-time-slot',
-            '.os-time-slot',
-            '.time-slot-time',
-            '.lp-slot-time',
-            '.os-slot-time',
-            '.latepoint-time-slot',
-            '.latepoint-slot-time',
-            '.time-slots .slot-time-w',
-            '.time-slots .slot-time',
-            '.time-slot-option',
-            '.os-time-option'
-        ];
-
-        slotSelectors.forEach(function(sel) {
-            $(sel).each(function() {
-                var $this = $(this);
-                // Keep nominal data but replace visible label
-                var trimmed = $this.text().trim();
-                if (trimmed !== '' && trimmed !== 'Request this day' && !trimmed.match(/^Request this day/)) {
-                    // Store original text if we ever need it
-                    if (!$this.attr('data-original-time')) {
-                        $this.attr('data-original-time', trimmed);
-                    }
-                    $this.text('Request this day');
-                }
-            });
+        // Slot grid: relabel the visible time on each pickable timebox.
+        $('.timeslots .dp-timebox').each(function() {
+            var $box = $(this);
+            var $time = $box.find('.dp-label-time');
+            if ($time.length && $time.text().trim() !== 'Request this day') {
+                $time.text('Request this day');
+            }
+            // The compact tick label ("8 am") also leaks the nominal time.
+            $box.find('.dp-tick').css('visibility', 'hidden');
         });
 
-        // Also handle the selected time in review/summary step or step header
-        var summarySelectors = [
-            '.selected-time',
-            '.booking-time',
-            '.summary-time',
-            '.lp-selected-time',
-            '.os-selected-time',
-            '.lp-summary-time',
-            '.review-time',
-            '.step-review-time',
-            '.review-booking-time'
-        ];
-
-        summarySelectors.forEach(function(sel) {
-            $(sel).each(function() {
-                var $this = $(this);
-                var trimmed = $this.text().trim();
-                if (trimmed !== '' && trimmed !== 'Request this day') {
-                    $this.text('Request this day');
-                }
-            });
+        // Any already-selected time echoed in the summary/side panel.
+        $('.summary-item-time, .os-selected-slot, .dp-selected-time').each(function() {
+            var $this = $(this);
+            if ($this.text().trim() !== '' && $this.text().trim() !== 'Request this day') {
+                $this.text('Request this day');
+            }
         });
 
-        // Add coordination note in time/date selection step
-        var $timeContainer = $('.step-time-slots, .time-slots, .time-slots-w, .latepoint-time-slots, .os-time-slots-w');
+        // The wizard summary highlights the picked slot as "July 15, 03:00pm";
+        // the nominal time stays internal while the request is pending, so strip
+        // the time portion and keep just the day.
+        $('.sbc-highlighted-item').each(function() {
+            var $this = $(this);
+            var stripped = $this.text().replace(/,?\s*\d{1,2}:\d{2}\s*(am|pm)\b/i, '');
+            if (stripped !== $this.text()) {
+                $this.text(stripped);
+            }
+        });
+
+        // Coordination note under the slot grid.
+        var $timeContainer = $('.timeslots').last();
         if ($timeContainer.length && !$('#gv-coordination-note').length) {
             $timeContainer.after(
                 '<div id="gv-coordination-note" class="gv-info-note">' +
@@ -84,18 +98,27 @@ jQuery(document).ready(function($) {
             );
         }
 
-        // Add coordination note in review step if visible
-        var $reviewContainer = $('.step-review, .lp-step-review, .os-step-review, .booking-review, .latepoint-booking-summary');
-        if ($reviewContainer.length && !$('#gv-coordination-note-review').length) {
-            $reviewContainer.append(
-                '<div id="gv-coordination-note-review" class="gv-info-note">' +
-                'Coach Gino will coordinate the exact 45-minute time after reviewing your request.' +
-                '</div>'
-            );
-        // Prefill/lock native contact fields if logged in
+        // Explicitly render Turnstile widgets that arrive via LatePoint's AJAX
+        // step loads: api.js implicit rendering only scans the DOM when the
+        // script first loads, so a container inserted later stays empty (and
+        // the request would fail the server-side security check).
+        if (window.turnstile && typeof window.turnstile.render === 'function') {
+            $('.cf-turnstile').each(function() {
+                if (!this.hasChildNodes() && !$(this).data('gvTurnstileRendered')) {
+                    $(this).data('gvTurnstileRendered', true);
+                    try {
+                        window.turnstile.render(this);
+                    } catch (err) {
+                        // Already rendered or container not ready; ignore.
+                    }
+                }
+            });
+        }
+
+        // Prefill/lock native contact fields if logged in.
         if (window.gvMembers && gvMembers.isLoggedIn) {
-            var select = 'input[name="customer[first_name]"], input[name="customer[last_name]"], input[name="customer[email]"], input.lp-customer-email, input.lp-customer-first-name, input.lp-customer-last-name';
-            $(select).prop('readonly', true).addClass('gv-locked-field');
+            var lockSel = 'input[name="customer[first_name]"], input[name="customer[last_name]"], input[name="customer[email]"], input.lp-customer-email, input.lp-customer-first-name, input.lp-customer-last-name';
+            $(lockSel).prop('readonly', true).addClass('gv-locked-field');
         }
     }
 
@@ -109,16 +132,23 @@ jQuery(document).ready(function($) {
         }
     });
 
-    // Setup MutationObserver on LatePoint wizard container to watch for dynamic DOM updates
-    var observerTarget = document.querySelector('.latepoint-w') || document.body;
-    if (observerTarget) {
-        var observer = new MutationObserver(function(mutations) {
-            gvMembersUpdateUI();
+    // Watch for LatePoint's dynamic DOM updates (calendar days, slot grids, step
+    // transitions). Observe document.body, NOT .latepoint-w: LatePoint replaces
+    // its own container's contents between steps, which would orphan an observer
+    // bound to .latepoint-w and silently stop the day-only theming. A body-level
+    // subtree observer survives every re-render. Debounced via setTimeout, NOT
+    // requestAnimationFrame: rAF never fires in hidden/background tabs, which
+    // permanently wedges a "scheduled" flag and silently stops all updates.
+    if (document.body) {
+        var gvUpdateTimer = null;
+        var observer = new MutationObserver(function() {
+            if (gvUpdateTimer) { return; }
+            gvUpdateTimer = setTimeout(function() {
+                gvUpdateTimer = null;
+                gvMembersUpdateUI();
+            }, 50);
         });
-        observer.observe(observerTarget, {
-            childList: true,
-            subtree: true
-        });
+        observer.observe(document.body, { childList: true, subtree: true });
     }
 
     // Double Submission Defense: Disable buttons while request is in-flight
@@ -128,8 +158,6 @@ jQuery(document).ready(function($) {
             var $buttons = $('.latepoint-w button, .latepoint-w .latepoint-btn, .latepoint-w .os-next-btn, .latepoint-w .os-verify-btn, .latepoint-w .os-submit-btn');
             $buttons.addClass('gv-disabled').prop('disabled', true);
         }
-    });
-
     });
 
     // ==================== OTP PORTAL AUTHENTICATION FLOW ====================

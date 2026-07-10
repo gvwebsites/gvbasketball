@@ -6,7 +6,7 @@ $cta = <<<'HTML'
 <h2 class="gv-section-title">Ready To Build A Better Player?</h2>
 <p class="gv-lead">Book a consultation and we'll map out the right path for your athlete.</p>
 <div class="gv-btn-row" style="justify-content:center;">
-<a class="gv-btn gv-btn--gold" href="/book-a-consultation/" data-gv-consultation>Book a Consultation</a>
+<a class="gv-btn gv-btn--gold" href="#" role="button" data-gv-consultation>Book a Consultation</a>
 <a class="gv-btn gv-btn--ghost" href="https://ig.me/m/gvbasketballl" target="_blank" rel="noopener">Message on Instagram</a>
 </div></div></div></section></div>
 HTML;
@@ -100,7 +100,7 @@ $booking_flow = '<section class="gv-section gv-section--light"><div class="gv-wr
 <p class="gv-flow__note">Payments are handled directly with GV Basketball — no payment or bank details are collected on this website.</p>
 </div></section>';
 
-// NOTE: Page 2982 (/book-a-consultation/) is the fallback page rendering the native wizard.
+// NOTE: Page 2982 (/book-a-consultation/) is retired (draft-only); booking is modal-only now.
 echo gv_set_page_blocks(2982, array(
   array('type'=>'html','content'=>$book_a),
   array('type'=>'html','content'=>$booking_flow),
@@ -117,7 +117,7 @@ $port_a = <<<'HTML'
 <h1 class="gv-h1">Members Portal</h1>
 <div class="gv-hero__rule" style="margin-top:24px;"></div>
 <p class="gv-lead">Log in to view your consultation schedule and session history. Need to change a day? Just message us and the team will take care of it. New here? Start with a consultation.</p>
-<div class="gv-btn-row"><a class="gv-btn gv-btn--primary" href="/book-a-consultation/" data-gv-consultation>Book a Consultation</a></div>
+<div class="gv-btn-row"><a class="gv-btn gv-btn--primary" href="#" role="button" data-gv-consultation>Book a Consultation</a></div>
 </div></div></section>
 </div>
 HTML;

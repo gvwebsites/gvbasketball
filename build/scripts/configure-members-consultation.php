@@ -66,4 +66,42 @@ foreach (['Private Training', 'Small Group Training', 'Elite Performance'] as $p
     }
 }
 
+// NOTE on venues: the wizard's `booking__locations` step is a LatePoint PRO
+// addon feature. Core strips it from the saved step order on the next request
+// (cleanup_steps vs get_step_codes_with_rules), so it CANNOT be enabled here.
+// Venue selection is instead handled by gv-members.php: one hidden
+// [latepoint_book_button selected_location=N] trigger per active venue behind
+// a GV venue chooser (see gv_members_hidden_booking_trigger). The
+// `selected_location` preset sets booking.location_id (fixes "Location Id can
+// not be blank") and scopes availability to that venue's 15:00-18:00 work
+// period, which with timeblock_interval=180 yields exactly one public
+// "Request this day" slot per day.
+$steps_settings = OsSettingsHelper::get_settings_value('steps_settings', []);
+if (is_array($steps_settings) && isset($steps_settings['booking__locations'])) {
+    unset($steps_settings['booking__locations']);
+    OsSettingsHelper::save_setting_by_name('steps_settings', $steps_settings);
+}
+
+// Disable the default (agent-wide) weekly schedule so availability comes ONLY
+// from venue-specific work periods (15:00-18:00 on each venue's days).
+// LatePoint falls back to the default schedule for any weekday that has no
+// location-specific row, which would expose 8:00-17:00 slots (3 per day) at
+// venues that are closed that day. A zero-length period (start == end) is
+// LatePoint's "day off".
+if (class_exists('OsWorkPeriodModel')) {
+    $default_periods = (new OsWorkPeriodModel())
+        ->where(['agent_id' => 0, 'service_id' => 0, 'location_id' => 0])
+        ->get_results_as_models();
+    if ($default_periods && !is_array($default_periods)) {
+        $default_periods = [$default_periods];
+    }
+    foreach ((array) $default_periods as $period) {
+        if ((int) $period->start_time !== 0 || (int) $period->end_time !== 0) {
+            $period->start_time = 0;
+            $period->end_time = 0;
+            $period->save();
+        }
+    }
+}
+
 printf("consultation=%d duration=%d interval=%d status=%s\n", $service->id, $service->duration, $service->timeblock_interval, $service->override_default_booking_status);

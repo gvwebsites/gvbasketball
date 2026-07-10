@@ -510,3 +510,106 @@
     display: none;
 }
 
+
+/* ==================== Venue chooser dialog ==================== */
+/* Venue choice happens before the LatePoint wizard opens because the
+   booking__locations wizard step is a PRO-only feature. */
+
+.gv-venue-chooser {
+    position: fixed;
+    inset: 0;
+    z-index: 100000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.gv-venue-chooser[hidden] {
+    display: none;
+}
+
+.gv-venue-chooser-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.65);
+}
+
+.gv-venue-chooser-card {
+    position: relative;
+    background: var(--gv-brand-white);
+    border-radius: 12px;
+    padding: 28px 24px;
+    max-width: 420px;
+    width: 100%;
+    box-shadow: 0 20px 50px rgba(15, 23, 42, 0.35);
+    text-align: center;
+}
+
+.gv-venue-chooser-card h3 {
+    margin: 0 0 8px;
+    color: var(--gv-brand-navy);
+    font-size: 22px;
+}
+
+.gv-venue-chooser-card p {
+    margin: 0 0 20px;
+    color: var(--gv-brand-dark-gray);
+    font-size: 14px;
+}
+
+.gv-venue-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.gv-venue-option {
+    min-height: 48px;
+    border: 2px solid var(--gv-brand-navy);
+    border-radius: 8px;
+    background: var(--gv-brand-white);
+    color: var(--gv-brand-navy);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.gv-venue-option:hover,
+.gv-venue-option:focus-visible {
+    background: var(--gv-brand-orange);
+    border-color: var(--gv-brand-orange);
+    color: var(--gv-brand-white);
+}
+
+.gv-venue-cancel {
+    min-height: 44px;
+    border: 0;
+    background: none;
+    color: var(--gv-brand-dark-gray);
+    font-size: 14px;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.gv-venue-chooser :focus-visible {
+    outline: 3px solid var(--gv-brand-orange);
+    outline-offset: 2px;
+}
+
+/* ==================== Hide wizard pricing ==================== */
+/* The consultation is a free request; suppress every Cost Breakdown /
+   Total Price surface in the LatePoint wizard (inline and lightbox). */
+
+.latepoint-w .summary-price-breakdown-wrapper,
+.latepoint-w .summary-price-item-w,
+.latepoint-w .spi-price,
+.latepoint-w .price-breakdown-unfold,
+.latepoint-lightbox-w .summary-price-breakdown-wrapper,
+.latepoint-lightbox-w .summary-price-item-w,
+.latepoint-lightbox-w .spi-price,
+.latepoint-lightbox-w .price-breakdown-unfold {
+    display: none !important;
+}

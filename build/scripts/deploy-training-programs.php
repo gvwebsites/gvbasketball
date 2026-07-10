@@ -1,10 +1,9 @@
 <?php
 /**
  * Deploy training-programs page (2981) as a single HTML block.
- * The old email-only consultation modal (shortcode widget and open-modal
- * triggers) is retired: every "Book a Consultation" CTA is a crawlable
- * /book-a-consultation/ link with data-gv-consultation, which gv-members.js
- * bridges into the native LatePoint wizard.
+ * Booking is modal-only: every "Book a Consultation" CTA is an href="#"
+ * placeholder with data-gv-consultation, which gv-members.js bridges into
+ * the native LatePoint wizard. /book-a-consultation/ is retired.
  *
  * Run: scp build/scripts/deploy-training-programs.php gvweb:~/
  * Then: ssh gvweb 'cd /home/u907133977/domains/gvbasketball.com/public_html && wp eval-file ~/deploy-training-programs.php && wp elementor flush-css && wp litespeed-purge all && rm ~/deploy-training-programs.php'

@@ -538,6 +538,18 @@ if (!class_exists('OsLocationModel')) {
         public $name = 'Dasma, Makati';
         public function __construct($id = null) {}
         public function is_new_record() { return false; }
+        public function should_be_active() { return $this; }
+        public function get_results_as_models() {
+            $venues = [[1, 'Dasma, Makati'], [2, 'Urdaneta Village'], [3, 'Corinthian Gardens']];
+            $models = [];
+            foreach ($venues as $v) {
+                $loc = new OsLocationModel();
+                $loc->id = $v[0];
+                $loc->name = $v[1];
+                $models[] = $loc;
+            }
+            return $models;
+        }
     }
 }
 
@@ -663,7 +675,25 @@ if (file_exists($consultation_script)) {
     gv_assert_contains('require_otp_for_new_contacts', $content, 'consultation script requires OTP for new contacts');
     gv_assert_contains('/members/', $content, 'consultation script redirects dashboard/login to /members/');
     gv_assert_contains('Private Training', $content, 'consultation script hides paid services');
+    gv_assert_not_contains('step_codes_in_order', $content, 'consultation script does not fight LatePoint step-order cleanup (locations step is PRO-only)');
+    gv_assert_contains('OsWorkPeriodModel', $content, 'consultation script zeroes the default schedule so only venue periods drive availability');
 }
+
+// Venue triggers: one hidden LatePoint trigger per active venue + a GV venue
+// chooser, since the booking__locations wizard step is a PRO addon feature.
+ob_start();
+gv_members_hidden_booking_trigger();
+$trigger_html = ob_get_clean();
+gv_assert_contains('id="gv-consult-trigger"', $trigger_html, 'hidden trigger container renders');
+gv_assert_contains('selected_location="1"', $trigger_html, 'trigger preset for venue 1');
+gv_assert_contains('selected_location="2"', $trigger_html, 'trigger preset for venue 2');
+gv_assert_contains('selected_location="3"', $trigger_html, 'trigger preset for venue 3');
+gv_assert_contains('data-gv-venue-trigger="2"', $trigger_html, 'venue trigger wrappers are addressable by location id');
+gv_assert_contains('id="gv-venue-chooser"', $trigger_html, 'venue chooser dialog renders');
+gv_assert_contains('data-gv-venue="3"', $trigger_html, 'venue chooser has an option per venue');
+gv_assert_contains('Dasma, Makati', $trigger_html, 'venue chooser shows venue names');
+gv_assert_contains('role="dialog"', $trigger_html, 'venue chooser is an accessible dialog');
+gv_assert_contains('selected_service="7"', $trigger_html, 'triggers preset the consultation service');
 
 if (file_exists($members_page_script)) {
     $content = file_get_contents($members_page_script);
@@ -674,7 +704,8 @@ if (file_exists($members_page_script)) {
 if (file_exists($consult_page_script)) {
     $content = file_get_contents($consult_page_script);
     gv_assert_not_contains('TRUNCATE', $content, 'consultation page script does not contain TRUNCATE');
-    gv_assert_contains('latepoint_book_form', $content, 'consultation page script contains native booking form shortcode');
+    gv_assert_not_contains('latepoint_book_form', $content, 'consultation page script no longer installs the booking form (modal-only)');
+    gv_assert_contains("'post_status' => 'draft'", $content, 'consultation page script drafts page 2982');
 }
 
 // ==================== TASK 3 CONTRACT TESTS ====================
@@ -857,8 +888,10 @@ check('latepoint_process_step has priority 20 persistence handler', $has_step_pr
 $booking = new OsBookingModel();
 $booking->service_id = 7; // Player Consultation
 
+// LatePoint fires this hook as do_action('latepoint_booking_steps_contact_after',
+// $customer, $booking) — customer FIRST, booking SECOND.
 ob_start();
-gv_members_booking_fields($booking);
+gv_members_booking_fields(null, $booking);
 $output = ob_get_clean();
 
 gv_assert_contains('name="gv_consult[player_name]"', $output, 'fields render player_name input');
@@ -1312,7 +1345,7 @@ gv_assert_contains('REFA2', $change_mailto, 'change email contains booking refer
 // ==================== TASK 9 CONTRACT TESTS ====================
 // The old email-only consultation modal is retired: gv-request-form.php keeps
 // compatibility helpers only, and every public entry point routes through the
-// native LatePoint wizard (crawlable /book-a-consultation/ + data-gv-consultation).
+// native LatePoint wizard modal (data-gv-consultation; /book-a-consultation/ retired).
 
 $legacy_plugin_src = file_get_contents(__DIR__ . '/../gv-request-form.php');
 check('legacy plugin: no admin_post_nopriv_gv_request_form registration',
@@ -1336,27 +1369,39 @@ foreach ($legacy_page_sources as $name => $path) {
     gv_assert_not_contains('data-gv-open-modal', $src, "source $name: no data-gv-open-modal trigger");
 }
 
-// Training Programs CTAs stay crawlable and bridge to the native wizard.
+// Training Programs CTAs are modal-only: data-gv-consultation with no
+// /book-a-consultation/ page link.
 $tp_src = file_get_contents(__DIR__ . '/../../pages/training-programs.html');
-gv_assert_contains('href="/book-a-consultation/" data-gv-consultation', $tp_src,
-    'training-programs CTAs are crawlable and carry data-gv-consultation');
+gv_assert_contains('data-gv-consultation', $tp_src,
+    'training-programs CTAs carry data-gv-consultation');
+gv_assert_not_contains('href="/book-a-consultation/"', $tp_src,
+    'training-programs CTAs no longer link to the retired /book-a-consultation/ page');
 
-// Header/footer source templates: member links go to /members/, book links stay
-// crawlable at /book-a-consultation/ with the data-gv-consultation bridge.
+// Header/footer source templates: member links go to /members/, consultation
+// CTAs are modal-only (data-gv-consultation, no /book-a-consultation/ link).
 $header_src = file_get_contents(__DIR__ . '/../../templates/header.html');
 $footer_src = file_get_contents(__DIR__ . '/../../templates/footer.html');
 
 gv_assert_contains('href="/members/"', $header_src, 'header: member link points to /members/');
 gv_assert_not_contains('href="/booking/"', $header_src, 'header: no legacy /booking/ member link');
-gv_assert_contains('href="/book-a-consultation/" data-gv-consultation', $header_src,
-    'header: consultation CTA is crawlable and carries data-gv-consultation');
+gv_assert_contains('data-gv-consultation', $header_src,
+    'header: consultation CTA carries data-gv-consultation');
+gv_assert_not_contains('href="/book-a-consultation/"', $header_src,
+    'header: no link to the retired /book-a-consultation/ page');
 gv_assert_not_contains('data-gv-open-modal', $header_src, 'header: no data-gv-open-modal trigger');
 
 gv_assert_contains('href="/members/"', $footer_src, 'footer: member link points to /members/');
 gv_assert_not_contains('href="/booking/"', $footer_src, 'footer: no legacy /booking/ member link');
-gv_assert_contains('href="/book-a-consultation/" data-gv-consultation', $footer_src,
-    'footer: consultation CTA is crawlable and carries data-gv-consultation');
+gv_assert_contains('data-gv-consultation', $footer_src,
+    'footer: consultation CTA carries data-gv-consultation');
+gv_assert_not_contains('href="/book-a-consultation/"', $footer_src,
+    'footer: no link to the retired /book-a-consultation/ page');
 gv_assert_not_contains('data-gv-open-modal', $footer_src, 'footer: no data-gv-open-modal trigger');
+
+// The retired /book-a-consultation path 301s via gv_members_legacy_redirect.
+$members_plugin_src = file_get_contents(__DIR__ . '/../gv-members.php');
+gv_assert_contains("'/book-a-consultation'", $members_plugin_src,
+    'gv-members.php: legacy redirect covers /book-a-consultation');
 
 echo $failures ? "\n$failures FAILED\n" : "\nALL PASS\n";
 exit($failures ? 1 : 0);

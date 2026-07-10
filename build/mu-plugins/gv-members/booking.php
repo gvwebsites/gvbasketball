@@ -10,15 +10,17 @@ defined('LATEPOINT_STATUS_ERROR') || define('LATEPOINT_STATUS_ERROR', 'error');
 // Register wizard field hooks.
 // latepoint_process_step is a do_action with 3 args: ($step_code, $booking_object, $params) —
 // see latepoint/lib/controllers/steps_controller.php. Core handler runs at priority 10.
-add_action('latepoint_booking_steps_contact_after', 'gv_members_booking_fields', 10, 1);
+add_action('latepoint_booking_steps_contact_after', 'gv_members_booking_fields', 10, 2);
 add_action('latepoint_process_step', 'gv_members_process_step_validation', 1, 3);
 add_action('latepoint_process_step', 'gv_members_process_step_persistence', 20, 3);
 add_action('latepoint_booking_created', 'gv_members_booking_created_handler', 5, 1);
 
 /**
  * Render custom fields on the LatePoint contact step for Player Consultation.
+ * LatePoint fires this hook as ($customer, $booking) — booking is the 2nd arg
+ * (see latepoint/lib/views/steps/partials/_contact_form.php).
  */
-function gv_members_booking_fields($booking) {
+function gv_members_booking_fields($customer, $booking = null) {
     if (!is_object($booking) || empty($booking->service_id)) {
         return;
     }

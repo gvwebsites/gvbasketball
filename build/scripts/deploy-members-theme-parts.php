@@ -18,4 +18,12 @@ foreach (array('GV Header' => array('header', "$HOME/header.html"), 'GV Footer' 
         if ($ed) file_put_contents("$bdir/$type-{$ids[0]}-ed-$ts.json", is_string($ed) ? $ed : json_encode($ed));
     }
     echo "  " . gv_set_theme_part_blocks($title, $type, array(array('type' => 'html', 'content' => file_get_contents($path)))) . "\n";
+    // Elementor caches rendered element HTML per post; without clearing it the
+    // theme part keeps serving the previous markup even after _elementor_data
+    // is updated (and after LiteSpeed/Cloudflare purges).
+    $ids = get_posts(array('post_type' => 'elementor_library', 'title' => $title, 'numberposts' => 1, 'post_status' => 'any', 'fields' => 'ids'));
+    if ($ids) delete_post_meta($ids[0], '_elementor_element_cache');
+}
+if (class_exists('\\Elementor\\Plugin')) {
+    \Elementor\Plugin::$instance->files_manager->clear_cache();
 }

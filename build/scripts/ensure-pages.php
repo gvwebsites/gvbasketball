@@ -2,7 +2,7 @@
 $pages = array(
   'about'                => 'About GV Basketball',
   'training-programs'    => 'Training Programs',
-  'book-a-consultation'  => 'Book a Consultation',
+  // 'book-a-consultation' retired: booking is modal-only; page 2982 stays draft.
   'booking'              => 'Member Booking',
   'athlete-development'  => 'Athlete Development System',
   'success-stories'      => 'Success Stories',

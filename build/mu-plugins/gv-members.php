@@ -66,6 +66,14 @@ function gv_members_legacy_redirect() {
         wp_safe_redirect(home_url('/members/'), 301);
         exit;
     }
+
+    if ($path === '/book-a-consultation') {
+        // Page 2982 (/book-a-consultation/) is retired; booking is modal-only now.
+        // Send crawlers/old links to the Training Programs page (2981), which
+        // carries the consultation CTA that opens the LatePoint modal.
+        wp_safe_redirect(home_url('/training-programs/'), 301);
+        exit;
+    }
 }
 
 // 3. Enqueue Assets (Priority 30)
@@ -117,9 +125,51 @@ function gv_members_hidden_booking_trigger() {
     }
 
     $service = (new OsServiceModel())->where(['name' => 'Player Consultation'])->set_limit(1)->get_results_as_models();
-    if ($service && !$service->is_new_record()) {
-        echo '<div id="gv-consult-trigger" hidden>' .
-            do_shortcode('[latepoint_book_button caption="Book a Consultation" selected_service="' . (int) $service->id . '" hide_side_panel="yes"]') .
+    if (!$service || $service->is_new_record()) {
+        return;
+    }
+
+    // The wizard's own venue step (booking__locations) is a LatePoint PRO
+    // feature, so venue choice happens before the wizard opens: one hidden
+    // trigger per active venue, fronted by the GV venue chooser dialog below.
+    // selected_location sets booking.location_id and scopes availability to
+    // that venue's work periods (one "Request this day" slot per day).
+    $locations = [];
+    if (class_exists('OsLocationModel')) {
+        $results = (new OsLocationModel())->should_be_active()->get_results_as_models();
+        if ($results) {
+            $locations = is_array($results) ? $results : [$results];
+        }
+    }
+
+    $triggers = '';
+    if ($locations) {
+        foreach ($locations as $location) {
+            $triggers .= '<div data-gv-venue-trigger="' . (int) $location->id . '">' .
+                do_shortcode('[latepoint_book_button caption="Book a Consultation" selected_service="' . (int) $service->id . '" selected_location="' . (int) $location->id . '" hide_side_panel="yes"]') .
+                '</div>';
+        }
+    } else {
+        $triggers = do_shortcode('[latepoint_book_button caption="Book a Consultation" selected_service="' . (int) $service->id . '" hide_side_panel="yes"]');
+    }
+
+    echo '<div id="gv-consult-trigger" hidden>' . $triggers . '</div>';
+
+    if (count($locations) > 1) {
+        $options = '';
+        foreach ($locations as $location) {
+            $options .= '<button type="button" class="gv-venue-option" data-gv-venue="' . (int) $location->id . '">' .
+                esc_html($location->name) .
+                '</button>';
+        }
+        echo '<div id="gv-venue-chooser" class="gv-venue-chooser" hidden>' .
+            '<div class="gv-venue-chooser-overlay" data-gv-venue-close></div>' .
+            '<div class="gv-venue-chooser-card" role="dialog" aria-modal="true" aria-labelledby="gv-venue-chooser-title">' .
+            '<h3 id="gv-venue-chooser-title">Choose a Venue</h3>' .
+            '<p>Pick the venue that works best for you. Coach Gino will confirm the details.</p>' .
+            '<div class="gv-venue-options">' . $options . '</div>' .
+            '<button type="button" class="gv-venue-cancel" data-gv-venue-close>Cancel</button>' .
+            '</div>' .
             '</div>';
     }
 }
