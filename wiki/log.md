@@ -364,3 +364,10 @@ This is the chronological log of all tasks, updates, and releases completed on t
   - `architecture.md`: added the `gv-members` mu-plugin entry + test-suite command.
   - `client-status.md`: Highlight 0 (GV Members & consultation requests); superseded the old email-modal items.
   - `deployment-workflows.md`: new script catalog rows, Elementor `_elementor_element_cache` gotcha, setup-latepoint do-not-rerun warning.
+
+## [2026-07-10] task | Final QA sweep + client report polish
+- **Goal:** Last quality pass of the live site and the July client report before merging to main.
+- **Changes:**
+  - Full-site QA (all 10 public pages, both viewports, redirects, console, links): launch-ready; one open client question — confirm the Instagram handle `@gvbasketballl` (three L's) is spelled correctly.
+  - `docs/CLIENT-REPORT-JULY.html`: added an up-front "What We Still Need From You" checklist (FAQ, testimonials, Instagram handle), split §03 into venue-chooser + calendar screenshots (new `consultation-venue-chooser.png`), softened the photography claim (program images are representative), de-jargoned "Cloudflare Turnstile", fixed a navy-card heading contrast bug.
+  - Code review (full branch): merge-ready; one low finding fixed (finalize hook re-add balance), OTP brute-force confirmed mitigated by LatePoint's 10-attempt cap.
