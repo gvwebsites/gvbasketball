@@ -77,5 +77,45 @@ check('modal script auto-opens for gv_open_modal flag',
 check('modal script intercepts legacy consultation links',
     strpos($modal, "pathname==='/book-a-consultation/'") !== false);
 
+// --- gv_rf_next_weekday_date() ---
+$fixed = new DateTime('2026-07-13 15:30', new DateTimeZone('Asia/Manila'));
+function gv_days_between($from, $ymd) {
+    $a = (clone $from); $a->setTime(0,0,0);
+    $b = DateTime::createFromFormat('Y-m-d', $ymd); $b->setTime(0,0,0);
+    return (int) $a->diff($b)->format('%r%a');
+}
+check('empty days -> empty string', gv_rf_next_weekday_date(array(), $fixed) === '');
+check('unknown day -> empty string', gv_rf_next_weekday_date(array('Xyz'), $fixed) === '');
+$all_ok = true; $window_ok = true;
+foreach (array('Mon','Tue','Wed','Thu','Fri','Sat','Sun') as $d) {
+    $res = gv_rf_next_weekday_date(array($d), $fixed);
+    $dt  = DateTime::createFromFormat('Y-m-d', $res);
+    if (!$dt || $dt->format('D') !== $d) $all_ok = false;
+    $diff = gv_days_between($fixed, $res);
+    if ($diff < 1 || $diff > 7) $window_ok = false;
+}
+check('single weekday resolves to that weekday', $all_ok);
+check('resolved date is 1..7 days ahead (strictly future)', $window_ok);
+$today_wd = $fixed->format('D'); // requesting today's weekday -> +7
+check('same-weekday request lands 7 days out',
+    gv_days_between($fixed, gv_rf_next_weekday_date(array($today_wd), $fixed)) === 7);
+check('multi-day picks the soonest',
+    gv_rf_next_weekday_date(array('Sat','Sun'), $fixed)
+    === min(gv_rf_next_weekday_date(array('Sat'), $fixed), gv_rf_next_weekday_date(array('Sun'), $fixed)));
+
+// --- gv_rf_gcal_url() ---
+check('gcal: invalid date -> empty', gv_rf_gcal_url(array('date' => 'nope')) === '');
+$gc = gv_rf_gcal_url(array(
+    'title' => 'GV Consultation — Test', 'date' => '2026-07-13',
+    'guest' => 'parent@example.com', 'details' => "Player: Test", 'location' => 'Dasma, Makati, Metro Manila',
+));
+check('gcal: points at Google Calendar', strpos($gc, 'calendar.google.com/calendar/render') !== false);
+check('gcal: is a TEMPLATE action', strpos($gc, 'action=TEMPLATE') !== false);
+check('gcal: all-day range is date/next-day', strpos($gc, 'dates=20260713%2F20260714') !== false
+    || strpos($gc, 'dates=20260713/20260714') !== false);
+check('gcal: prefills guest email', strpos(urldecode($gc), 'add=parent@example.com') !== false);
+check('gcal: carries title', strpos(urldecode($gc), 'GV Consultation') !== false);
+check('gcal: carries location', strpos(urldecode($gc), 'Metro Manila') !== false);
+
 echo $failures ? "\n$failures FAILED\n" : "\nALL PASS\n";
 exit($failures ? 1 : 0);

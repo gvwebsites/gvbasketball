@@ -50,6 +50,56 @@ function gv_rf_validate_location_days($location, $days) {
     return true;
 }
 
+/* ---------------- Consultation date + Google Calendar helpers ---------------- */
+// Short weekday name -> ISO-8601 numeric (Mon=1 .. Sun=7); 0 if unknown.
+function gv_rf_weekday_num($abbr) {
+    $map = array('Mon' => 1, 'Tue' => 2, 'Wed' => 3, 'Thu' => 4, 'Fri' => 5, 'Sat' => 6, 'Sun' => 7);
+    return isset($map[$abbr]) ? $map[$abbr] : 0;
+}
+
+// Soonest strictly-future date matching any selected weekday.
+// $today is injectable (DateTime) for deterministic tests; defaults to now in the site/Manila tz.
+// Returns 'Y-m-d' or '' when no valid weekday is given.
+function gv_rf_next_weekday_date($days_in, $today = null) {
+    if (!is_array($days_in) || !$days_in) return '';
+    if (!$today instanceof DateTime) {
+        $tz = function_exists('wp_timezone') ? wp_timezone() : new DateTimeZone('Asia/Manila');
+        $today = new DateTime('now', $tz);
+    }
+    $today = clone $today;
+    $today->setTime(0, 0, 0);
+    $today_n = (int) $today->format('N');
+    $best = null;
+    foreach ($days_in as $abbr) {
+        $n = gv_rf_weekday_num($abbr);
+        if (!$n) continue;
+        $ahead = ($n - $today_n + 7) % 7;
+        if ($ahead === 0) $ahead = 7; // next occurrence, never "today"
+        if ($best === null || $ahead < $best) $best = $ahead;
+    }
+    if ($best === null) return '';
+    return (clone $today)->modify("+{$best} day")->format('Y-m-d');
+}
+
+// Build a Google Calendar "add event" template URL for an all-day event on $args['date'] (Y-m-d).
+// $args keys: title, date, guest (email, prefilled as attendee), details, location. Returns '' if date invalid.
+function gv_rf_gcal_url($args) {
+    $date = isset($args['date']) ? $args['date'] : '';
+    if (!$date || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) return '';
+    $end_dt = DateTime::createFromFormat('Y-m-d', $date);
+    if (!$end_dt) return '';
+    $end_dt->modify('+1 day'); // all-day events: end date is exclusive (next day)
+    $params = array(
+        'action' => 'TEMPLATE',
+        'text'   => isset($args['title']) ? $args['title'] : 'GV Consultation',
+        'dates'  => str_replace('-', '', $date) . '/' . $end_dt->format('Ymd'),
+    );
+    if (!empty($args['details']))  $params['details']  = $args['details'];
+    if (!empty($args['location'])) $params['location'] = $args['location'];
+    if (!empty($args['guest']))    $params['add']      = $args['guest']; // prefill client as guest
+    return 'https://calendar.google.com/calendar/render?' . http_build_query($params);
+}
+
 /* ---------------- Branded email shell (mirrors gv-otp-email.php) ---------------- */
 function gv_rf_email_shell($heading, $intro, $inner) {
     $logo   = 'https://gvbasketball.com/wp-content/uploads/2025/07/GV_Logo_Main.png';
@@ -152,6 +202,28 @@ function gv_rf_handle() {
               . '</tr>';
     }
     $tbl .= '</table>';
+
+    // "Add to Google Calendar" button — all-day event on the soonest preferred day (coach adjusts).
+    $gcal_date = gv_rf_next_weekday_date($days_in);
+    if ($gcal_date) {
+        $gcal_details = "Player: {$player} (age {$age})\nParent/Guardian: {$parent}\nEmail: {$email}\n"
+            . 'Phone/IG: ' . ($alt ?: '—') . "\nTraining type: {$type}\n"
+            . "Preferred location: {$loc_label}\nPreferred day(s): {$days_str}"
+            . ($times ? "\nNotes: {$times}" : '');
+        $gcal_url = gv_rf_gcal_url(array(
+            'title'    => 'GV Consultation — ' . $player,
+            'date'     => $gcal_date,
+            'guest'    => $email,
+            'details'  => $gcal_details,
+            'location' => ($location !== 'any') ? $loc_label . ', Metro Manila' : '',
+        ));
+        $nice_date = DateTime::createFromFormat('Y-m-d', $gcal_date)->format('l, M j, Y');
+        $tbl .= '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:22px;"><tr><td align="center">'
+            . '<a href="' . esc_url($gcal_url) . '" style="display:inline-block;background:#F47B20;color:#ffffff;font-family:Arial,Helvetica,sans-serif;font-weight:700;font-size:14px;text-decoration:none;padding:13px 26px;border-radius:8px;">Add to Google Calendar &mdash; ' . esc_html($nice_date) . '</a>'
+            . '<div style="font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.5;color:#6B6F76;margin-top:9px;">Opens a prefilled event with <strong>' . esc_html($email) . '</strong> as a guest. Adjust the day if needed, then save to send the invite.</div>'
+            . '</td></tr></table>';
+    }
+
     $admin_html = gv_rf_email_shell('New training request', 'A new request came in from the website.', $tbl);
     $admin_headers = array(
         'Content-Type: text/html; charset=UTF-8',
