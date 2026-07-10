@@ -1,0 +1,53 @@
+/**
+ * GV Members presentation system
+ */
+
+:root {
+    --gv-brand-navy: #0F172A;
+    --gv-brand-orange: #F47B20;
+    --gv-brand-gold: #C9A24B;
+    --gv-brand-white: #FFFFFF;
+    --gv-brand-light-gray: #F1F5F9;
+    --gv-brand-dark-gray: #334155;
+}
+
+/* Accessibility focus styles */
+.gv-members :focus-visible,
+.gv-finalize :focus-visible,
+.gv-bookform-wrap :focus-visible {
+    outline: 3px solid var(--gv-brand-orange);
+    outline-offset: 2px;
+}
+
+/* Control sizing constraints */
+.gv-members input,
+.gv-members button,
+.gv-members select,
+.gv-members textarea,
+.gv-finalize input,
+.gv-finalize button,
+.gv-finalize select,
+.gv-finalize textarea {
+    min-height: 44px;
+}
+
+@media (max-width: 768px) {
+    .gv-members input,
+    .gv-members select,
+    .gv-members textarea,
+    .gv-finalize input,
+    .gv-finalize select,
+    .gv-finalize textarea {
+        font-size: 16px !important; /* Prevents iOS auto-zoom */
+    }
+}
+
+/* Reduced motion preference support */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}

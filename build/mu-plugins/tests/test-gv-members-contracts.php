@@ -44,6 +44,78 @@ function sanitize_key($s){ return strtolower(preg_replace('/[^a-z0-9_]/','', (st
 function wp_json_encode($d){ return json_encode($d); }
 function wp_salt($scheme = 'auth') { return 'salt'; }
 
+// Additional WordPress mocks for testing functionality
+$is_page_val = false;
+function is_page($id) {
+    global $is_page_val;
+    if (is_array($is_page_val)) {
+        return in_array($id, $is_page_val);
+    }
+    return $is_page_val === $id || $is_page_val === true;
+}
+
+$nocache_headers_called = false;
+function nocache_headers() {
+    global $nocache_headers_called;
+    $nocache_headers_called = true;
+}
+
+$actions_fired = [];
+function has_action($tag) {
+    return true; // Simple stub
+}
+function do_action($tag, ...$args) {
+    global $actions_fired;
+    $actions_fired[] = $tag;
+}
+
+// Exception to intercept wp_safe_redirect and prevent exit;
+class RedirectException extends Exception {
+    public $url;
+    public $status;
+    public function __construct($url, $status) {
+        $this->url = $url;
+        $this->status = $status;
+    }
+}
+
+$redirect_url = null;
+$redirect_status = null;
+function wp_safe_redirect($location, $status = 302, $x_redirect_by = 'WordPress') {
+    global $redirect_url, $redirect_status;
+    $redirect_url = $location;
+    $redirect_status = $status;
+    throw new RedirectException($location, $status);
+}
+
+$enqueued_styles = [];
+function wp_enqueue_style($handle, $src = '', $deps = [], $ver = false, $media = 'all') {
+    global $enqueued_styles;
+    $enqueued_styles[$handle] = ['src' => $src, 'ver' => $ver];
+}
+
+$enqueued_scripts = [];
+function wp_enqueue_script($handle, $src = '', $deps = [], $ver = false, $in_footer = false) {
+    global $enqueued_scripts;
+    $enqueued_scripts[$handle] = ['src' => $src, 'ver' => $ver];
+}
+
+$localized_scripts = [];
+function wp_localize_script($handle, $object_name, $l10n) {
+    global $localized_scripts;
+    $localized_scripts[$handle] = [$object_name => $l10n];
+}
+
+$is_admin_val = false;
+function is_admin() {
+    global $is_admin_val;
+    return $is_admin_val;
+}
+
+function do_shortcode($content) {
+    return $content; // Stub
+}
+
 // Stubs for plugins_loaded require logic
 if (!class_exists('OsBookingModel')) {
     class OsBookingModel {}
@@ -127,6 +199,159 @@ if (file_exists($consult_page_script)) {
     $content = file_get_contents($consult_page_script);
     gv_assert_not_contains('TRUNCATE', $content, 'consultation page script does not contain TRUNCATE');
     gv_assert_contains('latepoint_book_form', $content, 'consultation page script contains native booking form shortcode');
+}
+
+// ==================== TASK 3 CONTRACT TESTS ====================
+
+// 1. Module Loading Check
+// Simulate plugins_loaded hook priority 20 call
+$pre_loaded = get_included_files();
+gv_members_load_modules();
+$post_loaded = get_included_files();
+
+$loaded_modules = [
+    'booking.php',
+    'emails.php',
+    'auth.php',
+    'portal.php',
+    'finalize.php'
+];
+foreach ($loaded_modules as $mod) {
+    $found = false;
+    foreach ($post_loaded as $path) {
+        if (basename($path) === $mod) {
+            $found = true;
+            break;
+        }
+    }
+    check("module $mod is loaded", $found);
+}
+
+// 2. Legacy Redirect Test (gv_members_legacy_redirect) - RUN FIRST before DOING_AJAX is defined
+// A. Successful GET redirect for /booking
+$redirect_url = null;
+$redirect_status = null;
+$is_admin_val = false;
+$_SERVER['REQUEST_METHOD'] = 'GET';
+$_SERVER['REQUEST_URI'] = '/booking';
+
+try {
+    gv_members_legacy_redirect();
+    $redirected = false;
+} catch (RedirectException $e) {
+    $redirected = true;
+}
+check('redirects /booking to /members/', $redirected && $redirect_url === 'https://example.test/members/' && $redirect_status === 301);
+
+// B. Successful GET redirect for /customer-cabinet/
+$redirect_url = null;
+$redirect_status = null;
+$_SERVER['REQUEST_URI'] = '/customer-cabinet/';
+
+try {
+    gv_members_legacy_redirect();
+    $redirected = false;
+} catch (RedirectException $e) {
+    $redirected = true;
+}
+check('redirects /customer-cabinet/ to /members/', $redirected && $redirect_url === 'https://example.test/members/' && $redirect_status === 301);
+
+// C. Skip redirect for POST method
+$redirect_url = null;
+$_SERVER['REQUEST_METHOD'] = 'POST';
+$_SERVER['REQUEST_URI'] = '/booking';
+
+try {
+    gv_members_legacy_redirect();
+    $redirected = false;
+} catch (RedirectException $e) {
+    $redirected = true;
+}
+check('skips redirect for POST requests', !$redirected && $redirect_url === null);
+
+// D. Skip redirect for admin
+$redirect_url = null;
+$is_admin_val = true;
+$_SERVER['REQUEST_METHOD'] = 'GET';
+$_SERVER['REQUEST_URI'] = '/booking';
+
+try {
+    gv_members_legacy_redirect();
+    $redirected = false;
+} catch (RedirectException $e) {
+    $redirected = true;
+}
+check('skips redirect for admin requests', !$redirected && $redirect_url === null);
+
+// Reset mocks
+$is_admin_val = false;
+$_SERVER['REQUEST_METHOD'] = 'GET';
+
+// 3. Cache Protection Test (gv_members_private_response)
+$nocache_headers_called = false;
+$actions_fired = [];
+$is_page_val = 2983; // Members portal page
+unset($_GET['gv_finalize_consultation']);
+
+gv_members_private_response();
+check('calls nocache_headers for page 2983', $nocache_headers_called);
+check('defines DONOTCACHEPAGE', defined('DONOTCACHEPAGE') && DONOTCACHEPAGE === true);
+check('fires litespeed_control_set_nocache action', in_array('litespeed_control_set_nocache', $actions_fired));
+
+// Test with gv_finalize_consultation GET parameter
+$nocache_headers_called = false;
+$actions_fired = [];
+$is_page_val = 123; // Some other page
+$_GET['gv_finalize_consultation'] = '1';
+
+gv_members_private_response();
+check('calls nocache_headers for gv_finalize_consultation query parameter', $nocache_headers_called);
+check('fires litespeed_control_set_nocache action for finalize', in_array('litespeed_control_set_nocache', $actions_fired));
+
+// Test with AJAX action gv_otp_
+$nocache_headers_called = false;
+$actions_fired = [];
+$is_page_val = 123;
+unset($_GET['gv_finalize_consultation']);
+if (!defined('DOING_AJAX')) {
+    define('DOING_AJAX', true);
+}
+$_REQUEST['action'] = 'gv_otp_request';
+
+gv_members_private_response();
+check('calls nocache_headers for GV OTP AJAX requests', $nocache_headers_called);
+
+// Test with non-matching request
+$nocache_headers_called = false;
+$actions_fired = [];
+$is_page_val = 123;
+unset($_GET['gv_finalize_consultation']);
+$_REQUEST['action'] = 'some_other_action';
+
+gv_members_private_response();
+check('does NOT call nocache_headers for non-matching requests', !$nocache_headers_called);
+
+// 4. Asset Versioning Test (gv_members_enqueue_assets)
+$enqueued_styles = [];
+$enqueued_scripts = [];
+$localized_scripts = [];
+$is_page_val = 2983;
+
+gv_members_enqueue_assets();
+check('enqueues css stylesheet', isset($enqueued_styles['gv-members-css']));
+check('enqueues js script', isset($enqueued_scripts['gv-members-js']));
+check('localizes js script', isset($localized_scripts['gv-members-js']));
+
+if (isset($enqueued_styles['gv-members-css'])) {
+    $ver = $enqueued_styles['gv-members-css']['ver'];
+    $expected_ver = filemtime(__DIR__ . '/../gv-members/assets/gv-members.css');
+    check('stylesheet version matches filemtime', $ver === $expected_ver);
+}
+
+if (isset($enqueued_scripts['gv-members-js'])) {
+    $ver = $enqueued_scripts['gv-members-js']['ver'];
+    $expected_ver = filemtime(__DIR__ . '/../gv-members/assets/gv-members.js');
+    check('script version matches filemtime', $ver === $expected_ver);
 }
 
 echo $failures ? "\n$failures FAILED\n" : "\nALL PASS\n";
