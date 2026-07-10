@@ -1,0 +1,656 @@
+/**
+ * GV Members presentation system
+ */
+
+:root {
+    --gv-brand-navy: #0F172A;
+    --gv-brand-orange: #F47B20;
+    --gv-brand-gold: #C9A24B;
+    --gv-brand-white: #FFFFFF;
+    --gv-brand-light-gray: #F1F5F9;
+    --gv-brand-dark-gray: #334155;
+}
+
+/* Accessibility focus styles */
+.gv-members :focus-visible,
+.gv-finalize :focus-visible,
+.gv-bookform-wrap :focus-visible {
+    outline: 3px solid var(--gv-brand-orange);
+    outline-offset: 2px;
+}
+
+/* Control sizing constraints */
+.gv-members input,
+.gv-members button,
+.gv-members select,
+.gv-members textarea,
+.gv-finalize input,
+.gv-finalize button,
+.gv-finalize select,
+.gv-finalize textarea {
+    min-height: 44px;
+}
+
+@media (max-width: 768px) {
+    .gv-members input,
+    .gv-members select,
+    .gv-members textarea,
+    .gv-finalize input,
+    .gv-finalize select,
+    .gv-finalize textarea {
+        font-size: 16px !important; /* Prevents iOS auto-zoom */
+    }
+}
+
+/* Reduced motion preference support */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* Custom wizard field layout styling */
+.gv-consult-fields {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid var(--gv-brand-light-gray);
+}
+
+.gv-field-wrap {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.gv-field-wrap label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: var(--gv-brand-navy);
+}
+
+.gv-field-wrap label .required {
+    color: var(--gv-brand-orange);
+}
+
+.gv-field-wrap input[type="text"],
+.gv-field-wrap input[type="number"],
+.gv-field-wrap select,
+.gv-field-wrap textarea {
+    padding: 10px 12px;
+    border: 1px solid #CBD5E1;
+    border-radius: 6px;
+    background-color: var(--gv-brand-white);
+    color: var(--gv-brand-navy);
+    font-family: inherit;
+    transition: border-color 0.2s ease;
+}
+
+.gv-field-wrap input:focus,
+.gv-field-wrap select:focus,
+.gv-field-wrap textarea:focus {
+    border-color: var(--gv-brand-orange);
+    outline: none;
+}
+
+.gv-checkbox-wrap {
+    flex-direction: row;
+    align-items: center;
+}
+
+.gv-checkbox-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-weight: normal !important;
+}
+
+.gv-checkbox-label input[type="checkbox"] {
+    margin-right: 10px;
+    width: 18px;
+    height: 18px;
+    accent-color: var(--gv-brand-orange);
+}
+
+/* Info note for day-only selection */
+.gv-info-note {
+    background-color: var(--gv-brand-light-gray);
+    border-left: 4px solid var(--gv-brand-orange);
+    color: var(--gv-brand-dark-gray);
+    padding: 12px 16px;
+    margin: 15px 0;
+    border-radius: 0 6px 6px 0;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* Disabled buttons class to prevent duplicates */
+.gv-disabled {
+    pointer-events: none !important;
+    opacity: 0.6 !important;
+    cursor: not-allowed !important;
+}
+
+/* Secure finalizer styles */
+.gv-finalize-container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+.gv-logo-wrap {
+    text-align: center;
+    margin-bottom: 24px;
+}
+.gv-finalize-card {
+    background: #ffffff;
+    border: 1px solid #E6E7E9;
+    border-radius: 14px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    border-top: 4px solid var(--gv-brand-orange);
+}
+.gv-card-header {
+    background: #f8f9fa;
+    padding: 20px 24px;
+    border-bottom: 1px solid #E6E7E9;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.gv-card-header h2 {
+    margin: 0;
+    font-size: 20px;
+    color: var(--gv-brand-navy);
+    font-weight: 800;
+}
+.gv-card-body {
+    padding: 24px;
+}
+.gv-badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+}
+.gv-badge-success {
+    background: #e6f7ed;
+    color: #1a7f37;
+}
+.gv-details-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+.gv-details-table th, .gv-details-table td {
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 1px solid #f0f0f2;
+    font-size: 14px;
+}
+.gv-details-table th {
+    background: #f0f4fa;
+    color: var(--gv-brand-navy);
+    width: 35%;
+    font-weight: bold;
+    vertical-align: top;
+}
+.gv-error-message {
+    color: #d9381e;
+    font-size: 15px;
+    line-height: 1.5;
+    margin: 0;
+}
+.gv-error-banner {
+    background: #fce8e6;
+    color: #c53929;
+    padding: 12px 16px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    font-weight: bold;
+}
+.gv-success-banner {
+    background: #e6f7ed;
+    color: #1a7f37;
+    padding: 12px 16px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+.gv-success-banner p { margin: 0; }
+.gv-instruction {
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--gv-brand-navy);
+    margin-bottom: 15px;
+}
+.gv-contact-panel {
+    background: #f0f4fa;
+    border: 1px solid #d9e2f0;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+.gv-contact-panel h3 {
+    margin-top: 0;
+    margin-bottom: 12px;
+    font-size: 15px;
+    color: var(--gv-brand-navy);
+}
+.gv-slots-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 10px;
+    margin-bottom: 20px;
+}
+.gv-slot-label {
+    display: block;
+    border: 1px solid #E6E7E9;
+    border-radius: 6px;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    background: #ffffff;
+    transition: all 0.2s ease;
+}
+.gv-slot-label:hover {
+    border-color: var(--gv-brand-orange) !important;
+    background: #fff8f5 !important;
+}
+.gv-slot-label input:checked + span {
+    font-weight: bold;
+    color: var(--gv-brand-orange);
+}
+.gv-submit-btn {
+    background: var(--gv-brand-orange);
+    color: #ffffff;
+    border: none;
+    padding: 13px 26px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 15px;
+    cursor: pointer;
+    display: block;
+    width: 100%;
+    transition: background-color 0.2s ease;
+    min-height: 44px;
+}
+.gv-submit-btn:hover {
+    background-color: #d8620c;
+}
+
+/* Locked native field */
+.gv-locked-field {
+    background-color: #F1F5F9 !important;
+    cursor: not-allowed !important;
+    border-color: #E2E8F0 !important;
+}
+
+/* Member Portal Training Journal Presentation */
+.gv-portal-container {
+    background: var(--gv-brand-white);
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+    margin: 20px 0;
+}
+
+.gv-portal-header {
+    background: var(--gv-brand-navy);
+    padding: 24px;
+    border-bottom: 1px solid #1E293B;
+}
+
+.gv-portal-nav {
+    display: flex;
+    background: #F8FAFC;
+    border-bottom: 1px solid #E2E8F0;
+}
+
+.gv-portal-tab {
+    flex: 1;
+    text-align: center;
+    padding: 14px 16px;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    font-weight: bold;
+    color: var(--gv-brand-dark-gray);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 15px;
+    outline: none;
+}
+
+.gv-portal-tab:hover {
+    color: var(--gv-brand-navy);
+    background: #F1F5F9;
+}
+
+.gv-portal-tab.active {
+    color: var(--gv-brand-orange);
+    border-bottom-color: var(--gv-brand-orange);
+    background: var(--gv-brand-white);
+}
+
+.gv-portal-tab:focus-visible {
+    outline: 3px solid var(--gv-brand-orange);
+    outline-offset: -3px;
+}
+
+.gv-portal-tab-content {
+    background: var(--gv-brand-white);
+}
+
+/* Timeline */
+.gv-timeline {
+    position: relative;
+    padding: 30px 24px;
+}
+
+.gv-timeline::before {
+    content: '';
+    position: absolute;
+    top: 30px;
+    bottom: 30px;
+    left: 36px;
+    width: 2px;
+    background: #E2E8F0;
+}
+
+.gv-timeline-item {
+    position: relative;
+    padding-left: 48px;
+    margin-bottom: 30px;
+}
+
+.gv-timeline-item:last-child {
+    margin-bottom: 0;
+}
+
+.gv-timeline-node {
+    position: absolute;
+    left: 27px;
+    top: 4px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--gv-brand-white);
+    border: 4px solid var(--gv-brand-orange);
+    z-index: 1;
+}
+
+.gv-timeline-content {
+    background: var(--gv-brand-white);
+    border: 1px solid #E2E8F0;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+    transition: box-shadow 0.2s ease;
+}
+
+.gv-timeline-content:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.gv-card-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid #F1F5F9;
+    padding-bottom: 10px;
+}
+
+.gv-status-tag {
+    font-size: 12px;
+    font-weight: 800;
+    padding: 4px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+}
+
+.gv-status-submitted {
+    background: #FEF3C7;
+    color: #92400E;
+}
+
+.gv-status-confirmed {
+    background: #D1FAE5;
+    color: #065F46;
+}
+
+/* Auth Cards */
+.gv-members-auth-card {
+    max-width: 420px;
+    margin: 40px auto;
+    background: var(--gv-brand-white);
+    border: 1px solid #E2E8F0;
+    border-radius: 14px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    border-top: 4px solid var(--gv-brand-orange);
+    padding: 30px;
+}
+
+.gv-members-auth-header {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.gv-members-auth-header h2 {
+    margin: 0 0 6px 0;
+    font-size: 24px;
+    color: var(--gv-brand-navy);
+    font-weight: 800;
+}
+
+.gv-members-auth-header p {
+    margin: 0;
+    color: var(--gv-brand-dark-gray);
+    font-size: 14px;
+}
+
+.gv-otp-digits-wrap {
+    display: flex;
+    gap: 8px;
+    justify-content: space-between;
+    margin: 15px 0;
+}
+
+.gv-otp-digit {
+    width: 48px;
+    height: 48px;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    border: 1px solid #CBD5E1;
+    border-radius: 8px;
+    color: var(--gv-brand-navy);
+    background: var(--gv-brand-white);
+    transition: border-color 0.2s ease;
+}
+
+.gv-otp-digit:focus {
+    border-color: var(--gv-brand-orange);
+    outline: none;
+}
+
+.gv-status {
+    background: #F0F4FA;
+    color: var(--gv-brand-navy);
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.gv-status:empty {
+    display: none;
+}
+
+.gv-error {
+    background: #FCE8E6;
+    color: #C53929;
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.gv-error:empty {
+    display: none;
+}
+
+
+/* ==================== Venue chooser dialog ==================== */
+/* Venue choice happens before the LatePoint wizard opens because the
+   booking__locations wizard step is a PRO-only feature. */
+
+.gv-venue-chooser {
+    position: fixed;
+    inset: 0;
+    z-index: 100000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.gv-venue-chooser[hidden] {
+    display: none;
+}
+
+.gv-venue-chooser-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.65);
+}
+
+.gv-venue-chooser-card {
+    position: relative;
+    background: var(--gv-brand-white);
+    border-radius: 12px;
+    padding: 28px 24px;
+    max-width: 420px;
+    width: 100%;
+    box-shadow: 0 20px 50px rgba(15, 23, 42, 0.35);
+    text-align: center;
+}
+
+.gv-venue-chooser-card h3 {
+    margin: 0 0 8px;
+    color: var(--gv-brand-navy);
+    font-size: 22px;
+}
+
+.gv-venue-chooser-card p {
+    margin: 0 0 20px;
+    color: var(--gv-brand-dark-gray);
+    font-size: 14px;
+}
+
+.gv-venue-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.gv-venue-option {
+    min-height: 48px;
+    border: 2px solid var(--gv-brand-navy);
+    border-radius: 8px;
+    background: var(--gv-brand-white);
+    color: var(--gv-brand-navy);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.gv-venue-option:hover,
+.gv-venue-option:focus-visible {
+    background: var(--gv-brand-orange);
+    border-color: var(--gv-brand-orange);
+    color: var(--gv-brand-white);
+}
+
+.gv-venue-cancel {
+    min-height: 44px;
+    border: 0;
+    background: none;
+    color: var(--gv-brand-dark-gray);
+    font-size: 14px;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.gv-venue-chooser :focus-visible {
+    outline: 3px solid var(--gv-brand-orange);
+    outline-offset: 2px;
+}
+
+/* ==================== Hide wizard pricing ==================== */
+/* The consultation is a free request; suppress every Cost Breakdown /
+   Total Price surface in the LatePoint wizard (inline and lightbox). */
+
+.latepoint-w .summary-price-breakdown-wrapper,
+.latepoint-w .summary-price-item-w,
+.latepoint-w .spi-price,
+.latepoint-w .price-breakdown-unfold,
+.latepoint-lightbox-w .summary-price-breakdown-wrapper,
+.latepoint-lightbox-w .summary-price-item-w,
+.latepoint-lightbox-w .spi-price,
+.latepoint-lightbox-w .price-breakdown-unfold {
+    display: none !important;
+}
+
+/* Chooser loading state: shown between picking a venue and the LatePoint
+   wizard finishing its first render, so there is no dead gap. */
+
+.gv-venue-chooser.gv-venue-loading .gv-venue-option {
+    opacity: 0.45;
+    cursor: wait;
+}
+
+.gv-venue-option--any {
+    border-style: dashed;
+    font-weight: 500;
+}
+
+.gv-venue-loading-note {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    color: var(--gv-brand-dark-gray);
+    font-size: 14px;
+}
+
+.gv-venue-loading-note[hidden] {
+    display: none;
+}
+
+.gv-venue-loading-note::before {
+    content: '';
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--gv-brand-light-gray);
+    border-top-color: var(--gv-brand-orange);
+    border-radius: 50%;
+    animation: gv-venue-spin 0.8s linear infinite;
+}
+
+@keyframes gv-venue-spin {
+    to { transform: rotate(360deg); }
+}

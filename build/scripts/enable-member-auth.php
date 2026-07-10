@@ -12,9 +12,9 @@ $settings = array(
     'selected_customer_authentication_method'     => 'otp',
     'default_customer_authentication_method'       => 'otp',
     'selected_customer_authentication_field_type'  => 'email',
-    // Part B — land logged-in members on the branded /booking/ page.
-    'page_url_customer_dashboard'                  => '/booking/',
-    'page_url_customer_login'                       => '/booking/',
+    // Part B — land logged-in members on the branded /members/ page.
+    'page_url_customer_dashboard'                  => '/members/',
+    'page_url_customer_login'                       => '/members/',
 );
 
 foreach ($settings as $name => $value) {

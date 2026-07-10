@@ -31,46 +31,70 @@ Created and managed via the setup helper `build/scripts/setup-latepoint.php`:
 
 ---
 
-## 2. Customer Portal & Member Login
+## 2. Members Portal & OTP Login (`/members/`)
 
-The Member Portal at `/booking/` hosts the dashboard shortcode `[latepoint_customer_dashboard]`. 
+The GV Members Training Journal lives at **`/members/` (page 2983)** via the `[gv_members_portal]`
+shortcode from the `gv-members` mu-plugin. (The old `/booking/` and `/customer-cabinet/` paths 301
+to `/members/`.)
 
 ### Passwordless OTP Authentication
-Auth is entirely **email-based passwordless OTP**. There are no passwords. This forces verified-email signups.
+Auth is entirely **email-based passwordless OTP** handled by custom AJAX endpoints
+(`gv_otp_request` / `gv_otp_verify` in `gv-members/auth.php`) built on LatePoint's `OsOTPHelper`.
+There are no passwords and no WP user accounts — any verified email becomes a LatePoint customer
+record on demand. Rate limits: 5 sends/email/hour, 10 sends/IP/hour. `WP_Error` returns from the
+OTP helpers are treated as failures.
 
 | LatePoint Setting | Value | Rationale |
 |---|---|---|
-| `selected_customer_authentication_method` | `otp` | Selects OTP as the active auth method |
-| `default_customer_authentication_method` | `otp` | Forces OTP load state by default |
-| `selected_customer_authentication_field_type` | `email` | Selects email as target for OTP code delivery |
-| `notifications_email_processor` | `wp_mail` | **CRITICAL GOTCHA:** Without this specific option set, LatePoint skips calling the standard WordPress mailer, disabling OTP deliveries and causing login queries to hang/fail silently. |
-| `page_url_customer_dashboard` / `_login` | `/booking/` | Keeps users on the custom branded portal page instead of forwarding to `/customer-cabinet/` |
+| `notifications_email_processor` | `wp_mail` | **CRITICAL GOTCHA:** Without this option, LatePoint skips the WordPress mailer entirely — OTP deliveries silently fail. |
 
 ### Portal Scope — View-Only (free plugin) ⚠️
-This install runs **free LatePoint 5.6.6 only** (no PRO add-on). That caps what the portal can do:
+This install runs **free LatePoint 5.6.6 only** (no PRO add-on):
 
-- **Members can VIEW** their consultation(s) and booking history — this is what the `/booking/` dashboard provides today.
-- **Members CANNOT reschedule or cancel.** Customer reschedule is hard-gated behind
-  `apply_filters('latepoint_is_feature_reschedule_available', false)` — a **paid** feature that is
-  never enabled in the installed code, so it **cannot be turned on by a setting**
-  (`allow_customer_booking_reschedule` et al. are inert). The `_booking_tile.php` Reschedule/Cancel
-  buttons therefore never render. Portal copy on `/booking/` reflects this: *"view your consultation
-  schedule… Need to change a day? Just message us."*
-- **Self-registration is open:** any email → OTP code → account. New accounts see an empty dashboard
-  until a booking exists under their email.
-- **Bookings are order-linked** (`bookings.order_item_id → order_items → orders`), so a portal-visible,
-  manageable booking must be created through LatePoint's normal flow — not a bare model insert.
-
-### How a consultation reaches the portal
-The public "Book a Consultation" modal (`gv-request-form.php`) only **emails** the coach; it does not
-create a LatePoint booking. **Coach workflow:** when confirming the day, add the consultation in the
-**LatePoint admin under the client's email**. The self-registered member (same email) is matched by
-email and sees it in `/booking/`. If the paid reschedule add-on is ever purchased, self-reschedule
-becomes available with no further code changes.
+- **Members can VIEW** their consultation requests (Submitted) and confirmed sessions (Confirmed,
+  with exact times and ICS calendar links) in the Training Journal.
+- **Members CANNOT reschedule or cancel** — customer reschedule is hard-gated behind
+  `apply_filters('latepoint_is_feature_reschedule_available', false)`, a paid feature. Portal copy
+  says to message the team instead.
+- **Bookings are order-linked** (`bookings.order_item_id → order_items → orders`), so a
+  portal-visible booking must be created through LatePoint's normal flow — not a bare model insert.
 
 ---
 
-## 3. Branded OTP Email Integration
+## 3. Consultation Wizard (modal-only, venue-scoped)
+
+The public booking flow is **modal-only** — there is no booking page. Consultation CTAs sit in the
+header/footer sitewide; `/book-a-consultation/` (page 2982, drafted) 301s to `/training-programs/`.
+
+### How it works (`gv-members.php` + `gv-members/booking.php`)
+1. `wp_footer` prints **one hidden `[latepoint_book_button]` trigger per active venue** with
+   `selected_location="N"` plus an extra trigger with `selected_location="any"`
+   (`LATEPOINT_ANY_LOCATION`), all with `hide_side_panel="yes"`.
+2. Clicking a consultation CTA opens the **GV venue chooser dialog** (one button per venue plus
+   "I don't have a venue yet" → the `any` trigger). The chooser stays open with a loading state
+   until the LatePoint lightbox form is actually in the DOM, then closes.
+3. The wizard shows **one "Request this day" slot per available day** (nominal 15:00 start);
+   custom fields (player name/age, training interest, phone/Instagram, note) are injected via the
+   `latepoint_booking_steps_contact_after` hook — signature is `($customer, $booking)`.
+4. Submission creates a real **pending** LatePoint booking (order-linked), emails the parent a
+   branded receipt and Coach Gino a request email with a **tokenized finalize link**.
+5. Coach finalizes the exact 45-minute time on the finalize screen
+   (`/members/?gv_finalize_consultation=…`) → booking becomes **approved** with real start/end.
+   **No automatic final email is sent to the parent** — the coach contacts them personally
+   (stated in the coach email).
+
+### PRO-only constraints & schedule gotchas ⚠️
+- **`booking__locations` step is LatePoint PRO-only** — core strips it from the step order, so
+  venue choice must happen *before* the wizard opens (hence the chooser + `selected_location`
+  presets, which work fine in core).
+- **The default work schedule must be zeroed** (`configure-members-consultation.php` does this via
+  `OsWorkPeriodModel`): LatePoint falls back to the default schedule whenever a venue has no
+  location-specific work-period row, which would otherwise open unintended days on every venue.
+- `steps_settings` may retain a stale `booking__locations` key — the config script cleans it.
+
+---
+
+## 4. Branded OTP Email Integration
 
 LatePoint's default OTP handler spits out plain-text emails. To match the premium brand aesthetics, the custom Must-Use plugin `gv-otp-email.php` intercepts outgoing messages:
 
