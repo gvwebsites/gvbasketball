@@ -371,3 +371,16 @@ This is the chronological log of all tasks, updates, and releases completed on t
   - Full-site QA (all 10 public pages, both viewports, redirects, console, links): launch-ready; one open client question — confirm the Instagram handle `@gvbasketballl` (three L's) is spelled correctly.
   - `docs/CLIENT-REPORT-JULY.html`: added an up-front "What We Still Need From You" checklist (FAQ, testimonials, Instagram handle), split §03 into venue-chooser + calendar screenshots (new `consultation-venue-chooser.png`), softened the photography claim (program images are representative), de-jargoned "Cloudflare Turnstile", fixed a navy-card heading contrast bug.
   - Code review (full branch): merge-ready; one low finding fixed (finalize hook re-add balance), OTP brute-force confirmed mitigated by LatePoint's 10-attempt cap.
+
+## [2026-07-10] deploy | July client report as standalone page
+- **Goal:** Publish the July changes client report as a standalone HTML page at gvbasketball.com/july-updates.html.
+- **Changes:**
+  - Uploaded `docs/CLIENT-REPORT-JULY.html` → `public_html/july-updates.html` via SCP.
+  - Uploaded `docs/screenshots/*.png` → `public_html/screenshots/` (19 images).
+  - Verified HTTP 200 on both the page and a sample screenshot.
+
+## [2026-07-10] task | Add remote 'fork'
+- **Goal:** Add a new Git remote pointing to the gvwebsites repository.
+- **Changes:**
+  - Added git remote named `fork` pointing to `https://github.com/gvwebsites/gvbasketball.git` per user's specifications.
+
