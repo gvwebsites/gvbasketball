@@ -13,7 +13,10 @@ jQuery(document).ready(function($) {
     }
 
     function gvCloseVenueChooser() {
-        $('#gv-venue-chooser').attr('hidden', 'hidden');
+        var $chooser = $('#gv-venue-chooser');
+        $chooser.attr('hidden', 'hidden').removeClass('gv-venue-loading');
+        $chooser.find('.gv-venue-option, .gv-venue-cancel').prop('disabled', false);
+        $chooser.find('.gv-venue-loading-note').attr('hidden', 'hidden');
     }
 
     $(document).on('click', 'a[href*="/book-a-consultation/"], [data-gv-consultation]', function(e) {
@@ -37,9 +40,27 @@ jQuery(document).ready(function($) {
 
     $(document).on('click', '#gv-venue-chooser .gv-venue-option', function() {
         var venueId = $(this).attr('data-gv-venue');
-        gvCloseVenueChooser();
+        var $chooser = $('#gv-venue-chooser');
+
+        // Keep the chooser up (in a loading state) until the LatePoint wizard
+        // has actually rendered its form, so there is no dead gap where the
+        // visitor might click away.
+        $chooser.addClass('gv-venue-loading');
+        $chooser.find('.gv-venue-option, .gv-venue-cancel').prop('disabled', true);
+        $chooser.find('.gv-venue-loading-note').removeAttr('hidden');
+
         $('#gv-consult-trigger [data-gv-venue-trigger="' + venueId + '"] .os_trigger_booking')
             .first().trigger('click');
+
+        var waited = 0;
+        var poll = setInterval(function() {
+            waited += 100;
+            var wizardReady = $('.latepoint-lightbox-w form, .latepoint-lightbox-w .latepoint-step-content').length > 0;
+            if (wizardReady || waited >= 10000) {
+                clearInterval(poll);
+                gvCloseVenueChooser();
+            }
+        }, 100);
     });
 
     $(document).on('click', '#gv-venue-chooser [data-gv-venue-close]', function() {

@@ -694,6 +694,11 @@ gv_assert_contains('data-gv-venue="3"', $trigger_html, 'venue chooser has an opt
 gv_assert_contains('Dasma, Makati', $trigger_html, 'venue chooser shows venue names');
 gv_assert_contains('role="dialog"', $trigger_html, 'venue chooser is an accessible dialog');
 gv_assert_contains('selected_service="7"', $trigger_html, 'triggers preset the consultation service');
+gv_assert_contains('data-gv-venue-trigger="any"', $trigger_html, 'an any-venue trigger exists for undecided visitors');
+gv_assert_contains('selected_location="any"', $trigger_html, 'any-venue trigger uses the LatePoint any-location preset');
+gv_assert_contains('data-gv-venue="any"', $trigger_html, 'venue chooser offers an undecided option');
+gv_assert_contains("don&#039;t have a venue yet", $trigger_html, 'undecided option is labeled clearly');
+gv_assert_contains('gv-venue-loading-note', $trigger_html, 'chooser has a loading note for the modal transition');
 
 if (file_exists($members_page_script)) {
     $content = file_get_contents($members_page_script);

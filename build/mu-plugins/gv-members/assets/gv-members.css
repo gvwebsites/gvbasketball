@@ -613,3 +613,44 @@
 .latepoint-lightbox-w .price-breakdown-unfold {
     display: none !important;
 }
+
+/* Chooser loading state: shown between picking a venue and the LatePoint
+   wizard finishing its first render, so there is no dead gap. */
+
+.gv-venue-chooser.gv-venue-loading .gv-venue-option {
+    opacity: 0.45;
+    cursor: wait;
+}
+
+.gv-venue-option--any {
+    border-style: dashed;
+    font-weight: 500;
+}
+
+.gv-venue-loading-note {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    color: var(--gv-brand-dark-gray);
+    font-size: 14px;
+}
+
+.gv-venue-loading-note[hidden] {
+    display: none;
+}
+
+.gv-venue-loading-note::before {
+    content: '';
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--gv-brand-light-gray);
+    border-top-color: var(--gv-brand-orange);
+    border-radius: 50%;
+    animation: gv-venue-spin 0.8s linear infinite;
+}
+
+@keyframes gv-venue-spin {
+    to { transform: rotate(360deg); }
+}

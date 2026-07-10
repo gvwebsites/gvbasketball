@@ -149,6 +149,11 @@ function gv_members_hidden_booking_trigger() {
                 do_shortcode('[latepoint_book_button caption="Book a Consultation" selected_service="' . (int) $service->id . '" selected_location="' . (int) $location->id . '" hide_side_panel="yes"]') .
                 '</div>';
         }
+        // Undecided visitors: LatePoint's "any" location preset aggregates
+        // availability across venues; Coach Gino settles the venue later.
+        $triggers .= '<div data-gv-venue-trigger="any">' .
+            do_shortcode('[latepoint_book_button caption="Book a Consultation" selected_service="' . (int) $service->id . '" selected_location="any" hide_side_panel="yes"]') .
+            '</div>';
     } else {
         $triggers = do_shortcode('[latepoint_book_button caption="Book a Consultation" selected_service="' . (int) $service->id . '" hide_side_panel="yes"]');
     }
@@ -162,12 +167,16 @@ function gv_members_hidden_booking_trigger() {
                 esc_html($location->name) .
                 '</button>';
         }
+        $options .= '<button type="button" class="gv-venue-option gv-venue-option--any" data-gv-venue="any">' .
+            esc_html("I don't have a venue yet") .
+            '</button>';
         echo '<div id="gv-venue-chooser" class="gv-venue-chooser" hidden>' .
             '<div class="gv-venue-chooser-overlay" data-gv-venue-close></div>' .
             '<div class="gv-venue-chooser-card" role="dialog" aria-modal="true" aria-labelledby="gv-venue-chooser-title">' .
             '<h3 id="gv-venue-chooser-title">Choose a Venue</h3>' .
             '<p>Pick the venue that works best for you. Coach Gino will confirm the details.</p>' .
             '<div class="gv-venue-options">' . $options . '</div>' .
+            '<div class="gv-venue-loading-note" aria-live="polite" hidden>Opening the booking form&hellip;</div>' .
             '<button type="button" class="gv-venue-cancel" data-gv-venue-close>Cancel</button>' .
             '</div>' .
             '</div>';
