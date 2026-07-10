@@ -398,3 +398,14 @@ This is the chronological log of all tasks, updates, and releases completed on t
   - Added LatePoint `hide_summary="yes"` to all modal consultation triggers.
   - Relabeled the visible day action to `BOOK A CONSULTATION` and styled it as a centered, rounded GV orange button.
   - Added regression contracts and synchronized `booking-latepoint.md`.
+
+## [2026-07-10] task | Minimal edits round: GV Elite Performance copy, pricing removal, Academy teaser
+- **Goal:** Ship only straightforward client revisions (new features deferred by agreement) plus a Coming-2027 GV Elite Academy teaser.
+- **Changes:**
+  - `build/pages/home.html`, `build/pages/training-programs.html`, `build/pages/faq.html`: GV Elite Performance rebrand (four pillars, Application Required · Limited Enrollment), Apply Now label on existing `data-gv-consultation` buttons, "aqua training" removed.
+  - `build/pages/faq.html`, `build/scripts/build-functional.php`: pricing mentions removed from copy (cost FAQ deleted; booking blurb trimmed). Price-hiding CSS untouched.
+  - New `build/pages/elite-academy.html` one-screen teaser (gold `#C9A24B` accents), live as page ID `3098`; nav tab added in `build/templates/header.html`, `build/scripts/build-menu.php`, footer Explore in `build/templates/footer.html`; deployed via new `build/scripts/deploy-minimal-edits.php`.
+  - `build/scripts/setup-latepoint.php`: service renamed GV Elite Performance, description updated (source only — script is never re-run against live).
+  - Pre-deploy live snapshot for quick v1 revert: `~/backups/v1-revert-minimal-edits-20260710/` on host + `resources/backups/v1-revert-minimal-edits-20260710/` locally (with RESTORE.md).
+  - `docs/CLIENT-REPORT-JULY-V2.html` + `docs/screenshots/v2-*.png` uploaded to `public_html/july-updates-v2.html` (+ `screenshots/`).
+  - Deferred register documented in spec `docs/superpowers/specs/2026-07-10-minimal-edits-design.md` §6; deferred specs/plans retained under `docs/superpowers/`.
