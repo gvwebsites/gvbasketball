@@ -1,6 +1,6 @@
 <?php
 // Framework-free CLI test. Run: php build/mu-plugins/tests/test-gv-members-contracts.php
-
+namespace {
 define('ABSPATH', __DIR__);
 define('DAY_IN_SECONDS', 86400);
 
@@ -43,6 +43,12 @@ function esc_html($s){ return htmlspecialchars((string)$s, ENT_QUOTES); }
 function esc_url($s){ return (string)$s; }
 function home_url($p=''){ return 'https://example.test'.$p; }
 function wp_create_nonce($a=''){ return 'testnonce'; }
+function wp_verify_nonce($nonce, $action = -1) { return $nonce === 'valid-nonce'; }
+function wp_nonce_field($action = -1, $name = '_wpnonce', $referer = true, $echo = true) {
+    $html = '<input type="hidden" name="' . esc_attr($name) . '" value="valid-nonce">';
+    if ($echo) echo $html;
+    return $html;
+}
 function admin_url($p=''){ return 'https://example.test/wp-admin/'.$p; }
 function sanitize_key($s){ return strtolower(preg_replace('/[^a-z0-9_]/','', (string)$s)); }
 function wp_json_encode($d){ return json_encode($d); }
@@ -72,6 +78,17 @@ function remove_action($hook, $func, $priority = 10) {
     }
     return true;
 }
+
+if (!class_exists('MockWpdb')) {
+    class MockWpdb {
+        public $prefix = 'wp_';
+        public function query($q) { return true; }
+        public function prepare($q, ...$args) { return vsprintf(str_replace('%d', '%s', $q), $args); }
+        public function get_row($q) { return (object)['id' => 888, 'status' => 'pending']; }
+    }
+}
+global $wpdb;
+$wpdb = new MockWpdb();
 
 function add_query_arg($args, $url = '') {
     $parts = parse_url($url);
@@ -194,6 +211,7 @@ function do_shortcode($content) {
 
 // Stubs for plugins_loaded require logic
 if (!class_exists('OsBookingModel')) {
+    #[\AllowDynamicProperties]
     class OsBookingModel {
         public $id = 777;
         public $booking_code = 'REF777';
@@ -206,8 +224,41 @@ if (!class_exists('OsBookingModel')) {
         public $status = 'approved';
         public $meta = [];
 
+        public static $query_code = '';
+        
+        public function __construct($id = null) {
+            if ($id !== null) {
+                global $mock_bookings;
+                if (!empty($mock_bookings)) {
+                    foreach ($mock_bookings as $b) {
+                        if ($b->id == $id) {
+                            $this->id = $b->id;
+                            $this->booking_code = $b->booking_code;
+                            $this->service_id = $b->service_id;
+                            $this->customer_id = $b->customer_id;
+                            $this->location_id = $b->location_id;
+                            $this->start_date = $b->start_date;
+                            $this->start_time = $b->start_time;
+                            $this->end_time = $b->end_time;
+                            $this->status = $b->status;
+                            $this->meta = $b->meta;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        public function is_new_record() {
+            return false;
+        }
+
         public function save_meta_by_key($key, $value) {
             $this->meta[$key] = $value;
+            global $mock_bookings;
+            if (isset($mock_bookings[$this->booking_code])) {
+                $mock_bookings[$this->booking_code]->meta[$key] = $value;
+            }
             return true;
         }
 
@@ -219,11 +270,36 @@ if (!class_exists('OsBookingModel')) {
             foreach ($attrs as $k => $v) {
                 $this->$k = $v;
             }
+            global $mock_bookings;
+            if (isset($mock_bookings[$this->booking_code])) {
+                foreach ($attrs as $k => $v) {
+                    $mock_bookings[$this->booking_code]->$k = $v;
+                }
+            }
             return true;
         }
 
         public function save() {
             return true;
+        }
+
+        public function where($args) {
+            if (isset($args['booking_code'])) {
+                self::$query_code = $args['booking_code'];
+            }
+            return $this;
+        }
+
+        public function set_limit($limit) {
+            return $this;
+        }
+
+        public function get_results_as_models() {
+            global $mock_bookings;
+            if (isset($mock_bookings[self::$query_code])) {
+                return [$mock_bookings[self::$query_code]];
+            }
+            return [$this];
         }
     }
 }
@@ -295,6 +371,31 @@ if (!class_exists('OsStepsHelper')) {
     }
 }
 
+if (!class_exists('OsBookingHelper')) {
+    class OsBookingHelper {
+        public static $available_slots = [900, 915, 930, 945, 960, 975, 990, 1005, 1020, 1035];
+        public static function is_booking_request_available($request, $options = []) {
+            return in_array($request->booking->start_time, self::$available_slots, true);
+        }
+    }
+}
+}
+namespace LatePoint\Misc {
+    if (!class_exists('BookingRequest', false)) {
+        class BookingRequest {
+            public $booking;
+            public static function create_from_booking_model($booking) {
+                $req = new self();
+                $req->booking = $booking;
+                return $req;
+            }
+        }
+    }
+}
+
+namespace {
+
+
 $failures = 0;
 
 function check($label, $cond) {
@@ -313,6 +414,18 @@ function gv_assert_contains($needle, $haystack, $label) {
 
 function gv_assert_not_contains($needle, $haystack, $label) {
     check($label, strpos($haystack, $needle) === false);
+}
+
+function gv_assert_same($expected, $actual, $label) {
+    check($label, $expected === $actual);
+}
+
+function gv_assert_false($actual, $label) {
+    check($label, $actual === false);
+}
+
+function gv_assert_true($actual, $label) {
+    check($label, $actual === true);
 }
 
 // Load bootstrap file
@@ -697,5 +810,118 @@ if (count($sent_mails) === 2) {
     check('second mail contains manual confirmation warning', strpos($sent_mails[1]['message'], 'does not send an automatic final confirmation') !== false);
 }
 
+// ==================== TASK 6 CONTRACT TESTS ====================
+
+global $mock_bookings;
+$mock_bookings = [];
+
+function run_finalize_request($get, $post = [], $method = 'GET') {
+    $_GET = $get;
+    $_POST = $post;
+    $_SERVER['REQUEST_METHOD'] = $method;
+    
+    ob_start();
+    gv_members_handle_finalize_request();
+    return ob_get_clean();
+}
+
+// Stub mock pending booking
+$pending_booking = new OsBookingModel();
+$pending_booking->id = 888;
+$pending_booking->booking_code = 'XYZ888';
+$pending_booking->service_id = 7; // Player Consultation
+$pending_booking->customer_id = 202;
+$pending_booking->location_id = 303;
+$pending_booking->start_date = '2026-07-15';
+$pending_booking->start_time = 900;
+$pending_booking->status = 'pending';
+$pending_booking->meta = [
+    'gv_player_name' => 'Gino Junior',
+    'gv_player_age' => '8',
+    'gv_training_interest' => 'private',
+    'gv_finalize_token_hash' => gv_members_token_hash('valid_token_123'),
+    'gv_finalize_token_expires_at' => time() + 3600,
+    'gv_finalize_token_used_at' => '',
+    'gv_finalized_at' => '',
+];
+
+$mock_bookings['XYZ888'] = $pending_booking;
+
+// Test A: Candidate times count is 10
+gv_assert_same(10, count(gv_members_candidate_start_times()), 'assert ten candidate starts');
+
+// Test B: Invalid token fails GET and reveals no PII
+$out = run_finalize_request(['booking_code' => 'XYZ888', 'token' => 'invalid_token']);
+gv_assert_contains('Invalid or expired finalization token', $out, 'invalid token fails');
+gv_assert_not_contains('Gino Junior', $out, 'invalid token reveals no PII');
+gv_assert_not_contains('parent@example.com', $out, 'invalid token reveals no parent email');
+
+// Test C: Expired token fails GET
+$pending_booking->meta['gv_finalize_token_expires_at'] = time() - 10;
+$out = run_finalize_request(['booking_code' => 'XYZ888', 'token' => 'valid_token_123']);
+gv_assert_contains('Invalid or expired finalization token', $out, 'expired token fails');
+$pending_booking->meta['gv_finalize_token_expires_at'] = time() + 3600; // restore
+
+// Test D: Non-consultation booking fails GET
+$pending_booking->service_id = 999; // non-consultation
+$out = run_finalize_request(['booking_code' => 'XYZ888', 'token' => 'valid_token_123']);
+gv_assert_contains('Invalid or expired finalization token', $out, 'non-consultation booking fails');
+$pending_booking->service_id = 7; // restore
+
+// Test E: Non-pending booking fails GET
+$pending_booking->status = 'cancelled';
+$out = run_finalize_request(['booking_code' => 'XYZ888', 'token' => 'valid_token_123']);
+gv_assert_contains('Invalid or expired finalization token', $out, 'non-pending status fails');
+$pending_booking->status = 'pending'; // restore
+
+// Test F: GET has no update call
+$status_before = $pending_booking->status;
+$time_before = $pending_booking->start_time;
+$out = run_finalize_request(['booking_code' => 'XYZ888', 'token' => 'valid_token_123']);
+gv_assert_same($status_before, $pending_booking->status, 'GET does not change status');
+gv_assert_same($time_before, $pending_booking->start_time, 'GET does not change start time');
+gv_assert_contains('Gino Junior', $out, 'GET reveals player name for valid token');
+gv_assert_contains('parent@example.com', $out, 'GET reveals parent email for valid token');
+
+// Test G: POST requires nonce
+$out = run_finalize_request(['booking_code' => 'XYZ888', 'token' => 'valid_token_123'], ['selected_time' => 960], 'POST');
+gv_assert_contains('Security check failed', $out, 'POST fails without nonce');
+
+// Test H: POST requires availability
+OsBookingHelper::$available_slots = [900, 915]; // only these are available
+$out = run_finalize_request(
+    ['booking_code' => 'XYZ888', 'token' => 'valid_token_123'],
+    ['gv_finalize_nonce' => 'valid-nonce', 'selected_time' => 960],
+    'POST'
+);
+gv_assert_contains('The selected slot is no longer available', $out, 'POST fails if slot not available');
+
+// Test I: Valid POST approves booking once
+OsBookingHelper::$available_slots = [900, 915, 960]; // 960 now available
+global $wpdb; // mock database
+$out = run_finalize_request(
+    ['booking_code' => 'XYZ888', 'token' => 'valid_token_123'],
+    ['gv_finalize_nonce' => 'valid-nonce', 'selected_time' => 960],
+    'POST'
+);
+
+gv_assert_contains('Booking Updated', $out, 'valid POST displays success');
+gv_assert_contains('parent@example.com', $out, 'valid POST displays parent email');
+gv_assert_same('approved', $pending_booking->status, 'valid POST approves booking');
+gv_assert_same(960, $pending_booking->start_time, 'valid POST sets correct start time');
+gv_assert_same(1005, $pending_booking->end_time, 'valid POST sets correct end time');
+gv_assert_same('2026-07-15 08:00:00', $pending_booking->start_datetime_utc, 'valid POST sets correct start UTC time');
+gv_assert_same('2026-07-15 08:45:00', $pending_booking->end_datetime_utc, 'valid POST sets correct end UTC time');
+
+// Check used metadata is set
+gv_assert_true(!empty($pending_booking->meta['gv_finalize_token_used_at']), 'token marked used');
+
+// Test J: Repeat GET or POST loads read-only approved branch
+$out = run_finalize_request(['booking_code' => 'XYZ888', 'token' => 'valid_token_123']);
+gv_assert_contains('Consultation Finalized', $out, 'repeat GET shows confirmed read-only title');
+gv_assert_contains('This consultation booking has already been finalized', $out, 'repeat GET shows confirmed notice');
+gv_assert_contains('4:00 PM', $out, 'confirmed view displays selected time read-only');
+
 echo $failures ? "\n$failures FAILED\n" : "\nALL PASS\n";
 exit($failures ? 1 : 0);
+}
