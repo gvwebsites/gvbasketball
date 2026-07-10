@@ -79,6 +79,18 @@ function remove_action($hook, $func, $priority = 10) {
     return true;
 }
 
+function remove_filter($hook, $func, $priority = 10) {
+    global $registered_filters;
+    if (isset($registered_filters[$hook])) {
+        foreach ($registered_filters[$hook] as $key => $filter) {
+            if ($filter['function'] === $func && $filter['priority'] === $priority) {
+                unset($registered_filters[$hook][$key]);
+            }
+        }
+    }
+    return true;
+}
+
 if (!class_exists('MockWpdb')) {
     class MockWpdb {
         public $prefix = 'wp_';
@@ -118,6 +130,39 @@ class WpSendJsonException extends Exception {
 
 function wp_send_json($response, $status_code = null, $options = 0) {
     throw new WpSendJsonException($response);
+}
+
+function wp_send_json_success($data = null, $status_code = null, $options = 0) {
+    throw new WpSendJsonException(['success' => true, 'data' => $data]);
+}
+
+function wp_send_json_error($data = null, $status_code = null, $options = 0) {
+    throw new WpSendJsonException(['success' => false, 'data' => $data]);
+}
+
+$gv_transients = [];
+function get_transient($key) {
+    global $gv_transients;
+    return isset($gv_transients[$key]) ? $gv_transients[$key] : false;
+}
+function set_transient($key, $val, $ttl) {
+    global $gv_transients;
+    $gv_transients[$key] = $val;
+    return true;
+}
+
+function is_email($email) {
+    return is_string($email) && strpos($email, '@') !== false;
+}
+
+function apply_filters($tag, $value, ...$args) {
+    global $registered_filters;
+    if (isset($registered_filters[$tag])) {
+        foreach ($registered_filters[$tag] as $filter) {
+            $value = call_user_func_array($filter['function'], array_merge([$value], $args));
+        }
+    }
+    return $value;
 }
 
 // Mock HTTP requests for Turnstile verification
@@ -334,14 +379,117 @@ if (!class_exists('OsServiceModel')) {
     }
 }
 if (!class_exists('OsCustomerModel')) {
+    #[\AllowDynamicProperties]
     class OsCustomerModel {
         public $id = 202;
         public $first_name = 'John';
         public $last_name = 'Doe';
         public $email = 'parent@example.com';
         public $phone = '09171234567';
-        public function __construct($id = null) {}
-        public function is_new_record() { return false; }
+        public $status = 'active';
+        public $is_guest = 0;
+        public $meta = [];
+        public $is_new = false;
+        
+        public static $query_email = '';
+        public static $customers_db = [];
+
+        public function __construct($id = null) {
+            if ($id === null) {
+                $this->is_new = true;
+            } else {
+                $this->id = $id;
+            }
+        }
+        
+        public function is_new_record() {
+            return $this->is_new;
+        }
+
+        public function where($args) {
+            if (isset($args['email'])) {
+                self::$query_email = $args['email'];
+            }
+            return $this;
+        }
+
+        public function set_limit($limit) {
+            return $this;
+        }
+
+        public function get_results_as_models() {
+            // Check in our fake DB
+            if (isset(self::$customers_db[self::$query_email])) {
+                return self::$customers_db[self::$query_email];
+            }
+            // If default mock email requested, return the baseline mock object
+            if (self::$query_email === 'parent@example.com') {
+                $c = new self(202);
+                $c->email = 'parent@example.com';
+                $c->first_name = 'John';
+                $c->last_name = 'Doe';
+                $c->is_new = false;
+                return $c;
+            }
+            return [];
+        }
+
+        public function save() {
+            $this->is_new = false;
+            if (empty($this->id)) {
+                $this->id = rand(1000, 9999);
+            }
+            self::$customers_db[$this->email] = $this;
+            return true;
+        }
+
+        public function save_meta_by_key($key, $value) {
+            $this->meta[$key] = $value;
+            return true;
+        }
+
+        public function get_meta_by_key($key, $default = '') {
+            return $this->meta[$key] ?? $default;
+        }
+    }
+}
+
+if (!class_exists('OsOTPHelper')) {
+    class OsOTPHelper {
+        public static $last_sent = [];
+        public static function generateAndSendOTP($email, $type, $method) {
+            self::$last_sent = [$email, $type, $method];
+            return true;
+        }
+        public static function verifyOTP($code, $email, $type = 'email', $method = 'email') {
+            return $code === '123456';
+        }
+    }
+}
+
+if (!class_exists('OsAuthHelper')) {
+    class OsAuthHelper {
+        public static $logged_in_customer = null;
+        public static function authorize_customer($customer_id) {
+            // Find in db
+            foreach (OsCustomerModel::$customers_db as $c) {
+                if ($c->id == $customer_id) {
+                    self::$logged_in_customer = $c;
+                    return true;
+                }
+            }
+            // fallback
+            $c = new OsCustomerModel($customer_id);
+            $c->is_new = false;
+            self::$logged_in_customer = $c;
+            return true;
+        }
+        public static function logout_customer() {
+            self::$logged_in_customer = null;
+        }
+        public static function get_logged_in_customer() {
+            return self::$logged_in_customer;
+        }
     }
 }
 
@@ -923,6 +1071,87 @@ $out = run_finalize_request(['booking_code' => 'XYZ888', 'token' => 'valid_token
 gv_assert_contains('Consultation Finalized', $out, 'repeat GET shows confirmed read-only title');
 gv_assert_contains('This consultation booking has already been finalized', $out, 'repeat GET shows confirmed notice');
 gv_assert_contains('4:00 PM', $out, 'confirmed view displays selected time read-only');
+
+// ==================== TASK 7 CONTRACT TESTS ====================
+
+function run_ajax_action($action, $params = []) {
+    $_POST = $params;
+    $_POST['action'] = $action;
+    try {
+        if ($action === 'gv_otp_request') {
+            gv_otp_request_handler();
+        } elseif ($action === 'gv_otp_verify') {
+            gv_otp_verify_handler();
+        }
+        return ['success' => null, 'data' => null];
+    } catch (WpSendJsonException $e) {
+        return $e->response;
+    }
+}
+
+// Check AJAX actions are registered
+$has_otp_req = false;
+$has_otp_ver = false;
+if (isset($registered_actions['wp_ajax_gv_otp_request'])) $has_otp_req = true;
+if (isset($registered_actions['wp_ajax_nopriv_gv_otp_request'])) $has_otp_req = true;
+if (isset($registered_actions['wp_ajax_gv_otp_verify'])) $has_otp_ver = true;
+if (isset($registered_actions['wp_ajax_nopriv_gv_otp_verify'])) $has_otp_ver = true;
+
+check('auth: logged-out request AJAX actions registered', $has_otp_req);
+check('auth: logged-out verify AJAX actions registered', $has_otp_ver);
+
+// Test A: Request nonce check
+$res = run_ajax_action('gv_otp_request', []);
+check('auth: request nonce check fails without nonce', $res['success'] === false && strpos($res['data']['message'], 'Security check') !== false);
+
+$res = run_ajax_action('gv_otp_request', ['nonce' => 'invalid-nonce', 'email' => 'test@example.com']);
+check('auth: request nonce check fails with invalid nonce', $res['success'] === false && strpos($res['data']['message'], 'Security check') !== false);
+
+// Test B: Verify nonce check
+$res = run_ajax_action('gv_otp_verify', []);
+check('auth: verify nonce check fails without nonce', $res['success'] === false && strpos($res['data']['message'], 'Security check') !== false);
+
+// Test C: Valid OTP request returns generic success
+$res = run_ajax_action('gv_otp_request', ['nonce' => 'valid-nonce', 'email' => 'newuser@example.com']);
+check('auth: request success with generic response', $res['success'] === true && strpos($res['data']['message'], 'six-digit code') !== false);
+
+// Test D: IP rate limits (transient count check)
+global $gv_transients;
+// Reset transients
+$gv_transients = [];
+// Trigger email rate limit (max 5 sends/email/hour)
+for ($i = 0; $i < 5; $i++) {
+    $res = run_ajax_action('gv_otp_request', ['nonce' => 'valid-nonce', 'email' => 'limit_email@example.com']);
+}
+$res_limit = run_ajax_action('gv_otp_request', ['nonce' => 'valid-nonce', 'email' => 'limit_email@example.com']);
+check('auth: hashed rate limits for email triggered', $res_limit['success'] === false && strpos($res_limit['data']['message'], 'Too many requests') !== false);
+
+// Test E: Verify OTP for unknown email creates ONE customer
+$gv_transients = [];
+OsCustomerModel::$customers_db = []; // Clear DB
+$verify_res = run_ajax_action('gv_otp_verify', [
+    'nonce' => 'valid-nonce',
+    'email' => 'newuser@example.com',
+    'otp' => '123456'
+]);
+check('auth: verify success redirect status', $verify_res['success'] === true);
+check('auth: one unknown-email customer created in DB', isset(OsCustomerModel::$customers_db['newuser@example.com']));
+if (isset(OsCustomerModel::$customers_db['newuser@example.com'])) {
+    $cust = OsCustomerModel::$customers_db['newuser@example.com'];
+    check('auth: created customer is active', $cust->status === 'active');
+    check('auth: created customer is non-guest', $cust->is_guest === 0);
+    check('auth: created customer email matches', $cust->email === 'newuser@example.com');
+}
+
+// Test F: Repeat login does not duplicate the customer
+$customer_count_before = count(OsCustomerModel::$customers_db);
+$verify_res_repeat = run_ajax_action('gv_otp_verify', [
+    'nonce' => 'valid-nonce',
+    'email' => 'newuser@example.com',
+    'otp' => '123456'
+]);
+check('auth: repeat login success', $verify_res_repeat['success'] === true);
+check('auth: no duplicate customer on repeat', count(OsCustomerModel::$customers_db) === $customer_count_before);
 
 echo $failures ? "\n$failures FAILED\n" : "\nALL PASS\n";
 exit($failures ? 1 : 0);
