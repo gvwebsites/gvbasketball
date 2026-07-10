@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>GV Basketball &mdash; July 2026 Website Report</title>
+  <title>GV Basketball &mdash; July Changes</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="A plain-language summary of the July 2026 improvements to the GV Basketball website: a fresh homepage, a new photo gallery, real photos throughout, one-tap consultation booking, and premium polish.">
+  <meta name="description" content="July changes to the GV Basketball website: your revision notes addressed, plus the other improvements we added.">
   <style>
     :root {
       --deep: #021F51;
@@ -17,6 +17,7 @@
       --card: #ffffff;
       --line: #dde3ec;
       --live: #1f8a4c;
+      --amber: #9a7b1f;
       --maxw: 920px;
       --disp: "Helvetica Neue", Helvetica, Arial, sans-serif;
       --body: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -72,13 +73,18 @@
       border-radius: 999px;
       padding: 5px 12px;
     }
-    section { padding: 54px 0; border-bottom: 1px solid var(--line); }
+    .part-head { background: #eef1f6; border-bottom: 1px solid var(--line); border-top: 1px solid var(--line); }
+    .part-head .wrap { padding-top: 30px; padding-bottom: 30px; }
+    .part-head .kicker { font-family: var(--disp); text-transform: uppercase; letter-spacing:.14em; font-weight:700; font-size:.72rem; color: var(--gold); }
+    .part-head h2 { font-size: clamp(1.5rem, 3.4vw, 2.1rem); color: var(--deep); margin-top: 6px; }
+    .part-head p { color: var(--muted); max-width: 68ch; margin: 8px 0 0; }
+    section { padding: 44px 0; border-bottom: 1px solid var(--line); }
     section:last-of-type { border-bottom: 0; }
     h2 { font-size: clamp(1.4rem, 3vw, 1.9rem); color: var(--deep); }
     h2 .num { color: var(--gold); margin-right: .4em; }
     .lead { font-size: 1.08rem; color: var(--muted); max-width: 68ch; margin: 10px 0 0; }
-    .sec-head { margin-bottom: 32px; }
-    figure { margin: 0 0 24px; }
+    .sec-head { margin-bottom: 28px; }
+    figure { margin: 0 0 8px; }
     .screen {
       background: var(--card);
       border: 1px solid var(--line);
@@ -134,6 +140,18 @@
       background: var(--gold);
     }
     .card--navy ul.clean li::before { background: var(--gold-soft); }
+    /* Request cards (Part 1) */
+    .req { background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--gold); border-radius: 12px; padding: 20px 24px; margin-top: 16px; }
+    .req--done { border-left-color: var(--live); }
+    .req--evolved { border-left-color: var(--gold); }
+    .req--pending { border-left-color: #9aa6b8; }
+    .req__head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 4px; }
+    .req__num { font-family: var(--disp); font-weight: 800; color: var(--gold); font-size: 1.15rem; }
+    .req__head h3 { font-size: 1.05rem; color: var(--deep); margin: 0; flex: 1 1 auto; min-width: 180px; }
+    .req p { margin: 6px 0 0; color: var(--muted); font-size: .96rem; }
+    .req .note { margin-top: 10px; font-size: .9rem; color: var(--amber); background: #f9f4e6; border-radius: 8px; padding: 9px 12px; }
+    .req ul.clean { margin-top: 10px; }
+    .req ul.clean li { font-size: .96rem; }
     .chip {
       display: inline-flex;
       align-items: center;
@@ -145,15 +163,15 @@
       font-size: .7rem;
       padding: 5px 11px;
       border-radius: 999px;
+      white-space: nowrap;
     }
     .chip::before { content: ""; width: 8px; height: 8px; border-radius: 50%; }
-    .chip--live { background: #e7f3ec; color: var(--live); }
-    .chip--live::before { background: var(--live); }
-    .feature-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 18px; }
-    @media(max-width: 680px) { .feature-grid { grid-template-columns: 1fr; } }
-    .feat { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; }
-    .feat b { display: block; font-family: var(--disp); text-transform: uppercase; letter-spacing: .03em; color: var(--deep); font-size: .92rem; margin-bottom: 3px; }
-    .feat span { font-size: .92rem; color: var(--muted); }
+    .chip--live, .chip--done { background: #e7f3ec; color: var(--live); }
+    .chip--live::before, .chip--done::before { background: var(--live); }
+    .chip--evolved { background: #f7efd9; color: var(--amber); }
+    .chip--evolved::before { background: var(--gold); }
+    .chip--pending { background: #eef1f6; color: var(--muted); }
+    .chip--pending::before { background: #9aa6b8; }
     footer { background: var(--deep); color: #aebbd6; padding: 34px 0; font-size: .86rem; border-top: 1px solid rgba(255, 255, 255, 0.1); }
     footer .wrap { display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
     footer b { color: #fff; font-family: var(--disp); letter-spacing: .04em; }
@@ -163,39 +181,100 @@
 
 <div class="cover">
   <div class="wrap">
-    <div class="eyebrow">Monthly Website Report &middot; July 2026</div>
-    <h1>GV Basketball<br>July Website Report</h1>
+    <div class="eyebrow">GV Basketball &middot; July 2026</div>
+    <h1>July Changes</h1>
     <div class="accent"></div>
-    <p>A plain-language summary of everything we improved on your website this month. In July we gave the homepage a fresh, focused look, launched a brand-new photo gallery, replaced placeholder images with real photos from your sessions, made booking a consultation a single tap from anywhere on the site, and added premium finishing touches throughout. Everything below is live now at gvbasketball.com.</p>
+    <p>What we changed on your website in July. We start with the items from your revision notes &mdash; each tagged Done, Evolved, or Pending &mdash; then cover the other improvements we added to push the premium, elite-academy feel further. Everything here is live now at gvbasketball.com.</p>
     <div class="meta">
       <span>gvbasketball.com</span><span>Prepared for Coach Gino</span><span>July 2026</span>
     </div>
   </div>
 </div>
 
+<!-- ============ PART 1 ============ -->
+<div class="part-head"><div class="wrap">
+  <div class="kicker">Part 1</div>
+  <h2>Your Revision Notes, Addressed</h2>
+  <p>Every item from your July notes, in your original order. Your overall ask &mdash; a more premium, high-performance feel, less basketball clinic and more elite athlete-development academy &mdash; guided all of it. Where something has evolved from your exact wording, we&rsquo;ve tagged it <strong>Evolved</strong> and flagged it for your review rather than changing it back.</p>
+</div></div>
+
 <section><div class="wrap">
-  <div class="sec-head">
-    <div class="eyebrow">Overview</div>
-    <h2>What&rsquo;s New This Month</h2>
-    <p class="lead">A quick snapshot of the July improvements. Each one is explained in more detail, with screenshots, in the sections that follow.</p>
+  <div class="req req--done">
+    <div class="req__head"><span class="req__num">1</span><h3>Training Programs</h3><span class="chip chip--done">Done</span></div>
+    <p>All three programs were rewritten to your specifications, and your follow-up revisions were applied.</p>
+    <ul class="clean">
+      <li><strong>Private Training:</strong> 1-on-1 individualized coaching &middot; available by appointment &middot; ages 3 to professional athletes.</li>
+      <li><strong>Small Group:</strong> maximum 6 athletes &middot; ages 5&ndash;20 &middot; with your inclusivity messaging &mdash; &ldquo;Game-like, competitive drills / All skill levels welcome &mdash; drills are adapted to each player / Skill development + team concepts.&rdquo;</li>
+      <li><strong>Elite Performance:</strong> basketball + strength &amp; conditioning + aqua training &mdash; an integrated performance system for next-level athletes, by appointment.</li>
+      <li><strong>Schedule:</strong> Dasma Makati (Mon, Wed, Thu) &middot; Urdaneta Village (Fri, Sun) &middot; Corinthian Gardens (Sun).</li>
+      <li><strong>Header copy:</strong> &ldquo;Choose Your Path to Elite Performance &mdash; purpose-built programs for athletes committed to reaching their full potential,&rdquo; as you requested.</li>
+    </ul>
   </div>
-  <div class="feature-grid">
-    <div class="feat"><b>Fresh Homepage</b><span>A clean, centered welcome with a clear headline and two obvious next steps.</span></div>
-    <div class="feat"><b>New Photo Gallery</b><span>A dedicated &ldquo;Inside the Gym&rdquo; page filled with real session photos.</span></div>
-    <div class="feat"><b>Real Photos Everywhere</b><span>Genuine photos of Coach Gino and your athletes replaced older placeholder images.</span></div>
-    <div class="feat"><b>Instagram in the Menu</b><span>A one-tap Instagram link added to the top of every page.</span></div>
-    <div class="feat"><b>One-Tap Booking</b><span>Every &ldquo;Book a Consultation&rdquo; button opens the same quick pop-up form.</span></div>
-    <div class="feat"><b>Location &amp; Day Picker</b><span>Parents choose a venue and instantly see the days it runs.</span></div>
-    <div class="feat"><b>Clearer Programs</b><span>Three easy-to-compare programs with updated details and photos.</span></div>
-    <div class="feat"><b>Premium Polish</b><span>Gold accents, a cleaner footer, and consistent buttons across the site.</span></div>
+
+  <figure style="margin-top:22px;">
+    <div class="screen"><div class="screen__bar"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span class="screen__url">gvbasketball.com/training-programs/</span></div>
+    <img src="screenshots/training-programs.png" alt="Training Programs page with the three updated program cards">
+    </div>
+    <figcaption>The three updated programs, with your inclusivity and aqua-training wording live.</figcaption>
+  </figure>
+
+  <div class="req req--pending">
+    <div class="req__head"><span class="req__num">2</span><h3>FAQ</h3><span class="chip chip--pending">Pending your input</span></div>
+    <p>Holding for the revised answers you mentioned you&rsquo;d send separately. As soon as they arrive, we&rsquo;ll update the FAQ page.</p>
+  </div>
+
+  <div class="req req--done">
+    <div class="req__head"><span class="req__num">3</span><h3>Real Coach Gino Photos</h3><span class="chip chip--done">Done</span></div>
+    <p>Placeholder imagery was replaced with real, professional photography across the site &mdash; on the home page, the about page, and in training and coaching shots &mdash; for a premium, authentic, personal feel.</p>
+  </div>
+
+  <figure style="margin-top:22px;">
+    <div class="screen"><div class="screen__bar"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span class="screen__url">gvbasketball.com/about/</span></div>
+    <img src="screenshots/about.png" alt="About GV Basketball page with Coach Gino's real portrait">
+    </div>
+    <figcaption>Real photography now anchors the About page and the rest of the site.</figcaption>
+  </figure>
+
+  <div class="req req--pending">
+    <div class="req__head"><span class="req__num">4</span><h3>Testimonials</h3><span class="chip chip--pending">Pending your content</span></div>
+    <p>The section is ready and waiting for the testimonials, parent feedback, and success stories (with photos) you plan to send. It stays hidden until your content is in, so nothing shows empty at launch.</p>
+  </div>
+
+  <div class="req req--done">
+    <div class="req__head"><span class="req__num">5</span><h3>Pricing</h3><span class="chip chip--done">Done</span></div>
+    <p>Pricing stays hidden. Instead, the site communicates that each athlete receives a personalized recommendation &mdash; program options and investment are discussed during the consultation to ensure the best fit.</p>
+  </div>
+
+  <div class="req req--evolved">
+    <div class="req__head"><span class="req__num">6</span><h3>Member Login</h3><span class="chip chip--evolved">Evolved</span></div>
+    <p>As you asked, member login was kept simple for Version 1 so we can launch first &mdash; client login, scheduling, and session tracking remain planned for a future update.</p>
+    <div class="note"><strong>Evolved &mdash; for your review:</strong> to keep the top menu focused and premium, the member-login icon was removed from the header and replaced with a one-tap Instagram link. The booking/login portal still exists behind the scenes and can be brought back into the menu whenever you want. Noted here, not changed.</div>
+  </div>
+
+  <div class="req req--done">
+    <div class="req__head"><span class="req__num">7</span><h3>Footer &mdash; More Minimalist</h3><span class="chip chip--done">Done</span></div>
+    <p>The footer was rebuilt to the cleaner, more minimalist look from your reference images, using your official GV wordmark logo. We also tidied away the unused newsletter sign-up strip &mdash; it can be switched back on later without rebuilding it.</p>
+  </div>
+
+  <div class="req req--evolved">
+    <div class="req__head"><span class="req__num">8</span><h3>Flow of Purchase</h3><span class="chip chip--evolved">Evolved</span></div>
+    <p>Your notes outlined a booking-and-payment flow (book &rarr; receive payment details &rarr; bank transfer &rarr; payment confirmed &rarr; booking confirmed &rarr; attend).</p>
+    <div class="note"><strong>Evolved &mdash; for your review:</strong> on the live site this became a <strong>consultation-first</strong> flow &mdash; <em>Book a Consultation &rarr; Player Evaluation &rarr; Start Your Plan</em> &mdash; which keeps pricing private and payment handled off-site, in line with your &ldquo;keep pricing hidden&rdquo; request. The bank-transfer steps aren&rsquo;t shown publicly. Noted here, not changed &mdash; let us know if you&rsquo;d like the payment steps surfaced.</div>
   </div>
 </div></section>
+
+<!-- ============ PART 2 ============ -->
+<div class="part-head"><div class="wrap">
+  <div class="kicker">Part 2</div>
+  <h2>Other Improvements We Added</h2>
+  <p>Beyond your notes, these are the extra changes we made this month to keep pushing toward that elite academy feel.</p>
+</div></div>
 
 <section><div class="wrap">
   <div class="sec-head">
     <div class="chips"><span class="chip chip--live">Live</span></div>
-    <h2><span class="num">01</span>A Fresh, Focused Homepage</h2>
-    <p class="lead">We rebuilt the top of the homepage into a calm, confident welcome that gets visitors to the right place quickly.</p>
+    <h2><span class="num">01</span>A Fresh Homepage with a Premium Scroll</h2>
+    <p class="lead">The top of the homepage was rebuilt into a calm, centered welcome. As visitors scroll, the hero holds in place and the next section rises up to cover it &mdash; a subtle, high-end touch.</p>
   </div>
   <figure>
     <div class="screen"><div class="screen__bar"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span class="screen__url">gvbasketball.com</span></div>
@@ -204,13 +283,11 @@
     <figcaption>The new homepage: a centered welcome, a clear headline, and an always-visible &ldquo;Book a Consultation&rdquo; button.</figcaption>
   </figure>
   <div class="card card--accent">
-    <h3>What Changed</h3>
     <ul class="clean">
-      <li><strong>Centered welcome:</strong> Your message &mdash; &ldquo;Build Better Players. Build Better People.&rdquo; &mdash; now sits front and center with two clear buttons: <em>Book a Consultation</em> and <em>View Training Programs</em>.</li>
-      <li><strong>Simple top menu:</strong> Home, About, Programs, Gallery, FAQ and Contact are all one tap away, along with a bright orange booking button that stays visible as visitors scroll.</li>
-      <li><strong>Instagram link:</strong> A one-tap Instagram icon now sits in the menu so families can follow along instantly.</li>
-      <li><strong>Coach Gino featured first:</strong> Coach Gino appears side by side with his NBA mentors, Phil Handy and Micah Lancaster.</li>
-      <li><strong>Locations on the homepage:</strong> Your three training venues now appear right on the homepage, so visitors see where you train without searching.</li>
+      <li><strong>Centered welcome:</strong> your message &mdash; &ldquo;Build Better Players. Build Better People.&rdquo; &mdash; front and center, with clear next steps.</li>
+      <li><strong>Coach Gino featured first:</strong> shown side by side with his NBA mentors, Phil Handy and Micah Lancaster.</li>
+      <li><strong>Locations on the homepage:</strong> your three training venues now appear right on the homepage.</li>
+      <li><strong>Premium scroll effect:</strong> a smooth, modern reveal that makes the site feel more like an academy than a clinic.</li>
     </ul>
   </div>
 </div></section>
@@ -219,20 +296,19 @@
   <div class="sec-head">
     <div class="chips"><span class="chip chip--live">Live</span></div>
     <h2><span class="num">02</span>A Brand-New Photo Gallery</h2>
-    <p class="lead">We created a dedicated gallery so families can see the real GV Basketball experience before they book.</p>
+    <p class="lead">A dedicated gallery so families can see the real GV Basketball experience before they reach out.</p>
   </div>
   <figure>
     <div class="screen"><div class="screen__bar"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span class="screen__url">gvbasketball.com/gallery/</span></div>
     <img src="screenshots/gallery.png" alt="Inside the Gym gallery page with a grid of real training photos">
     </div>
-    <figcaption>The new &ldquo;Inside the Gym&rdquo; gallery &mdash; real athletes, real sessions, no stock photos.</figcaption>
+    <figcaption>The new &ldquo;Inside the Gym&rdquo; gallery &mdash; real athletes, real sessions.</figcaption>
   </figure>
   <div class="card card--accent">
-    <h3>What Changed</h3>
     <ul class="clean">
-      <li><strong>Real session photos:</strong> A clean grid of genuine photos from your actual training sessions and clinics &mdash; no placeholder or stock imagery.</li>
-      <li><strong>Easy to find:</strong> Gallery was added to both the main menu and the footer.</li>
-      <li><strong>Fast and sharp:</strong> The photos are optimized to load quickly and look crisp on phones and large screens alike.</li>
+      <li><strong>Real session photos:</strong> a clean grid of genuine photos from your actual training sessions and clinics.</li>
+      <li><strong>Easy to find:</strong> added to both the main menu and the footer.</li>
+      <li><strong>One consistent look:</strong> every photo across the site was color-matched to the same clean, cohesive tone.</li>
     </ul>
   </div>
 </div></section>
@@ -240,70 +316,21 @@
 <section><div class="wrap">
   <div class="sec-head">
     <div class="chips"><span class="chip chip--live">Live</span></div>
-    <h2><span class="num">03</span>Real Photos, One Consistent Look</h2>
-    <p class="lead">We swapped placeholder imagery for genuine photography across the whole site and gave every photo the same clean, cohesive tone.</p>
-  </div>
-  <figure>
-    <div class="screen"><div class="screen__bar"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span class="screen__url">gvbasketball.com/about/</span></div>
-    <img src="screenshots/about.png" alt="About GV Basketball page with Coach Gino's portrait and story">
-    </div>
-    <figcaption>The refreshed &ldquo;About GV Basketball&rdquo; page featuring Coach Gino&rsquo;s real portrait and story.</figcaption>
-  </figure>
-  <div class="card card--accent">
-    <h3>What Changed</h3>
-    <ul class="clean">
-      <li><strong>Genuine photography:</strong> Real photos of Coach Gino and your athletes now appear across the homepage, programs, about, and gallery.</li>
-      <li><strong>Refreshed About page:</strong> Renamed to &ldquo;About GV Basketball,&rdquo; with Coach Gino&rsquo;s portrait, his story, and a photo carousel.</li>
-      <li><strong>One cohesive look:</strong> We color-matched every photo to the same clean, cool tone, so the whole site feels like one polished brand rather than a mix of sources.</li>
-    </ul>
-  </div>
-</div></section>
-
-<section><div class="wrap">
-  <div class="sec-head">
-    <div class="chips"><span class="chip chip--live">Live</span></div>
-    <h2><span class="num">04</span>Clearer Training Programs</h2>
-    <p class="lead">We made it simple to compare programs at a glance and understand how booking works &mdash; without listing prices online.</p>
-  </div>
-  <figure>
-    <div class="screen"><div class="screen__bar"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span class="screen__url">gvbasketball.com/training-programs/</span></div>
-    <img src="screenshots/training-programs.png" alt="Training Programs page with three program cards and real photos">
-    </div>
-    <figcaption>Three easy-to-compare programs, each with a clear &ldquo;Book a Consultation&rdquo; button.</figcaption>
-  </figure>
-  <div class="card card--accent">
-    <h3>What Changed</h3>
-    <ul class="clean">
-      <li><strong>Three clear programs:</strong> Private Training, Small Group (up to 6 athletes, all skill levels welcome), and Elite Performance (which now includes aqua training).</li>
-      <li><strong>Updated photos:</strong> The program images were refreshed with real session photography.</li>
-      <li><strong>Simple schedule:</strong> A clean schedule shows which days each venue runs &mdash; Dasma Makati (Mon, Wed, Thu), Urdaneta Village (Fri, Sun), and Corinthian Gardens (Sun).</li>
-      <li><strong>How booking works:</strong> A short, friendly step-by-step explainer sets expectations for booking and payment, which is handled privately rather than shown online.</li>
-      <li><strong>Personal pricing:</strong> Pricing stays customized and is shared during the consultation.</li>
-    </ul>
-  </div>
-</div></section>
-
-<section><div class="wrap">
-  <div class="sec-head">
-    <div class="chips"><span class="chip chip--live">Live</span></div>
-    <h2><span class="num">05</span>One-Tap Consultation Booking</h2>
-    <p class="lead">Booking a consultation is now effortless from anywhere on the site &mdash; every button opens the same quick form right where the visitor is.</p>
+    <h2><span class="num">03</span>One-Tap Consultation Booking</h2>
+    <p class="lead">Every &ldquo;Book a Consultation&rdquo; button now opens the same quick form right where the visitor is &mdash; no page jumps, no dead ends.</p>
   </div>
   <figure>
     <div class="screen"><div class="screen__bar"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span class="screen__url">gvbasketball.com/book-a-consultation/</span></div>
     <img src="screenshots/book-a-consultation.png" alt="Book a Consultation pop-up form with location and day selection">
     </div>
-    <figcaption>The consultation pop-up, with the new location picker and matching day options.</figcaption>
+    <figcaption>The consultation pop-up, with a location picker and matching day options.</figcaption>
   </figure>
   <div class="card card--accent">
-    <h3>What Changed</h3>
     <ul class="clean">
-      <li><strong>Opens anywhere:</strong> Every &ldquo;Book a Consultation&rdquo; button now opens the same quick pop-up form &mdash; no page jumps and no dead ends.</li>
-      <li><strong>Location &amp; day picker:</strong> Parents choose a preferred venue, and the available days update automatically for that location.</li>
-      <li><strong>Only the essentials required:</strong> Phone or Instagram and preferred time are optional, so the form stays short and friendly.</li>
-      <li><strong>Spam protection:</strong> A quiet security check keeps junk submissions out of your inbox.</li>
-      <li><strong>Confirmation emails:</strong> Requests go straight to your coaching inbox, and both you and the parent receive an email that includes the chosen location and day.</li>
-      <li><strong>No more dead links:</strong> Older buttons that used to send people to a separate page now open this form directly.</li>
+      <li><strong>Opens anywhere:</strong> every booking button opens the same pop-up form.</li>
+      <li><strong>Location &amp; day picker:</strong> choose a venue and the available days update automatically for that location.</li>
+      <li><strong>Short and friendly:</strong> only the essentials are required; phone/Instagram and preferred time are optional. Quiet spam protection keeps junk out.</li>
+      <li><strong>Confirmation emails:</strong> requests reach your coaching inbox, and both you and the parent get an email with the chosen location and day.</li>
     </ul>
   </div>
 </div></section>
@@ -311,25 +338,8 @@
 <section><div class="wrap">
   <div class="sec-head">
     <div class="chips"><span class="chip chip--live">Live</span></div>
-    <h2><span class="num">06</span>Premium Polish</h2>
-    <p class="lead">A set of finishing touches that make the whole site feel more premium and consistent.</p>
-  </div>
-  <div class="card card--navy">
-    <h3>What Changed</h3>
-    <ul class="clean">
-      <li><strong>Premium gold accents:</strong> A tasteful gold accent was added to key call-to-action areas to complement the GV navy and orange.</li>
-      <li><strong>Consistent buttons:</strong> Buttons now keep clean white text when you hover over them, fixing an earlier color glitch.</li>
-      <li><strong>Cleaner footer:</strong> The footer was rebuilt to be simple and elegant, using your official GV wordmark logo.</li>
-      <li><strong>Newsletter tidied away:</strong> We removed the newsletter sign-up strip for now, since it isn&rsquo;t being used yet &mdash; it can be switched back on later without rebuilding it.</li>
-    </ul>
-  </div>
-</div></section>
-
-<section><div class="wrap">
-  <div class="sec-head">
-    <div class="chips"><span class="chip chip--live">Live</span></div>
-    <h2><span class="num">07</span>A Simpler Contact Page</h2>
-    <p class="lead">With your venues now shown on the homepage, the Contact page is focused purely on helping people reach you.</p>
+    <h2><span class="num">04</span>A Simpler Contact Page &amp; Instagram Link</h2>
+    <p class="lead">With your venues now on the homepage, the Contact page is focused purely on reaching you &mdash; and Instagram is one tap away from every page.</p>
   </div>
   <figure>
     <div class="screen"><div class="screen__bar"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span class="screen__url">gvbasketball.com/contact/</span></div>
@@ -338,10 +348,9 @@
     <figcaption>A clean Contact page: Instagram, email, and a short message form.</figcaption>
   </figure>
   <div class="card card--accent">
-    <h3>What Changed</h3>
     <ul class="clean">
-      <li><strong>Focused on reaching you:</strong> The page now leads with your Instagram and email, plus a simple message form.</li>
-      <li><strong>Venues moved to the homepage:</strong> The list of training locations was moved to the homepage where it&rsquo;s seen sooner.</li>
+      <li><strong>Focused on reaching you:</strong> leads with your Instagram and email, plus a simple message form.</li>
+      <li><strong>Instagram in the menu:</strong> a one-tap Instagram icon now sits in the top menu of every page.</li>
     </ul>
   </div>
 </div></section>
@@ -350,22 +359,22 @@
   <div class="sec-head">
     <div class="eyebrow">Quality Check</div>
     <h2>Tested &amp; Live</h2>
-    <p class="lead">After making these changes, we checked the live website to make sure everything works as intended.</p>
+    <p class="lead">After making these changes, we checked the live website to confirm everything works.</p>
   </div>
   <div class="two">
     <div class="card card--accent">
       <h3>What We Verified</h3>
       <ul class="clean">
-        <li>The new menu, Instagram link, and gallery all work on every page.</li>
-        <li>The consultation pop-up opens from every &ldquo;Book a Consultation&rdquo; button, and location/day selection behaves correctly.</li>
-        <li>Confirmation emails reach both your coaching inbox and the parent.</li>
-        <li>&ldquo;Book a Consultation&rdquo; wording is consistent across the whole site.</li>
+        <li>The new menu, Instagram link, gallery, and premium scroll all work on every page.</li>
+        <li>The consultation pop-up opens from every button, with location/day selection behaving correctly.</li>
+        <li>Confirmation emails reach both your inbox and the parent.</li>
+        <li>&ldquo;Book a Consultation&rdquo; wording is consistent across the site.</li>
       </ul>
     </div>
     <div class="card card--navy">
-      <h3>Always Up to Date</h3>
-      <p>We cleared the website&rsquo;s caches after each update, so visitors always see the newest version right away &mdash; no waiting and no stale pages.</p>
-      <p>Everything in this report is live now at <a href="https://gvbasketball.com">gvbasketball.com</a>.</p>
+      <h3>For Your Review</h3>
+      <p>Two items evolved from your notes and are flagged above, not changed: the <strong>member login</strong> (replaced in the menu by Instagram) and the <strong>purchase flow</strong> (now consultation-first). Two are waiting on you: <strong>FAQ answers</strong> and <strong>testimonials</strong>.</p>
+      <p>Everything else is live now at <a href="https://gvbasketball.com">gvbasketball.com</a>.</p>
     </div>
   </div>
 </div></section>
@@ -373,7 +382,7 @@
 <footer>
   <div class="wrap">
     <span>&copy; 2026 <b>GV BASKETBALL</b>. All rights reserved.</span>
-    <span>Monthly Website Report &mdash; July 2026</span>
+    <span>July Changes &mdash; 2026</span>
   </div>
 </footer>
 
