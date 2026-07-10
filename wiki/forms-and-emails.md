@@ -57,7 +57,9 @@ To replace direct public booking on LatePoint, a highly structured, custom "Book
 
 ### Notifications & Auto-Reply
 On success, `gv-request-form.php` constructs two mail payloads sent via `wp_mail()`:
-- **Admin Alert:** Sent to `gvbasketballcoaching@gmail.com` with parent/player stats, chosen location, and days.
+- **Admin Alert:** Sent to `gvbasketballcoaching@gmail.com` with parent/player stats, chosen location, and days. It includes an **"Add to Google Calendar" action link** styled as a button:
+  - Automatically calculates the soonest strictly-future date matching any of the selected weekdays using `gv_rf_next_weekday_date()`.
+  - Generates a prefilled Google Calendar template URL using `gv_rf_gcal_url()`, placing the parent's email as a guest (`add`), setting the location, and formatting all submission details into the description.
 - **Parent Auto-Reply:** Sent to the user's email confirming receipt, highlighting the chosen venue details, and stating the coaching team will follow up via IG/Email.
 
 ### Verification CLI Test
@@ -65,4 +67,5 @@ Run the framework-free assertion suite on the local terminal:
 ```bash
 php build/mu-plugins/tests/test-gv-request-form.php
 ```
-This tests the location-day data model, validation filters, nonce exceptions, and markup builders.
+This tests the location-day data model, validation filters, nonce exceptions, markup builders, and the new Google Calendar date/URL generation functions.
+
