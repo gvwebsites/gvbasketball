@@ -251,3 +251,18 @@ This is the chronological log of all tasks, updates, and releases completed on t
   - Added `docs/superpowers/plans/2026-07-10-members-self-service-consultation-merged.md` with focused modules, exact LatePoint hooks, security boundaries, phased deployment, rollback, and production acceptance.
   - Explicitly prohibited the destructive fresh-install LatePoint setup script and preserved the 45-minute duration with a 180-minute public request interval.
   - Folded live portal/wizard/finalizer captures plus OTP, parent-receipt, and Coach Gino email screenshots into the July client-report task.
+
+## [2026-07-10] task | Pure domain helpers with TDD (Task 1)
+- **Goal:** Implement pure domain helpers and validations for the GV Members system using TDD.
+- **Changes:**
+  - Created `build/mu-plugins/gv-members/core.php` containing payload validation, interest option labels, status labels, start time range helper, secure token hash comparison, and change mailto builders.
+  - Created `build/mu-plugins/tests/test-gv-members-core.php` to perform red-green TDD testing of all validation boundaries and domain helpers.
+
+## [2026-07-10] task | Non-destructive LatePoint and page configuration (Task 2)
+- **Goal:** Add idempotent WordPress configuration scripts and contract tests to align LatePoint, Members page (2983), and Consultation page (2982).
+- **Changes:**
+  - Created `build/scripts/configure-members-consultation.php` to set up Player Consultation service duration (45 mins), interval (180 mins), default status (pending), customer fields, and hide paid services.
+  - Created `build/scripts/configure-members-page.php` to configure the members page (2983) with Elementor blocks and `[gv_members_portal]` shortcode.
+  - Created `build/scripts/configure-consultation-page.php` to configure the consultation landing fallback page (2982) with the native wizard shortcode.
+  - Modified `build/scripts/enable-member-auth.php` and `build/scripts/build-functional.php` to point LatePoint options to `/members/` and match the new portal shortcode conventions.
+  - Created `build/mu-plugins/tests/test-gv-members-contracts.php` static contract test to assert configuration scripts are non-destructive and contain necessary configuration directives.
