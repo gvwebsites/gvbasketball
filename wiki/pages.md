@@ -46,9 +46,9 @@ The site navigation is managed under WordPress primary location and Astra theme 
   1. Home (`/`)
   2. About (`/about/`)
   3. Programs (`/training-programs/`)
+     - **GV Elite Academy** (`/elite-academy/`) — gold submenu item (WP menu class `gv-navgold`; header template uses a `.gv-nav__item`/`.gv-nav__sub` CSS hover dropdown with gold link class `.gv-nav__gold`; shows indented under Programs in the mobile burger)
   4. Gallery (`/gallery/`)
   5. FAQ (`/faq/`)
-  6. GV Elite Academy (`/elite-academy/`)
-  7. Contact (`/contact/`)
+  6. Contact (`/contact/`)
 - **Action CTA:** The orange "Book a Consultation" button is hard-coded into the header template itself and is not part of the standard menu items array.
 - **Menu ID Gotcha:** When the primary menu is rebuilt by the build script, its underlying term ID changes. The script handles re-linking this term to the Astra `primary` theme location automatically.

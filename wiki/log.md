@@ -409,3 +409,12 @@ This is the chronological log of all tasks, updates, and releases completed on t
   - Pre-deploy live snapshot for quick v1 revert: `~/backups/v1-revert-minimal-edits-20260710/` on host + `resources/backups/v1-revert-minimal-edits-20260710/` locally (with RESTORE.md).
   - `docs/CLIENT-REPORT-JULY-V2.html` + `docs/screenshots/v2-*.png` uploaded to `public_html/july-updates-v2.html` (+ `screenshots/`).
   - Deferred register documented in spec `docs/superpowers/specs/2026-07-10-minimal-edits-design.md` §6; deferred specs/plans retained under `docs/superpowers/`.
+
+## [2026-07-11] task | Academy nav polish: gold submenu under Programs, Elite-card Academy buttons, bigger Coming-2027 badge
+- **Goal:** Make GV Elite Academy navigation gold-branded and nested under Programs, cross-link it from the GV Elite Performance CTAs, and make the teaser's "Coming 2027" more prominent.
+- **Changes:**
+  - `build/templates/header.html` + `build/mu-plugins/gv-assets/gv-brand.css`: Academy moved into a `.gv-nav__item`/`.gv-nav__sub` CSS hover/focus dropdown under Programs; new `.gv-nav__gold` link style (new `--gv-gold-dark:#A8842F` var for contrast on white); mobile burger shows it indented under Programs; footer Explore link now gold/bold.
+  - `build/scripts/build-menu.php`: Academy is a child menu item of Programs (class `gv-navgold`); menu rebuilt as ID 17.
+  - `build/pages/home.html`, `build/pages/training-programs.html`: gold `GV Elite Academy` button (`gv-btn--gold` → `/elite-academy/`) added beside every Apply Now on the GV Elite Performance card/detail; `.gv-program__foot` is now a wrapping flex row.
+  - `build/pages/elite-academy.html`: "Coming 2027" upgraded to a large gold-bordered pill badge (1.2rem, 800 weight).
+  - Deployed pages + theme parts + menu + `gv-brand.css`; caches purged; verified live on desktop (hover dropdown, buttons, badge) and mobile burger.
