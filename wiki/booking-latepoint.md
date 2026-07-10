@@ -69,11 +69,13 @@ header/footer sitewide; `/book-a-consultation/` (page 2982, drafted) 301s to `/t
 ### How it works (`gv-members.php` + `gv-members/booking.php`)
 1. `wp_footer` prints **one hidden `[latepoint_book_button]` trigger per active venue** with
    `selected_location="N"` plus an extra trigger with `selected_location="any"`
-   (`LATEPOINT_ANY_LOCATION`), all with `hide_side_panel="yes"`.
+   (`LATEPOINT_ANY_LOCATION`), all with `hide_side_panel="yes" hide_summary="yes"` (no side
+   panel, no Summary panel).
 2. Clicking a consultation CTA opens the **GV venue chooser dialog** (one button per venue plus
    "I don't have a venue yet" → the `any` trigger). The chooser stays open with a loading state
    until the LatePoint lightbox form is actually in the DOM, then closes.
-3. The wizard shows **one "Request this day" slot per available day** (nominal 15:00 start);
+3. The wizard shows **one "BOOK A CONSULTATION" action per available day** (nominal 15:00 start;
+   the exact time is still coordinated later by the coach);
    custom fields (player name/age, training interest, phone/Instagram, note) are injected via the
    `latepoint_booking_steps_contact_after` hook — signature is `($customer, $booking)`.
 4. Submission creates a real **pending** LatePoint booking (order-linked), emails the parent a

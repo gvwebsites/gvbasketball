@@ -384,3 +384,10 @@ This is the chronological log of all tasks, updates, and releases completed on t
 - **Changes:**
   - Added git remote named `fork` pointing to `https://github.com/gvwebsites/gvbasketball.git` per user's specifications.
 
+
+## [2026-07-10] task | Consultation CTA and Summary cleanup
+- **Goal:** Make the available-day consultation action more obvious and remove the unused LatePoint Summary panel.
+- **Changes:**
+  - Added LatePoint `hide_summary="yes"` to all modal consultation triggers.
+  - Relabeled the visible day action to `BOOK A CONSULTATION` and styled it as a centered, rounded GV orange button.
+  - Added regression contracts and synchronized `booking-latepoint.md`.
