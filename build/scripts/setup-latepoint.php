@@ -47,7 +47,7 @@ function gv_svc($name, $dur, $capmin, $capmax, $desc) {
 $consult = gv_svc('Player Consultation', 45, 1, 1, 'Discuss goals, current level, and the best-fit program.');
 $private = gv_svc('Private Training', 60, 1, 1, '1-on-1 individualized development.');
 $group   = gv_svc('Small Group Training', 90, 1, 6, 'Maximum 6 athletes, competitive reps.');
-$elite   = gv_svc('Elite Performance', 90, 1, 6, 'Basketball + strength, conditioning & aqua training.');
+$elite   = gv_svc('GV Elite Performance', 90, 1, 6, 'The complete performance system: court training, strength & conditioning, recovery, and nutrition. Application required.');
 $services  = array($consult, $private, $group, $elite);
 $locations = array($dasma, $urdaneta, $corinth);
 
