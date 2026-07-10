@@ -220,3 +220,11 @@ This is the chronological log of all tasks, updates, and releases completed on t
   - `gv-request-form.php`: `$gcal_details` now joins with `<br>` instead of `\n` — Google Calendar renders the description as HTML, so raw newlines collapsed. Deployed both mu-plugins; re-sent a real test email (verified by client).
   - `docs/CLIENT-REPORT-JULY.html`: item #6 Member Login → **Done** (was Evolved) with view-only portal copy; new Part-2 section "05 — Member Login & Branded Emails" featuring `docs/screenshots/member-email.png` (Chrome-headless render of the real email); refreshed the "Tested & Live" summary.
   - Wiki: `forms-and-emails.md` (gcal `<br>` + crest logo), `booking-latepoint.md` (OTP email crest logo).
+
+## [2026-07-10] task | Design GV Members Portal and Consultation History
+- **Goal:** Specify a full `/members/` experience with open email-OTP signup, a minimal consultation request form, member request history, and read-only confirmed LatePoint sessions.
+- **Changes:**
+  - Added `docs/superpowers/specs/2026-07-10-gv-members-portal-design.md` after repository, live-page, SSH, database, and LatePoint source investigation.
+  - Chose a hybrid architecture: GV-owned request persistence and timeline UI with LatePoint-owned customer sessions and confirmed bookings.
+  - Defined the Request Timeline visual direction, two-state Submitted/Confirmed workflow, email-based coach confirmation, URL migration, cache exclusions, security requirements, and acceptance tests.
+  - Reduced anonymous request capture to parent/email, player/age, program, location, days, and one optional note; signed-in requests hide verified account identity.
