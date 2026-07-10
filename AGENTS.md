@@ -64,3 +64,12 @@ Occasionally, scan the wiki to find and reconcile:
 - Contradictory claims between wiki pages.
 - Stale instructions or dead file paths.
 - Broken markdown cross-references.
+
+---
+
+## 4. Knowledge Graph (graphify)
+
+To rebuild or query the project's knowledge graph (stored in the gitignored `graphify-out/` directory):
+- **Rebuild:** `/graphify .` (or `--update` for incremental updates)
+- **Query:** `/graphify query "<your query>"`
+
